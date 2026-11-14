@@ -54,11 +54,15 @@ export function createCapture() {
                   ikis: [], pauses: [], keys: 0, corrections: 0 };
     },
 
-    /** Call from a keydown listener. Stores a timestamp, never the key. */
+    /**
+     * Call from a keydown listener. Stores a timestamp, never the key.
+     * Returns true if the press was counted, so the UI can draw a blip. It never reports
+     * which key it was.
+     */
     onKeyDown(event, now = performance.now()) {
-      if (!current) return;
+      if (!current) return false;
       const kind = classify(event);
-      if (kind === "ignore") return;
+      if (kind === "ignore") return false;
       if (kind === "correction") current.corrections += 1;
       current.keys += 1;
       if (current.firstKeyAt === null) {
@@ -69,6 +73,7 @@ export function createCapture() {
         else current.ikis.push(gap);
       }
       current.lastKeyAt = now;
+      return true;
     },
 
     /** The typed confirmation did not match — the person has to re-enter it. */

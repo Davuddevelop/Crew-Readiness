@@ -1,50 +1,74 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
-{% block content %}
-<section class="page-head">
-  <div>
-    <h1>Crew readiness</h1>
-    <p class="muted">Each crew member is compared only with <strong>their own</strong> usual timing on the same task.</p>
-  </div>
-  <a class="btn" href="{{ url_for('views.monitor') }}">Start monitored task →</a>
-</section>
-
-<section id="crew-grid" class="crew-grid" aria-live="polite">
-  <p class="muted">Loading crew…</p>
-</section>
-
-<section id="detail" class="panel detail" hidden>
-  <div class="detail-head">
-    <div>
-      <h2 id="detail-name"></h2>
-      <p id="detail-meta" class="muted"></p>
+{% block body %}
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow rise">Passive readiness telemetry</p>
+      <h1 class="display rise d1">Compared only<br>with yourself.</h1>
+      <p class="lede rise d2">Crew Readiness reads how routine work is done, never what is typed, and flags changes from each person's own baseline for a human to review.</p>
+      <div class="actions rise d3">
+        <a class="btn" href="{{ url_for('views.monitor') }}">Start monitored task</a>
+        <a class="link" href="{{ url_for('views.about') }}">How the data stays private</a>
+      </div>
     </div>
-    <div id="detail-chip"></div>
-  </div>
 
-  <div class="detail-grid">
-    <div>
-      <h3>Advisory</h3>
-      <p id="detail-advisory" class="advisory"></p>
-      <h3>Why (plain language)</h3>
-      <ul id="detail-reasons" class="reasons"></ul>
-      <p id="detail-disclaimer" class="fineprint"></p>
-    </div>
-    <div>
-      <h3>Trend <span class="muted small">(deviation from own baseline, last sessions)</span></h3>
-      <div class="chart-wrap"><canvas id="trend-chart" aria-label="Deviation score trend"></canvas></div>
-      <p class="fineprint">Shaded bands: green &lt; 1.0, yellow 1.0–2.0, red ≥ 2.0 robust SD — illustrative cutoffs.</p>
-    </div>
-  </div>
+    <figure class="art rise d2" aria-labelledby="art-caption">
+      <div class="art-stage">
+        <canvas id="ridge" role="img" aria-label="One line per recent session for the selected crew member, oldest at the top. Flat lines match their own baseline; rises show where timing differed from it."></canvas>
+        <div class="art-readout" id="art-readout" aria-hidden="true"></div>
+        <div class="art-axis" id="art-axis" aria-hidden="true"></div>
+      </div>
+      <figcaption class="art-foot">
+        <p class="art-caption" id="art-caption">Each line is one session, oldest at the top. Flat means a session matched this person's own baseline. A rise means slower typing, more or longer pauses, or slower responses than their usual.</p>
+        <div class="legend" aria-hidden="true">
+          <span><i></i>Earlier session</span>
+          <span><i class="dash"></i>No baseline yet</span>
+          <span><i class="latest"></i>Latest session</span>
+        </div>
+      </figcaption>
+    </figure>
+  </section>
 
-  <h3>Evidence: today vs usual</h3>
-  <div class="table-wrap">
-    <table class="evidence">
-      <thead><tr><th>Signal</th><th>Today</th><th>Usual (median)</th><th>Change</th><th>Counts toward score</th></tr></thead>
-      <tbody id="detail-evidence"></tbody>
-    </table>
-  </div>
-</section>
+  <section class="crew-row" aria-label="Choose a crew member">
+    <div class="crew-list rise d3" id="crew-list" role="group">
+      <p class="muted small" style="padding-top:16px">Loading crew…</p>
+    </div>
+  </section>
+
+  <section id="detail" class="detail" hidden aria-live="polite">
+    <div class="detail-head">
+      <div>
+        <h2 id="detail-name"></h2>
+        <p id="detail-meta" class="muted small mono" style="margin-top:10px"></p>
+      </div>
+      <div id="detail-chip"></div>
+    </div>
+
+    <div class="detail-grid">
+      <div>
+        <h3 style="margin-top:0">Advisory</h3>
+        <p id="detail-advisory" class="advisory"></p>
+        <h3>Why, in plain language</h3>
+        <ul id="detail-reasons" class="reasons"></ul>
+        <p id="detail-disclaimer" class="fineprint" style="margin-top:20px"></p>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Score over time</h3>
+        <div class="chart-wrap"><canvas id="trend-chart" aria-label="Deviation score trend"></canvas></div>
+        <p class="fineprint">Robust SD from own baseline. Dotted lines at 1.0 and 2.0 are illustrative cutoffs, not validated limits.</p>
+      </div>
+    </div>
+
+    <h3>Evidence: today vs usual</h3>
+    <div class="table-wrap">
+      <table class="evidence">
+        <thead><tr><th>Signal</th><th>Today</th><th>Usual (median)</th><th>Change</th><th>Counts toward score</th></tr></thead>
+        <tbody id="detail-evidence"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='vendor/chart.umd.js') }}"></script>

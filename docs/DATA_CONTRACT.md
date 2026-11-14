@@ -130,7 +130,7 @@ All JSON. Errors: `{"error": "<code>", "message": "<human text>"}`.
 | GET | `/api/tasks/<task_type>` | checklist definition | `200 {task_type, title, intro, items[]}` |
 | POST | `/api/sessions` | `{profile_id, task_type, features{…all 9…}}` | `201 {session_id, …ProfileReadiness}` · `400` contract violation · `404` unknown profile |
 | GET | `/api/readiness` | latest readiness for every profile (no trend) | `200 {crew: [ProfileReadiness]}` |
-| GET | `/api/readiness/<profile_id>` | includes `trend` (last 10 sessions) | `200 ProfileReadiness` |
+| GET | `/api/readiness/<profile_id>` | includes `trend` (last 14 sessions, oldest first; see **Trend point** below) | `200 ProfileReadiness` |
 | POST | `/api/attention` | `{profile_id, session_id?, trials, median_rt_ms, premature_count, miss_count}` | `201 {id}` |
 | GET | `/api/mission` | scenario + assignments joined with readiness + `advisory` | `200` |
 
@@ -142,10 +142,16 @@ All JSON. Errors: `{"error": "<code>", "message": "<human text>"}`.
   "latest_session": {"id": 15, "created_at": "…Z", "source": "synthetic", "data_quality": "ok", "quality_notes": null, "features": {…}},
   "readiness": {"status": "SCORED", "band": "YELLOW", "score": 1.22, "confidence": "MEDIUM", "…": "see §2"},
   "baseline": {"n": 14, "ready": true, "min_required": 5, "features": {"iki_median_ms": {"median": 188.1, "spread": 9.9}}},
-  "trend": [{"session_id": 6, "created_at": "…Z", "source": "synthetic", "status": "SCORED", "band": "GREEN", "score": 0.7}],
+  "trend": [{"session_id": 6, "created_at": "…Z", "source": "synthetic", "status": "SCORED", "band": "GREEN", "score": 0.7,
+             "deviations": {"iki_median_ms": 0.4, "iki_iqr_ms": 0.0, "pause_count": 0.0, "pause_total_ms": 0.0, "checklist_response_median_ms": 1.1}}],
   "attention": null
 }
 ```
+
+**Trend point.** One entry per session, scored against only the sessions before it (same rule as the baseline).
+`deviations` is the per-feature directional deviation that fed that session's score (0 = usual or faster, capped at 4,
+same numbers as `readiness.deviations[].deviation`), or `null` while `status` is `CALIBRATING`. The dashboard's
+stacked-sessions art draws exactly these numbers and nothing else (see `docs/DESIGN.md`).
 
 ---
 

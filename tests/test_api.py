@@ -77,3 +77,25 @@ def test_attention_rejects_extra_fields(client):
     body = {"profile_id": "plt-okafor", "trials": 10, "median_rt_ms": 300,
             "premature_count": 0, "miss_count": 0, "notes": "free text"}
     assert client.post("/api/attention", json=body).status_code == 400
+
+
+# ---------- trend carries what the dashboard art draws ----------
+
+def test_trend_has_per_feature_deviations_for_scored_sessions(client):
+    from app.scoring import SCORED_FEATURES
+    trend = client.get("/api/readiness/plt-okafor").json["trend"]
+    assert len(trend) == 14, "one line of art per session"
+    latest = trend[-1]
+    assert set(latest["deviations"]) == set(SCORED_FEATURES)
+    assert latest["deviations"]["iki_median_ms"] > 3, "the seeded demo deviation must show"
+
+
+def test_latest_trend_point_matches_the_readiness_evidence(client):
+    data = client.get("/api/readiness/plt-okafor").json
+    evidence = {d["feature"]: d["deviation"] for d in data["readiness"]["deviations"]}
+    assert data["trend"][-1]["deviations"] == evidence
+
+
+def test_trend_deviations_are_null_while_calibrating(client):
+    trend = client.get("/api/readiness/ms-ibarra").json["trend"]
+    assert trend and all(t["deviations"] is None for t in trend)

@@ -53,3 +53,22 @@ def test_language_guardrails():
     out = mission_advisory([a("Primary pilot", "Kai", "RED"), a("Backup pilot", "Lena", "YELLOW")])
     text = " ".join(out["messages"] + out["suggested_actions"]).lower()
     assert not any(w in text for w in BANNED_WORDS)
+
+
+# ---- Added after decision D-5 (see docs/PLAN.md "D-5 rules") ----
+
+def test_red_on_non_critical_role_does_not_escalate():
+    """D-5: non-critical roles never change the level, even RED."""
+    out = mission_advisory([a("Primary pilot", "Kai", "GREEN"),
+                            a("Comms", "Tomas", "RED", critical=False)])
+    assert out["level"] == "NOMINAL"
+
+
+def test_no_clean_backup_requires_review_and_flags_both():
+    """D-5: pilot RED and backup YELLOW -> REVIEW, flag both, name nobody as a replacement."""
+    out = mission_advisory([a("Primary pilot", "Kai", "RED"), a("Backup pilot", "Lena", "YELLOW")])
+    assert out["level"] == "REVIEW"
+    text = " ".join(out["messages"])
+    assert "Kai" in text and "Lena" in text
+    # TODO(you, L-1): pin down "names nobody as a replacement" as an assertion on the output.
+    # Which words or structure in `suggested_actions` would prove it? Decide, then write it.

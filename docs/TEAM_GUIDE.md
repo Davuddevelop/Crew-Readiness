@@ -79,13 +79,16 @@ app/
   static/js/
     capture.js          ★ privacy-preserving timing capture                  (Member 3)
     monitor.js          checklist flow + payload preview + submit            (Member 3)
-    dashboard.js        crew cards, detail, trend chart                       (Member 3)
+    dashboard.js        crew selector, detail, trend chart                    (Member 3)
+    ridgeline.js        ★ stacked-sessions art, drawn from trend[].deviations (Member 3)
+    keytrace.js         live key-press trace on Monitoring (timestamps only)  (Member 3)
     mission.js          mission view
     attention.js        reaction-time check TODO                              (A-1)
     common.js           fetch helper, escaping, chips
   static/vendor/        Chart.js (vendored so the demo works offline)
+  static/fonts/         Space Grotesk + JetBrains Mono (self-hosted, SIL OFL)
 tests/                  pytest; test_api.py protects the demo story
-docs/                   PLAN, TEAM_GUIDE, DATA_CONTRACT, TEST_LOG
+docs/                   PLAN, TEAM_GUIDE, DATA_CONTRACT, DESIGN, TEST_LOG
 ```
 
 ### Follow one session end to end (do this with the code open)

@@ -360,6 +360,8 @@ table.evidence td.num { font-size: 15px; }
 /* baseline review: shown only while a flagged run waits for a human */
 .review { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--rule); max-width: 62ch; }
 .review p { margin: 0 0 16px; }
+.review .btn { margin-bottom: 12px; }
+.advisory:focus { outline: none; }
 
 /* replay: scenario controls */
 .replay-controls { display: flex; flex-wrap: wrap; gap: 24px 40px; align-items: end; }

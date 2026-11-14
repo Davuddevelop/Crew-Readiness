@@ -167,7 +167,8 @@ function renderResult(s, saved) {
       <li>Missed: <span class="num">${s.miss_count}</span></li>
     </ul>
     ${s.__resp ? `<p>${esc(s.__resp.summary)}</p>${(s.__resp.reasons || []).length ? `<ul class="reasons">${s.__resp.reasons.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}` : ""}
-    <p class="fineprint">${esc(saved)} Only these four numbers are stored, as context for a human reviewer.</p>`;
+    <p class="fineprint">${esc(saved)} Only these four numbers are stored, as context for a human reviewer.</p>
+    <p><a class="btn" href="/me?crew=${encodeURIComponent(select.value)}">Back to my status</a></p>`;
   result.hidden = false;
 }
 

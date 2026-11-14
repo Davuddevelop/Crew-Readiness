@@ -42,6 +42,22 @@ the team (decision 3 in `docs/ML_PLAN.md`: what false-alert rate is acceptable t
 false-alert reduction back for detection. After the change, the remaining false alerts are spread evenly across
 features (checklist 35 %, typing rhythm 26 %, pauses 20 %, typing variability 19 %), so no single feature dominates.
 
+## Experiment: a flagged session poisons the baseline (not shipped)
+`python -m ml.experiment_contamination`. Today every OK session joins the person's baseline, including flagged ones. In a
+**sustained** 15-session slowdown the baseline absorbs the change and the alerts fade. Detection by position in the event
+(alert at 1.0; synthetic; 300 people):
+
+| Slowdown | Policy | Session 1 | 3 | 5 | 8 | 11 | 15 | False alerts |
+|---|---|---|---|---|---|---|---|---|
+| 20 % | keep all (today) | 0.88 | 0.78 | 0.67 | 0.41 | 0.21 | **0.07** | 4.5 % |
+| 20 % | exclude flagged (score >= 1.5) | 0.88 | 0.83 | 0.80 | 0.71 | 0.59 | **0.40** | 4.6 % |
+| 10 % | keep all (today) | 0.40 | 0.35 | 0.26 | 0.19 | 0.11 | 0.08 | 5.6 % |
+| 10 % | exclude flagged | 0.41 | 0.37 | 0.28 | 0.22 | 0.16 | 0.10 | 5.8 % |
+
+Catch: excluding flagged sessions forever would also lock out a *genuine new normal* (new keyboard, practice effect), so
+the alerts would never stop. A re-admission rule or a human "accept as the new normal" action is required; that is a design
+decision (decision 4 in `docs/ML_PLAN.md`). Not implemented in the product yet.
+
 ## Robustness to a wrong assumption (`python -m ml.stress_prior`)
 Assumed burstiness prior 0.05 / 0.5 / 2.0, against simulated people whose true burstiness is 0 / 0.5 / 1.5
 (10 % slowdown, 5 % false alerts): detection stays 0.35-0.38 / 0.36-0.38 / 0.29 against 0.24 / 0.29 / 0.22 for

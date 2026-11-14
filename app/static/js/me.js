@@ -42,6 +42,8 @@ async function show(id) {
     let acts = actions(r, id).map((x) => `<li>${x.startsWith("<a") ? x : esc(x)}</li>`);
     if (data.baseline_review) acts.unshift(`<li>${esc(data.baseline_review.message)} A reviewer can do that on the dashboard.</li>`);
     $("me-actions").innerHTML = acts.join("");
+    $("me-start").href = `/monitor?crew=${encodeURIComponent(id)}`;
+    $("me-resp-top").href = `/attention?crew=${encodeURIComponent(id)}`;
     const q = data.responsiveness || { summary: "", reasons: [] };
     $("me-resp-sentence").textContent = q.summary;
     $("me-resp-reasons").innerHTML = (q.reasons || []).map((x) => `<li>${esc(x)}</li>`).join("");

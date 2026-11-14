@@ -104,5 +104,5 @@ Search summaries only; the article hosts are outside the build environment's net
 ## 10. Open items
 
 - Brand name: kept **Crew Readiness**. "Pulse" suggests a physiological signal we don't measure; check availability before using any other name.
-- The Attention and Privacy & limits pages carry the style but still hold task-owner TODOs (A-1, R-1).
+- The Privacy & limits page carries the style but still holds a task-owner TODO (R-1).
 - Possible refinement: align the art's five axes to grid column centres (they currently sit at 10/30/50/70/90 % of the plate, within ~10 px of the column centres).

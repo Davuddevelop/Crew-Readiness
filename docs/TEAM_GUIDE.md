@@ -86,7 +86,7 @@ app/
     grid.js             dev aid: add ?grid to any URL to see the 12 columns
     keytrace.js         live key-press trace on Monitoring (timestamps only)  (Member 3)
     mission.js          mission view
-    attention.js        reaction-time check TODO                              (A-1)
+    attention.js        reaction-time check (A-1); browser check: scripts/check_attention.js
     common.js           fetch helper, escaping, chips
   static/vendor/        Chart.js (vendored so the demo works offline)
   static/fonts/         Instrument Sans (self-hosted, SIL OFL)
@@ -210,6 +210,7 @@ Each card: **goal → files → done when → think about → hints.** If a card
 - **Files:** `static/js/attention.js` (full spec in the header comment), `templates/attention.html`. The API `POST /api/attention` already works and is tested.
 - **Done when:** 10 trials, random foreperiod, premature and miss handling, median RT, result stored and shown with the "illustrative, not a medical test" label.
 - **Think about:** why is the foreperiod random? Why treat RT < 100 ms as premature?
+- **Status: done.** Escape cancels a run without sending anything; a hidden tab cancels too (it cannot see the light). Responses use `pointerdown`, not `click`, so the press duration is not added to the reaction time. `node scripts/check_attention.js` (app running) drives a full run with a fake clock and checks the exact POST body.
 
 ---
 

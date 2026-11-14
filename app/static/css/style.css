@@ -249,10 +249,12 @@ table.evidence td.num { font-size: 15px; }
 .tminus { font-size: clamp(32px, 5vw, 64px); line-height: 1; font-weight: 700; letter-spacing: -0.04em; color: var(--checkin); }
 .rt-stage {
   margin: 24px 0; height: 240px; border: 1px solid var(--ink); background: transparent; color: var(--muted);
-  display: flex; align-items: center; justify-content: flex-start; text-align: left; padding: 24px; user-select: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: flex-start; text-align: left; padding: 24px; user-select: none; cursor: pointer; touch-action: manipulation;
 }
+.rt-result { margin-top: 32px; }
+.rt-result p { margin: 0 0 12px; }
+.rt-progress { color: var(--muted); font-size: 14px; margin: 0; }
 .rt-stage.rt-go { background: var(--signal); border-color: var(--signal); color: var(--bg); }
-.rt-stage.rt-todo { border-style: dashed; }
 .todo-box { border: 1px dashed var(--line); padding: 20px 24px; }
 
 /* ---------- dev aid: add ?grid to any URL to see the 12 columns ---------- */

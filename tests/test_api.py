@@ -87,6 +87,15 @@ def test_attention_result_roundtrip(client):
     assert latest["median_rt_ms"] == 312.5
 
 
+def test_attention_page_is_finished_and_labelled(client):
+    html = client.get("/attention").data.decode()
+    assert "Not implemented" not in html and "Builder notes" not in html
+    assert "Illustrative reaction-time check. Not a medical test." in html
+    js = client.get("/static/js/attention.js").data.decode()
+    assert "Not implemented" not in js and "TODO" not in js
+    assert "Illustrative reaction-time check. Not a medical test." in js
+
+
 def test_attention_rejects_extra_fields(client):
     body = {"profile_id": "plt-okafor", "trials": 10, "median_rt_ms": 300,
             "premature_count": 0, "miss_count": 0, "notes": "free text"}

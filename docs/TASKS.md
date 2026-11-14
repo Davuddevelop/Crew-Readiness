@@ -56,3 +56,5 @@ Status: `[ ]` open, `[~]` in progress, `[x]` done. Update this file in your PR w
 
 Read `AGENTS.md`. Small PRs. Tests and `check_grid.js` before each one. Never write that astronauts use it or that it is validated on crews. The pilot is
 "a small pilot with deliberate perturbations", the benchmark is "simulated". Say what you could not verify.
+
+**Human check (before submission):** open these two links and confirm `/about` section 02 says what they say: https://ntrs.nasa.gov/citations/20090029851 (Reaction Self Test experiment) and https://read.qxmd.com/read/35023565 (the 24-astronaut ISS sleep study abstract) and confirm they say what the page says. The agent read them through search summaries only.

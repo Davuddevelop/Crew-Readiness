@@ -4,7 +4,7 @@ For the NASA Space Apps judges. Everything below is something the product really
 benchmark on **simulated** crews (`/evidence`, `docs/ML_RESULTS.md`); say "simulated" every time you quote one.
 
 ## The one-sentence pitch
-> Crew Readiness compares how each person works with *their own* usual pattern, and puts a change in front of a human before a critical operation. It never reads what is typed, it never decides, and we show where it is worse as well as better.
+> Crew Readiness is a behavioural signal that sits beside crew health monitoring, not in place of it. It compares how each person works with *their own* usual pattern, and puts a change in front of a human before a critical operation. It never reads what is typed, it never decides, and we show where it is worse as well as better.
 
 ## Before you start (5 minutes, do it twice)
 1. `python run.py` (local, no internet needed; the app makes no external calls).
@@ -19,7 +19,7 @@ About 150 spoken words per minute; clicks take about 15 s in total. Rehearse it 
 
 | Time | Page | Say | Show |
 |---|---|---|---|
-| 0:00 | `/` landing | "On a long mission the ground may be minutes away, and someone still has to decide who does a critical task. People differ: 220 ms between keys is normal for one person and a big change for another. So we compare each person only with themselves, and a human decides." | The poster. Move toward the gap: the hands lean in and never touch. "The system never closes that gap. A person does." |
+| 0:00 | `/` landing | "On a long mission the ground may be minutes away, and someone still has to decide who does a critical task. People differ: 220 ms between keys is normal for one person and a big change for another. So we compare each person only with themselves, and a human decides. It is not a health monitor: it is a behavioural signal that could sit beside one." | The poster. Move toward the gap: the hands lean in and never touch. "The system never closes that gap. A person does." |
 | 0:20 | `/me` | "The crew member sees their own status first, on their own device, in plain words, and what they can do next." | The sentence, the actions and the "who sees this" proposal. |
 | 0:40 | `/dashboard` | "Pilot Okafor is YELLOW. This is an illustrative seeded case, not a measure of how well it works. It is not a diagnosis: two pauses against a usual 0.7, which we would expect about one session in nine. Read the number on screen." | Click the pilot; read the pause reason; point at "Advisory only". |
 | 1:05 | `/mission` then `/brief` | "Before a critical operation the system suggests a check-in and says why. It never assigns or clears anyone. This is the page a reviewer holds: reasons, what it cannot tell you, and a blank record they fill in by hand. Nothing is stored." | Mission advisory, open the brief, point at the "cannot tell you" list and the checkboxes. |
@@ -51,6 +51,7 @@ preview nor the data actually sent contains any typed phrase.
 **We do not claim:** fatigue, illness, cognitive state or fitness for duty detection; validation on real crews or astronauts; NASA approval or endorsement; that the thresholds are clinical (they are illustrative).
 
 ## Hard questions, honest answers
+- **"The challenge is health monitoring. Where is the health?"** Honestly: we do not measure health, and we say so. NASA already treats changes in response speed as a behavioural indicator (its Reaction Self Test flew on the ISS for that purpose). We ask whether a change can also show up in ordinary procedure work, with no sensors and no extra test, and we hand it to a human, with a box in the printable brief for involving crew medical support. Whether that is a useful companion to health monitoring is exactly what we have not shown; the page says so. `/about`, section 02.
 - **"How is this different from a health dashboard or a wearable?"** It uses no sensors and no health data. It compares a person's own task-interaction timing with their own earlier sessions, entirely on the device, and leaves meaning to a human. That is also why it makes no health claim.
 - **"Why gloves?"** It is an illustrative equipment change, not a measurement. The point is that a change in timing is not always about the person, so a human can accept it as the new normal. The size and timing in the simulation are our assumptions.
 - **"Is this actually for astronauts?"** Not yet. It is a prototype for on-board decision support on computer-based procedure work, using a typed checklist as a stand-in task, tested only on simulated data. Real conditions (tablets, gloves, shared devices, microgravity, a different keyboard or time of day) are untested, and real use would need crew consent and clear rules on who sees what. One property that does suit space: it runs fully offline and sends nothing off the device.

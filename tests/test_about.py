@@ -52,3 +52,12 @@ def test_about_has_the_offline_self_check_and_says_what_it_does_not_cover(client
     html = client.get("/about").get_data(as_text=True)
     assert 'id="offline-check"' in html and "js/netcheck.js" in html
     assert "Not tested: a real on-board computer" in html and "turn off Wi-Fi" in html
+
+
+def test_about_places_the_tool_beside_health_monitoring_without_health_claims(client):
+    html = client.get("/about").get_data(as_text=True)
+    assert 'id="health-fit"' in html and "not</strong> a health monitor" in html
+    assert "Reaction Self Test" in html and "no endorsement by NASA is implied" in html
+    assert "tell crew medical support directly" in html
+    landing = client.get("/").get_data(as_text=True)
+    assert "beside crew health monitoring, not in place of it" in landing

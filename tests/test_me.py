@@ -22,3 +22,8 @@ def test_the_data_the_page_reads_exists_for_every_profile(client):
     for p in profiles:
         r = client.get(f"/api/readiness/{p['id']}").get_json()["readiness"]
         assert r["status"] in ("SCORED", "CALIBRATING", "INSUFFICIENT_DATA") and "baseline_needed" in r
+
+
+def test_mission_page_has_the_no_ground_link_section(client):
+    html = client.get("/mission").get_data(as_text=True)
+    assert 'id="no-ground-link"' in html and "Not tested" in html and 'href="/me"' in html

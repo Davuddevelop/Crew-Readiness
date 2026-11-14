@@ -9,7 +9,7 @@ Status: `[ ]` open, `[~]` in progress, `[x]` done. Update this file in your PR w
 |---|---|---|---|---|
 | T0.1 | Davud | Open the official challenge page and paste its text (title, description, any required deliverables, listed resources, judging notes) into `docs/CHALLENGE.md`. Our plan so far rests on secondary sources | 15 min | `docs/CHALLENGE.md` exists, with the URL and the date read |
 | T0.2 | Davud | Merge PR #21 (Mission advisory). Production has not rebuilt since the Privacy page: in the Vercel dashboard redeploy `main` and check the project's production branch and Git settings. Then run `python scripts/smoke.py <live URL>` | 30 min | Live Mission page shows a real advisory; smoke passes on the live URL |
-| T0.3 | Davud | Add a `LICENSE` file (your choice; MIT is usual). Fill the `[PLACEHOLDERS]` in `docs/SUBMISSION.md` (team name, challenge title from T0.1, repo URL, AI tool name). Name the logo's AI tool in `docs/ASSETS.md` | 30 min | No `[...]` or "NOT STATED" left in those two files |
+| T0.3 | Davud | *(LICENSE added: MIT, change if you prefer)* Add a `LICENSE` file (your choice; MIT is usual). Fill the `[PLACEHOLDERS]` in `docs/SUBMISSION.md` (team name, challenge title from T0.1, repo URL, AI tool name). Name the logo's AI tool in `docs/ASSETS.md` | 30 min | No `[...]` or "NOT STATED" left in those two files |
 | T0.4 | Teammate | **Done.** Read `docs/PLAN_V2.md`, `docs/TASKS.md`, `AGENTS.md`; pull `main`; confirm you can run the app and the tests | 15 min | Tests pass locally |
 
 ## Workstreams, owner: Davud + Claude

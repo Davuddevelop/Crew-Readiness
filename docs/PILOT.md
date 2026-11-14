@@ -66,8 +66,9 @@ the order sessions were submitted) and the nine aggregate timing numbers. **Noth
 no typed text (typed text is never stored at all). `tests/test_pilot_export.py` checks this. Check that every person shows 12 sessions
 in the script's summary; if not, fix the sheet before anything else. If a volunteer withdraws, re-run with `--exclude pilot-NN`.
 
-Commit the CSV and the filled sheet (`docs/pilot/session_sheet.csv`, copied from the template) to `docs/pilot/`. **Do not edit any
-number in the CSV.** If a session went wrong, say so in the sheet's issue code; the analysis (task C4) decides what to do with it.
+Then fill the sheet (`docs/pilot/session_sheet.csv`, section 5) and run `python scripts/check_pilot_ready.py` until it prints
+**READY**: it names, per pseudonym, every session missing from the export and every sheet row still lacking a consent or issue code.
+Commit the CSV and the filled sheet to `docs/pilot/`. **Do not edit any number in the CSV.** If a session went wrong, say so in the sheet's issue code; the analysis (task C4) decides what to do with it.
 
 Then run the analysis (it needs both files and refuses if they disagree):
 
@@ -106,8 +107,10 @@ The team fills **[CONTACT]** and **[DEADLINE FOR WITHDRAWAL]** before the first 
 
 ## 5. Session-order sheet
 
-Copy `docs/pilot/session_sheet_template.csv` to `docs/pilot/session_sheet.csv` and fill one row per **submitted** session. The
-same columns as below. Codes only, no free text, no names.
+`docs/pilot/session_sheet.csv` is already laid out for `pilot-01` to `pilot-08`, 12 sessions each, with the **planned** condition and
+perturbation from this protocol. Consent and issue are left **blank on purpose**: the operator fills them for every session that
+happened, deletes the rows of anyone who did not take part, and changes a condition only if that is what really happened.
+Codes only, no free text, no names. A printable one-page version of the whole evening: `docs/pilot/CHECKLIST.md`.
 
 Sheet header (once, in the commit message or at the top of the PR): laptop model, keyboard (built-in or external, layout), date.
 

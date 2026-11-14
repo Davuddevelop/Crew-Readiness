@@ -14,6 +14,7 @@ from .db import get_db
 from .features import ValidationError, assess_quality, validate_session_payload
 from .mission import MISSION, check_in_watchdog, mission_advisory
 from .readiness import accept_new_normal, readiness_for_all, readiness_for_profile
+from .selftest import run_selftest
 from .tasks import DEFAULT_TASK_TYPE, TASKS
 
 bp = Blueprint("api", __name__, url_prefix="/api")
@@ -39,6 +40,12 @@ def health():
     db.execute("SELECT 1").fetchone()
     return jsonify(status="ok", version=current_app.config["APP_VERSION"],
                    profiles=len(store.list_profiles(db)))
+
+
+@bp.get("/selftest")
+def selftest():
+    """Health of the monitor (task R1): each check with pass/fail and its reason. Always 200; `ok` says the result."""
+    return jsonify(run_selftest())
 
 
 @bp.get("/tasks/<task_type>")

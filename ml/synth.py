@@ -46,6 +46,7 @@ class PopulationSpec:
     pause_rate: tuple[float, float] = (0.4, 1.2)       # expected pauses per session
     resp_ms: tuple[float, float] = (1100.0, 1800.0)
     resp_cv: float = 0.11
+    pause_overdispersion: float = 0.0                  # 0 = Poisson pauses; >0 = burstier (gamma-mixed rate, variance = mean*(1+od*mean))
     learning_per_session: float = 0.0                  # slow drift: fractional change per session (negative = getting faster)
 
 
@@ -71,7 +72,10 @@ def simulate_person(rng: np.random.Generator, n: int, pop: PopulationSpec = Popu
         iki = max(40.0, rng.normal(iki0, pop.iki_cv * iki0) * drift) * (1 + f)
         iqr = max(5.0, rng.normal(pop.iqr_ratio * iki0, 0.15 * pop.iqr_ratio * iki0) * drift) * (1 + f)
         resp = max(300.0, rng.normal(resp0, pop.resp_cv * resp0) * drift) * (1 + f)
-        pauses = int(rng.poisson(pause0 * (1 + effect.pause_gain * f)))
+        rate = pause0 * (1 + effect.pause_gain * f)
+        if pop.pause_overdispersion > 0:
+            rate *= rng.gamma(1 / pop.pause_overdispersion, pop.pause_overdispersion)
+        pauses = int(rng.poisson(rate))
         pause_total = float(sum(2000 + rng.exponential(1200) for _ in range(pauses)))
         corrections = int(rng.poisson(2))
         keys = TASK_CHARS + 2 * corrections

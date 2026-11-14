@@ -126,3 +126,12 @@ def test_evidence_page_renders_from_the_results_file(client):
     assert data["synthetic"] is True
     for row in data["table"]:                           # every number on the page comes from the file
         assert f"{row['neg_binomial']:.2f}" in html and f"{row['incumbent']:.2f}" in html
+
+
+def test_evidence_operating_point_numbers_come_from_the_file(client):
+    import json
+    from app.views import RESULTS_FILE
+    html = client.get("/evidence").data.decode()
+    for row in json.loads(RESULTS_FILE.read_text())["operating_point"]:
+        assert f"{row['now']['false_alerts'] * 100:.1f} %" in html
+        assert f"{row['now']['detection']:.2f}" in html

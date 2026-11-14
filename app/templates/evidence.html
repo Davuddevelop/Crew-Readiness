@@ -60,6 +60,28 @@
 
 <section class="section">
   <div class="grid">
+    <div class="label"><span class="idx">03b</span>At the real alert level</div>
+    <div class="body">
+      <p class="muted small" style="max-width:62ch">The same comparison at the level the product actually uses (YELLOW at a score of 1.0), with no matching.
+        <strong>Synthetic data.</strong> Both columns matter: fewer false alerts is only a win if real changes are still caught.</p>
+      <div class="table-wrap">
+        <table class="evidence">
+          <thead><tr><th>Slowdown</th><th>Detected, before</th><th>Detected, now</th><th>False alerts, before</th><th>False alerts, now</th></tr></thead>
+          <tbody>
+          {% for r in data.operating_point %}
+            <tr><td>{{ (r.slowdown * 100) | round(0) | int }} %</td>
+              <td class="num">{{ '%.2f' | format(r.before.detection) }}</td><td class="num">{{ '%.2f' | format(r.now.detection) }}</td>
+              <td class="num">{{ '%.1f' | format(r.before.false_alerts * 100) }} %</td><td class="num"><strong>{{ '%.1f' | format(r.now.false_alerts * 100) }} %</strong></td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="grid">
     <div class="label"><span class="idx">04</span>If our assumption is wrong</div>
     <div class="body">
       <p class="muted small" style="max-width:62ch">The model needs a starting guess for how bursty pausing is. We changed the guess and the true burstiness of the simulated people

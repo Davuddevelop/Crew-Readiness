@@ -26,6 +26,22 @@ Detection of event sessions at a **fixed 5 % false-alert rate**, 5-session step 
 | 10 % | high (od 1.5) | 0.22 | 0.26 | 0.29 |
 | 15 % | high (od 1.5) | 0.39 | 0.47 | 0.53 |
 
+## At the shipped alert level (YELLOW at score >= 1.0, no matching)
+`python -m ml.export_results`, 300 simulated people per row, 5-session step event, synthetic.
+
+| Slowdown | Detected before | Detected now | False alerts before | False alerts now |
+|---|---|---|---|---|
+| 6 % | 0.26 | 0.18 | 11.9 % | 4.7 % |
+| 10 % | 0.42 | 0.35 | 13.0 % | 4.7 % |
+| 15 % | 0.62 | 0.58 | 12.7 % | 4.8 % |
+
+**This is a trade-off, not a free win.** False alerts fall by about 60 %, and detection also falls (by 0.04 to 0.08).
+The fixed-false-alert table above is the fair comparison (the new model is better at every matched rate). The product's
+cutoff of 1.0 now sits at a more conservative point on the curve; whether that is the right point is a decision for
+the team (decision 3 in `docs/ML_PLAN.md`: what false-alert rate is acceptable to a crew). Lowering the cutoff trades the
+false-alert reduction back for detection. After the change, the remaining false alerts are spread evenly across
+features (checklist 35 %, typing rhythm 26 %, pauses 20 %, typing variability 19 %), so no single feature dominates.
+
 ## Robustness to a wrong assumption (`python -m ml.stress_prior`)
 Assumed burstiness prior 0.05 / 0.5 / 2.0, against simulated people whose true burstiness is 0 / 0.5 / 1.5
 (10 % slowdown, 5 % false alerts): detection stays 0.35-0.38 / 0.36-0.38 / 0.29 against 0.24 / 0.29 / 0.22 for

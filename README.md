@@ -90,7 +90,7 @@ every limit: [docs/ML_RESULTS.md](docs/ML_RESULTS.md). Demo script: [docs/DEMO.m
 
 ## Sources and acknowledgements
 - Images: Michelangelo, *The Creation of Adam* (public domain); spacesuit glove from NASA's 2012 *Man and Machine* photograph (credit NASA, no endorsement implied); the logo is **AI-generated** (tool not yet named). Sources, licences and open checks: [docs/ASSETS.md](docs/ASSETS.md).
-- Design: Swiss / International Typographic style; the stacked-sessions chart form was inspired by Harold D. Craft Jr.'s 1970 pulsar plot (idea only). Inter typeface, SIL OFL 1.1.
+- Design: Swiss / International Typographic style; the stacked-sessions chart form was inspired by Harold D. Craft Jr.'s 1970 pulsar plot (idea only). Instrument Sans typeface, SIL OFL 1.1.
 - **NASA research:** we have **not** yet reviewed NASA's human-research literature and cite none; we claim no NASA findings (task R-2 is open).
 Chart.js © Chart.js contributors, MIT License.
 

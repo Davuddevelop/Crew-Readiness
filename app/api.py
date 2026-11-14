@@ -11,7 +11,7 @@ from . import store
 from .db import get_db
 from .features import ValidationError, assess_quality, validate_session_payload
 from .mission import MISSION, mission_advisory
-from .readiness import readiness_for_all, readiness_for_profile
+from .readiness import accept_new_normal, readiness_for_all, readiness_for_profile
 from .tasks import TASKS
 
 bp = Blueprint("api", __name__, url_prefix="/api")
@@ -83,6 +83,20 @@ def readiness_one(profile_id: str):
     if profile is None:
         return jsonify(error="not_found", message="Unknown profile_id."), 404
     return jsonify(readiness_for_profile(get_db(), profile))
+
+
+@bp.post("/readiness/<profile_id>/accept-new-normal")
+def accept_new_normal_route(profile_id: str):
+    """A reviewer accepts the latest flagged run as this person's new normal (it then counts toward the baseline)."""
+    db = get_db()
+    profile = _require_profile(profile_id)
+    if profile is None:
+        return jsonify(error="not_found", message="Unknown profile_id."), 404
+    ids = accept_new_normal(db, profile)
+    if not ids:
+        return jsonify(error="conflict", message="There is no flagged run waiting for review."), 409
+    db.commit()
+    return jsonify(accepted_session_ids=ids, **readiness_for_profile(db, profile))
 
 
 @bp.post("/attention")

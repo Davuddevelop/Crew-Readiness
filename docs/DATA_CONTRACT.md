@@ -68,6 +68,7 @@ A session is never part of its own baseline.
 | `reasons[]` | plain-language strings, only for deviation ≥ 1.0 |
 | `advisory` | one sentence for a human reviewer |
 | `disclaimer` | always shown |
+| `baseline_review` | `null`, or `{excluded_sessions, message}` when the latest unbroken run of sessions was scored >= 1.5 against the person's baseline and is therefore **not used to learn what is normal** (a reviewer can accept it) |
 | `model` | which scoring model produced the view: `nb-pause-v2` (pause count by per-person negative binomial; pause time shown as context, not scored) or `robust-mad-v1`. See docs/ML_RESULTS.md |
 
 ### Attention result (stretch, task A-1)
@@ -161,3 +162,13 @@ stacked-sessions art draws exactly these numbers and nothing else (see `docs/DES
 * Changing checklist text, item count, or the pause threshold → **new task_type** (`docking_checklist_v2`). Old baselines must not mix with new sessions.
 * Adding a feature → new column + `FEATURES` entry + range + tests + this file, in one PR.
 * Changing scoring constants → allowed without a new version, but log it in `docs/PLAN.md` § Decisions and re-run `pytest` (the demo-protection tests will tell you if the pitch story broke).
+
+
+## Baseline review (flagged sessions and accepting a new normal)
+
+- A session scored >= `EXCLUDE_FROM_BASELINE` (1.5) does not join the person's baseline, so a sustained change is not absorbed
+  and stops being flagged. Trend points carry `excluded_from_baseline` (bool). Evidence: `docs/ML_RESULTS.md`.
+- `POST /api/readiness/<profile_id>/accept-new-normal` (no body): a human accepts the latest unbroken flagged run. Those sessions get
+  `sessions.accepted_at` (UTC timestamp; no identity, the prototype has no accounts), count toward the baseline, and the baseline
+  **restarts from the first accepted session** (fewer than 5 means CALIBRATING). 200 returns `accepted_session_ids` plus the readiness
+  payload; 404 unknown profile; 409 nothing waiting for review.

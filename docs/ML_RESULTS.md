@@ -26,6 +26,38 @@ Detection of event sessions at a **fixed 5 % false-alert rate**, 5-session step 
 | 10 % | high (od 1.5) | 0.22 | 0.26 | 0.29 |
 | 15 % | high (od 1.5) | 0.39 | 0.47 | 0.53 |
 
+## At the shipped alert level (YELLOW at score >= 1.0, no matching)
+`python -m ml.export_results`, 300 simulated people per row, 5-session step event, synthetic.
+
+| Slowdown | Detected before | Detected now | False alerts before | False alerts now |
+|---|---|---|---|---|
+| 6 % | 0.26 | 0.18 | 11.9 % | 4.7 % |
+| 10 % | 0.42 | 0.35 | 13.0 % | 4.7 % |
+| 15 % | 0.62 | 0.58 | 12.7 % | 4.8 % |
+
+**This is a trade-off, not a free win.** False alerts fall by about 60 %, and detection also falls (by 0.04 to 0.08).
+The fixed-false-alert table above is the fair comparison (the new model is better at every matched rate). The product's
+cutoff of 1.0 now sits at a more conservative point on the curve; whether that is the right point is a decision for
+the team (decision 3 in `docs/ML_PLAN.md`: what false-alert rate is acceptable to a crew). Lowering the cutoff trades the
+false-alert reduction back for detection. After the change, the remaining false alerts are spread evenly across
+features (checklist 35 %, typing rhythm 26 %, pauses 20 %, typing variability 19 %), so no single feature dominates.
+
+## Experiment: a flagged session poisons the baseline (not shipped)
+`python -m ml.experiment_contamination`. Today every OK session joins the person's baseline, including flagged ones. In a
+**sustained** 15-session slowdown the baseline absorbs the change and the alerts fade. Detection by position in the event
+(alert at 1.0; synthetic; 300 people):
+
+| Slowdown | Policy | Session 1 | 3 | 5 | 8 | 11 | 15 | False alerts |
+|---|---|---|---|---|---|---|---|---|
+| 20 % | keep all (today) | 0.88 | 0.78 | 0.67 | 0.41 | 0.21 | **0.07** | 4.5 % |
+| 20 % | exclude flagged (score >= 1.5) | 0.88 | 0.83 | 0.80 | 0.71 | 0.59 | **0.40** | 4.6 % |
+| 10 % | keep all (today) | 0.40 | 0.35 | 0.26 | 0.19 | 0.11 | 0.08 | 5.6 % |
+| 10 % | exclude flagged | 0.41 | 0.37 | 0.28 | 0.22 | 0.16 | 0.10 | 5.8 % |
+
+Catch: excluding flagged sessions forever would also lock out a *genuine new normal* (new keyboard, practice effect), so
+the alerts would never stop. A re-admission rule or a human "accept as the new normal" action is required; that is a design
+decision (decision 4 in `docs/ML_PLAN.md`). **Implemented** (team lead chose "exclude + human accepts"): flagged sessions are excluded; a reviewer can accept the run, which restarts the baseline from it. The simulation measures only the exclusion; the human-acceptance step is not benchmarked, because it depends on a person's judgement.
+
 ## Robustness to a wrong assumption (`python -m ml.stress_prior`)
 Assumed burstiness prior 0.05 / 0.5 / 2.0, against simulated people whose true burstiness is 0 / 0.5 / 1.5
 (10 % slowdown, 5 % false alerts): detection stays 0.35-0.38 / 0.36-0.38 / 0.29 against 0.24 / 0.29 / 0.22 for
@@ -41,6 +73,21 @@ median/MAD. The prior washes out because burstiness is learned per person.
 4. **Not scored any more:** pause time. Long single pauses go unflagged by this model.
 5. **Calibration of "1 session in N"** assumes the count model is right; it is an explanation aid, not a guarantee.
 6. Detects changes in interaction timing against a person's own history. **Not** fatigue, illness or fitness for duty.
+
+## Public dataset search (2026-11-14): no usable fit, dropped
+The plan asked for one public dataset with repeated per-person task timings and a citable licence. What we found,
+so nobody repeats it:
+- **Sandbox network:** only Hugging Face and a few media hosts are reachable. Zenodo, OSF, PhysioNet, figshare, UCI,
+  Kaggle and the CMU keystroke-dynamics page were not.
+- **Hugging Face keystroke sets** (e.g. Aalto 136M features): one session per person, so there is no personal history,
+  and most carry no licence tag, which means we cannot use them.
+- **Closest candidate:** `Emulated-Inc/drowsy-driving-reaction-time-eeg`, a mirror of Cao et al. 2019 (*Scientific Data*
+  6:19, doi:10.1038/s41597-019-0027-4), tagged CC BY 4.0. Lane-drift reaction times, 62 sessions. **At most 5 sessions per
+  person (most have 2 or 3)**, below our 5-session minimum baseline; 20 sessions are EEG files without a trial table;
+  the task is driving, and its framing is drowsiness, which is the claim this project avoids. Not used.
+- **Consequence:** every number in this repository is synthetic. If a typing or reaction-time dataset with 10+ sessions
+  per person and a licence appears (the CMU keystroke-dynamics benchmark is a plausible candidate; its terms are
+  **unverified**), the first use is the false-alert rate on real people with no injected events.
 
 ## Reproduce
 ```

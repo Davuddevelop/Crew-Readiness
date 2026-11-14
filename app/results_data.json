@@ -78,6 +78,41 @@
       "true_od_1.5": 0.22
     }
   ],
+  "operating_point": [
+    {
+      "slowdown": 0.06,
+      "before": {
+        "detection": 0.26,
+        "false_alerts": 0.119
+      },
+      "now": {
+        "detection": 0.18,
+        "false_alerts": 0.047
+      }
+    },
+    {
+      "slowdown": 0.1,
+      "before": {
+        "detection": 0.42,
+        "false_alerts": 0.13
+      },
+      "now": {
+        "detection": 0.35,
+        "false_alerts": 0.047
+      }
+    },
+    {
+      "slowdown": 0.15,
+      "before": {
+        "detection": 0.62,
+        "false_alerts": 0.127
+      },
+      "now": {
+        "detection": 0.58,
+        "false_alerts": 0.048
+      }
+    }
+  ],
   "commands": [
     "python -m ml.compare 0.5",
     "python -m ml.stress_prior",

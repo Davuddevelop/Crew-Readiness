@@ -33,7 +33,8 @@ CREATE TABLE sessions (
   checklist_response_median_ms  REAL NOT NULL,
   task_duration_ms              REAL NOT NULL,
   correction_count              INTEGER NOT NULL,
-  retry_count                   INTEGER NOT NULL
+  retry_count                   INTEGER NOT NULL,
+  accepted_at                   TEXT                    -- set when a human accepts a flagged run as the new normal
 );
 
 CREATE INDEX idx_sessions_profile_task ON sessions (profile_id, task_type, id);

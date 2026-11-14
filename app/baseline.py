@@ -22,6 +22,9 @@ import numpy as np
 MIN_BASELINE_SESSIONS = 5    # below this we show CALIBRATING, never a score
 MAX_BASELINE_SESSIONS = 20   # rolling window of the most recent comparable sessions
 MAD_TO_SD = 1.4826
+# A session scored at or above this against the person's own baseline is NOT used to learn what is
+# normal, unless a human accepts it (see readiness.py). Experiment: docs/ML_RESULTS.md. Illustrative.
+EXCLUDE_FROM_BASELINE = 1.5
 
 
 @dataclass(frozen=True)

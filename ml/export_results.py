@@ -38,12 +38,21 @@ if __name__ == "__main__":
     candidates.pause_model.PRIOR_DISPERSION = 0.5
     stress.append({"assumed_prior": "incumbent", **{f"true_od_{od}": detection(incumbent_detector, 0.10, od) for od in (0.0, 0.5, 1.5)}})
     fa = evaluate(incumbent_detector, shape="step", magnitude=0.10, length=5, n_people=N_PEOPLE, seed=SEED).false_alert_rate
+    # the product's own operating point: alert at score >= 1.0 (YELLOW), no threshold matching
+    op = []
+    for mag in (0.06, 0.10, 0.15):
+        row = {"slowdown": mag}
+        for key, det in (("before", incumbent_detector), ("now", candidates.candidate_nb)):
+            r = evaluate(det, shape="step", magnitude=mag, length=5, n_people=N_PEOPLE, seed=SEED, alert_threshold=1.0)
+            row[key] = {"detection": round(r.detection_rate, 2), "false_alerts": round(r.false_alert_rate, 3)}
+        op.append(row)
+        print(row, flush=True)
     OUT.write_text(json.dumps({
         "synthetic": True,
         "setup": {"false_alert_rate": FAR, "event": "5-session step slowdown", "people_per_cell": N_PEOPLE,
                   "sessions_per_person": N_SESS, "seed": SEED},
         "incumbent_false_alerts_at_yellow": round(fa, 3),
-        "table": table, "stress": stress,
+        "table": table, "stress": stress, "operating_point": op,
         "commands": ["python -m ml.compare 0.5", "python -m ml.stress_prior", "python -m ml.export_results"],
     }, indent=2) + "\n")
     print("wrote", OUT)

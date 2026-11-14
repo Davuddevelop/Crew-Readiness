@@ -37,5 +37,7 @@ def create_app(test_config: dict | None = None) -> Flask:
                 db.init_db()
                 seed_demo(db.get_db())
                 app.logger.info("Initialised database with fictional demo crew.")
+            else:
+                db.ensure_columns()
 
     return app

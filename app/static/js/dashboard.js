@@ -1,135 +1,147 @@
 /**
- * Dashboard: crew cards + detail panel (advisory, reasons, trend, evidence).
+ * Dashboard: crew selector, the stacked-sessions art, and the evidence behind it.
  * Owner: Member 3 (Frontend & UX).
  *
- * Data comes from GET /api/readiness and GET /api/readiness/<id>
- * (shapes documented in docs/DATA_CONTRACT.md).
+ * Data: GET /api/readiness (everyone, for the selector) and
+ *       GET /api/readiness/<id> (one person, with trend + per-feature deviations).
+ * Shapes: docs/DATA_CONTRACT.md.
  */
 import { api, bandChip, esc, timeAgo } from "./common.js";
+import { createRidgeline } from "./ridgeline.js";
 
-const grid = document.getElementById("crew-grid");
-const detail = document.getElementById("detail");
+const $ = (id) => document.getElementById(id);
+const list = $("crew-list");
+const detail = $("detail");
+const art = createRidgeline($("ridge"), $("art-axis"), $("art-readout"));
 let chart = null;
+let selectedId = null;
 
-function card(entry) {
-  const p = entry.profile;
+const SEVERITY = { RED: 3, YELLOW: 2 };
+const markClass = (r) => `m-${(r.band || "calibrating").toLowerCase()}`;
+
+function item(entry) {
   const r = entry.readiness;
+  const p = entry.profile;
   const score = r.status === "SCORED"
-    ? `<div class="score">${r.score.toFixed(2)}<span class="unit"> robust SD</span></div>`
-    : `<div class="score muted">${r.baseline_n}/${r.baseline_needed}<span class="unit"> baseline sessions</span></div>`;
-  const topReason = r.reasons[0] || r.advisory;
-  const synthetic = entry.latest_session?.source === "synthetic"
-    ? `<span class="tag">synthetic data</span>` : "";
+    ? r.score.toFixed(2)
+    : `${r.baseline_n}/${r.baseline_needed}`;
   return `
-    <button class="crew-card band-${esc((r.band || "none").toLowerCase())}" data-id="${esc(p.id)}">
-      <div class="card-top">
-        <div>
-          <div class="name">${esc(p.display_name)}</div>
-          <div class="muted small">${esc(p.mission_role)} · ${p.kind === "demo" ? "fictional" : "team test"} ${synthetic}</div>
-        </div>
-        ${bandChip(r)}
-      </div>
-      ${score}
-      <div class="small">Confidence: <strong>${esc(r.confidence)}</strong> · last task ${esc(timeAgo(entry.latest_session?.created_at))}</div>
-      <p class="small card-reason">${esc(topReason)}</p>
+    <button class="crew-item" data-id="${esc(p.id)}" aria-pressed="false">
+      <span class="mark ${markClass(r)}" aria-hidden="true"></span>
+      <span class="who">${esc(p.display_name)}</span>
+      <span class="chipcell">${bandChip(r)}</span>
+      <span class="role">${esc(p.mission_role)}</span>
+      <span class="score">${esc(score)}</span>
     </button>`;
 }
 
-async function loadGrid() {
-  try {
-    const { crew } = await api("/api/readiness");
-    grid.innerHTML = crew.map(card).join("");
-    grid.querySelectorAll(".crew-card").forEach((el) =>
-      el.addEventListener("click", () => loadDetail(el.dataset.id)));
-    const wanted = new URLSearchParams(location.search).get("crew");
-    if (wanted) loadDetail(wanted);
-  } catch (err) {
-    grid.innerHTML = `<p class="error">Could not load crew: ${esc(err.message)}</p>`;
-  }
+function mark(id) {
+  list.querySelectorAll(".crew-item").forEach((el) => {
+    const on = el.dataset.id === id;
+    el.setAttribute("aria-selected", String(on));
+    el.setAttribute("aria-pressed", String(on));
+  });
 }
 
+// ---- score-over-time chart: hairline, no fills ----
 function renderTrend(trend) {
-  // TODO(F-2, Member 3): this is a minimal chart. Ideas: tooltips with the
-  // reasons, a marker on the latest session, synthetic vs live styling.
-  const ctx = document.getElementById("trend-chart");
   const points = trend.filter((t) => t.score !== null);
-  const bandsPlugin = {
-    id: "bands",
-    beforeDraw(c) {
-      const { ctx: g, chartArea: a, scales: { y } } = c;
-      if (!a) return;
-      const fill = (from, to, color) => {
-        const top = y.getPixelForValue(Math.min(to, y.max));
-        const bottom = y.getPixelForValue(Math.max(from, y.min));
-        g.fillStyle = color;
-        g.fillRect(a.left, top, a.right - a.left, bottom - top);
-      };
-      fill(0, 1, "rgba(34,197,94,0.10)");
-      fill(1, 2, "rgba(245,158,11,0.12)");
-      fill(2, 4, "rgba(239,68,68,0.12)");
+  const cutoffs = {
+    id: "cutoffs",
+    beforeDatasetsDraw(c) {
+      const { ctx, chartArea: a, scales: { y } } = c;
+      ctx.save();
+      ctx.strokeStyle = "#2C3140"; ctx.setLineDash([2, 4]); ctx.lineWidth = 1;
+      [1, 2].forEach((v) => {
+        const py = y.getPixelForValue(v);
+        ctx.beginPath(); ctx.moveTo(a.left, py); ctx.lineTo(a.right, py); ctx.stroke();
+      });
+      ctx.restore();
     },
   };
+  const bandColor = { GREEN: "#00F0FF", YELLOW: "#FFB800", RED: "#FF5A6E" };
   if (chart) chart.destroy();
-  chart = new Chart(ctx, {
+  Chart.defaults.font.family = '"JetBrains Mono", monospace';
+  Chart.defaults.color = "#9AA0AA";
+  chart = new Chart($("trend-chart"), {
     type: "line",
     data: {
       labels: points.map((t) => new Date(t.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })),
       datasets: [{
-        label: "Deviation score",
         data: points.map((t) => t.score),
-        borderColor: "#93c5fd",
-        pointBackgroundColor: points.map((t) => ({ GREEN: "#22c55e", YELLOW: "#f59e0b", RED: "#ef4444" }[t.band])),
-        pointRadius: 5,
-        tension: 0.25,
+        borderColor: "#F8FAFC", borderWidth: 1.5, tension: 0,
+        pointBackgroundColor: points.map((t) => bandColor[t.band]),
+        pointBorderWidth: 0, pointRadius: 4,
       }],
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false, animation: false,
       scales: {
-        y: { min: 0, max: 3, ticks: { color: "#94a3b8" }, grid: { color: "rgba(148,163,184,0.15)" } },
-        x: { ticks: { color: "#94a3b8" }, grid: { display: false } },
+        y: { min: 0, max: 3, ticks: { stepSize: 1, font: { size: 11 } }, grid: { display: false }, border: { display: false } },
+        x: { ticks: { font: { size: 11 }, maxRotation: 0, autoSkip: true }, grid: { display: false }, border: { color: "#2C3140" } },
       },
-      plugins: { legend: { display: false } },
+      plugins: { legend: { display: false }, tooltip: { displayColors: false, backgroundColor: "#16181F", borderColor: "#2C3140", borderWidth: 1 } },
     },
-    plugins: [bandsPlugin],
+    plugins: [cutoffs],
   });
 }
 
-function fmt(value, unit) {
-  return unit === "ms" ? `${Math.round(value)} ms` : `${Math.round(value * 10) / 10}`;
+const fmt = (value, unit) => (unit === "ms" ? `${Math.round(value)} ms` : `${Math.round(value * 10) / 10}`);
+
+function renderDetail(data) {
+  const p = data.profile;
+  const r = data.readiness;
+  detail.hidden = false;
+  $("detail-name").textContent = p.display_name;
+  $("detail-meta").textContent =
+    `${p.mission_role} · baseline ${r.baseline_n} session${r.baseline_n === 1 ? "" : "s"} · confidence ${r.confidence}` +
+    (data.latest_session?.data_quality === "low" ? " · latest session low quality" : "");
+  $("detail-chip").innerHTML = bandChip(r);
+  $("detail-advisory").textContent = r.advisory;
+  $("detail-disclaimer").textContent = r.disclaimer;
+  $("detail-reasons").innerHTML = r.reasons.length
+    ? r.reasons.map((x) => `<li>${esc(x)}</li>`).join("")
+    : `<li class="muted">No signal is notably different from usual.</li>`;
+  $("detail-evidence").innerHTML = r.deviations.map((d) => `
+    <tr>
+      <td>${esc(d.label)}</td>
+      <td class="num">${fmt(d.value, d.unit)}</td>
+      <td class="num">${fmt(d.baseline_median, d.unit)}</td>
+      <td class="num">${d.z >= 0 ? "+" : "−"}${Math.abs(d.z).toFixed(1)} SD</td>
+      <td class="num">${d.deviation.toFixed(2)}</td>
+    </tr>`).join("") || `<tr><td colspan="5" class="muted">Not enough baseline sessions yet.</td></tr>`;
+  renderTrend(data.trend);
 }
 
-async function loadDetail(profileId) {
+async function select(id) {
+  selectedId = id;
+  mark(id);
+  history.replaceState(null, "", `?crew=${encodeURIComponent(id)}`);
   try {
-    const data = await api(`/api/readiness/${encodeURIComponent(profileId)}`);
-    const p = data.profile;
-    const r = data.readiness;
-    detail.hidden = false;
-    document.getElementById("detail-name").textContent = p.display_name;
-    document.getElementById("detail-meta").textContent =
-      `${p.mission_role} · baseline from ${r.baseline_n} session(s) · confidence ${r.confidence}` +
-      (data.latest_session?.data_quality === "low" ? " · latest session flagged LOW quality" : "");
-    document.getElementById("detail-chip").innerHTML = bandChip(r);
-    document.getElementById("detail-advisory").textContent = r.advisory;
-    document.getElementById("detail-disclaimer").textContent = r.disclaimer;
-    document.getElementById("detail-reasons").innerHTML = r.reasons.length
-      ? r.reasons.map((x) => `<li>${esc(x)}</li>`).join("")
-      : `<li class="muted">No signal is notably different from usual.</li>`;
-    document.getElementById("detail-evidence").innerHTML = r.deviations.map((d) => `
-      <tr>
-        <td>${esc(d.label)}</td>
-        <td>${fmt(d.value, d.unit)}</td>
-        <td>${fmt(d.baseline_median, d.unit)}</td>
-        <td>${d.z >= 0 ? "+" : ""}${d.z.toFixed(1)} SD</td>
-        <td>${d.deviation.toFixed(2)}</td>
-      </tr>`).join("") || `<tr><td colspan="5" class="muted">Not enough baseline sessions yet.</td></tr>`;
-    renderTrend(data.trend);
-    detail.scrollIntoView({ behavior: "smooth", block: "start" });
+    const data = await api(`/api/readiness/${encodeURIComponent(id)}`);
+    if (id !== selectedId) return;            // a faster click won; ignore this response
+    art.setSessions(data.trend, data.readiness.band);
+    renderDetail(data);
   } catch (err) {
     detail.hidden = false;
-    document.getElementById("detail-advisory").textContent = `Could not load: ${err.message}`;
+    $("detail-advisory").textContent = `Could not load: ${err.message}`;
   }
 }
 
-loadGrid();
+async function init() {
+  try {
+    const { crew } = await api("/api/readiness");
+    list.innerHTML = crew.map(item).join("");
+    list.querySelectorAll(".crew-item").forEach((el) =>
+      el.addEventListener("click", () => select(el.dataset.id)));
+    const wanted = new URLSearchParams(location.search).get("crew");
+    // default: whoever most needs a human's attention
+    const byNeed = [...crew].sort((a, b) =>
+      (SEVERITY[b.readiness.band] || 0) - (SEVERITY[a.readiness.band] || 0));
+    select(crew.some((c) => c.profile.id === wanted) ? wanted : byNeed[0].profile.id);
+  } catch (err) {
+    list.innerHTML = `<p class="error small">Could not load crew: ${esc(err.message)}</p>`;
+  }
+}
+
+init();

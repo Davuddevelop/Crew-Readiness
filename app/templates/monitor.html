@@ -6,7 +6,7 @@
     <h1>{{ task.title }}</h1>
     <p class="muted">Routine work, passively timed. No extra test for the crew.</p>
   </div>
-  <div id="monitor-pill" class="monitor-pill" hidden>● Monitoring active: timing only</div>
+  <div id="monitor-pill" class="monitor-pill" hidden>Monitoring active · timing only</div>
 </section>
 
 <!-- Step 1: who + consent -->
@@ -41,6 +41,10 @@
 <!-- Step 2: the task -->
 <section id="step-task" class="panel" hidden>
   <p class="muted">{{ task.intro }}</p>
+  <div class="keytrace">
+    <span class="keytrace-cap">Timing trace · each blip is one key press · which key is never recorded</span>
+    <canvas id="keytrace-canvas" aria-hidden="true"></canvas>
+  </div>
   <div class="progress"><div id="progress-bar"></div></div>
   <p class="step-counter" id="step-counter"></p>
   <p class="step-text" id="step-text"></p>

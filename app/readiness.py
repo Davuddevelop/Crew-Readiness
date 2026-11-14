@@ -13,7 +13,9 @@ from .features import FEATURE_NAMES
 from .scoring import insufficient_data_view, score_session
 from .tasks import DEFAULT_TASK_TYPE
 
-TREND_POINTS = 10
+# How many of the most recent sessions the trend carries. The dashboard draws one line
+# per session (the "stacked sessions" art), so this is also the number of lines.
+TREND_POINTS = 14
 
 
 def _session_summary(s: dict) -> dict:
@@ -66,6 +68,13 @@ def readiness_for_profile(db, profile: dict, task_type: str = DEFAULT_TASK_TYPE,
                 "status": v.status,
                 "band": v.band,
                 "score": None if v.score is None else round(v.score, 2),
+                # Per-feature directional deviation that fed the score (0 = usual or faster,
+                # capped at 4). None while CALIBRATING, because there is no baseline to
+                # deviate from. The dashboard art draws exactly these numbers, nothing else.
+                "deviations": (
+                    {d.feature: round(d.deviation, 2) for d in v.deviations}
+                    if v.status == "SCORED" else None
+                ),
             })
     return result
 

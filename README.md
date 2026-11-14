@@ -59,7 +59,8 @@ Browser (capture.js)  ──9 aggregate numbers──▶  Flask API (strict allo
                          Dashboard · Mission view (human decides)
 ```
 
-Python 3.10+ · Flask · SQLite · NumPy · vanilla JS · Chart.js (vendored; works offline).
+Python 3.10+ · Flask · SQLite · NumPy · vanilla JS · Chart.js and fonts vendored (works offline).
+Visual design and its rationale: [docs/DESIGN.md](docs/DESIGN.md).
 Full details: [docs/DATA_CONTRACT.md](docs/DATA_CONTRACT.md).
 
 ## Data handling

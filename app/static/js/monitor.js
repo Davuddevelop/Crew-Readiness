@@ -5,12 +5,14 @@
  */
 import { api, bandChip, esc } from "./common.js";
 import { createCapture } from "./capture.js";
+import { createKeyTrace } from "./keytrace.js";
 
 const task = JSON.parse(document.getElementById("task-data").textContent);
 const taskType = JSON.parse(document.getElementById("task-type").textContent);
 
 const $ = (id) => document.getElementById(id);
 const select = $("profile-select");
+const trace = createKeyTrace($("keytrace-canvas"));
 const input = $("task-input");
 
 let capture = null;
@@ -49,12 +51,14 @@ function start() {
   $("monitor-pill").hidden = false;
   select.disabled = true;
   capture.startTask();
+  trace.start();          // after the task section is visible, so it can measure itself
   showItem();
 }
 
 function finish() {
   features = capture.summarize();
   capture = null; // stop capturing immediately
+  trace.stop();
   input.value = "";
   $("monitor-pill").hidden = true;
   $("step-task").hidden = true;
@@ -72,6 +76,7 @@ input.addEventListener("keydown", (e) => {
     const expected = task.items[index].confirm;
     if (normalise(input.value) === normalise(expected)) {
       capture.endItem();
+      trace.boundary();
       index += 1;
       if (index < task.items.length) showItem();
       else finish();
@@ -84,7 +89,7 @@ input.addEventListener("keydown", (e) => {
     }
     return;
   }
-  capture.onKeyDown(e);
+  if (capture.onKeyDown(e)) trace.pulse();   // a counted press: timestamp only, never the key
 });
 
 $("start-btn").addEventListener("click", start);

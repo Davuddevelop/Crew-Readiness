@@ -7,6 +7,11 @@ bp = Blueprint("views", __name__)
 
 
 @bp.get("/")
+def home():
+    return render_template("landing.html", active="home")
+
+
+@bp.get("/dashboard")
 def dashboard():
     return render_template("dashboard.html", active="dashboard")
 

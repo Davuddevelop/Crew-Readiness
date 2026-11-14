@@ -25,7 +25,7 @@ python run.py                                       # → http://127.0.0.1:5050
 python -m pytest                                    # tests
 ```
 
-The first run creates `instance/crew_readiness.sqlite3` with four fictional crew members.
+The first run creates `instance/crew_readiness.sqlite3` with four fictional crew members. Pages: `/` landing, `/dashboard`, `/monitor`, `/attention`, `/mission`, `/about`.
 Reset any time: `flask --app run reset-demo`.
 
 ## Deploy (Vercel)

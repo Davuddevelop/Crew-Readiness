@@ -16,13 +16,14 @@ const { chromium } = require('playwright');
 
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:5050';
 const WIDTHS = [1440, 1280, 1024, 390];
-const PATHS = ['/', '/monitor', '/mission', '/about', '/attention'];
+const PATHS = ['/', '/dashboard', '/monitor', '/mission', '/about', '/attention'];
 const TOLERANCE = 1.5;
 
 // everything that should sit on the grid
 const SELECTORS = [
   '.section > .grid > .label', '.section > .grid > .body', '.pagehead > .label', '.pagehead > .body',
   '.hero-copy', '.art', '.crew-item', '.g10 > *', '.topbar nav',
+  '.land-copy', '.land-preview', '.land-brand', '.land-col',
 ];
 
 (async () => {

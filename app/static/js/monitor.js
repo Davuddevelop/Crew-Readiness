@@ -112,7 +112,7 @@ $("submit-btn").addEventListener("click", async () => {
       ${r.reasons.length ? `<ul class="reasons">${r.reasons.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
       ${data.latest_session.data_quality === "low"
         ? `<p class="warn">Flagged LOW quality: ${esc(data.latest_session.quality_notes)}</p>` : ""}
-      <p><a class="btn" href="/?crew=${encodeURIComponent(select.value)}">Open on dashboard →</a>
+      <p><a class="btn" href="/dashboard?crew=${encodeURIComponent(select.value)}">Open on dashboard →</a>
          <a class="btn btn-ghost" href="/monitor?crew=${encodeURIComponent(select.value)}">Run again</a></p>`;
   } catch (err) {
     $("submit-btn").disabled = false;

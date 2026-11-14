@@ -55,6 +55,25 @@ Every curve is built from `trend[].deviations` (`docs/DATA_CONTRACT.md` §5). Th
 
 **Credit.** The form is a *stacked pulse plot*; the best-known example is Harold D. Craft Jr.'s 1970 plot of pulsar CP 1919. We borrowed the idea of stacking repeated measurements to make deviation visible. No artwork or code was used.
 
+## 5b. The landing page and the hands
+
+`/` is a landing page; the dashboard lives at `/dashboard`. The composition borrows *ideas* from a landing page the team lead supplied as a reference (a dark poster, a tilted product preview, a footer-style link block, two hands almost touching over a giant ghosted wordmark). **No assets, copy or code were taken from it**; everything here is original and drawn in code.
+
+**The motif.** Michelangelo's *Creation of Adam* (c. 1512): two hands, a small gap. Ours is a person's hand and an astronaut's gloved hand. The gap is the product's point: the system never decides, a human closes the gap. The amber line in the gap is the check-in.
+
+**How it is made** (`static/js/hands.js`; no photographs, no AI imagery, no assets):
+1. Each hand is a skeleton: a palm ellipse plus finger chains (joint angles, tapering radii). The glove is the same skeleton with fatter radii, puffed joints and bellows ridges, and a two-ring metal cuff.
+2. The skeleton is rasterised to a low-resolution mask. A second, interior-detail field (knuckles, tendons, thumb pad, glove plate) is added to a two-scale blur of the mask to give a relief.
+3. Horizontal lines are drawn only inside the mask, displaced by the relief, top to bottom, each erasing what it hides: **the same stacked-line technique as the session art**, so the hands and the data are one visual language.
+
+Cost: about 55 ms to draw both hands once per size (measured, desktop Chromium); nothing runs per frame. Their motion is CSS only (they slide in, the spark travels) and is off under reduced motion. Poses are plain numbers at the top of `hands.js`; tune by editing and reloading.
+
+**Why code, not photographs or AI imagery.** Licensing and AI-use disclosure for a competition submission, offline operation (risk R-6), and the sandbox cannot fetch image hosts. It also keeps the art on-brand.
+
+**Transparency fades only.** The tilted preview fades out with an alpha mask; there are no colour gradients.
+
+**Accessibility.** The hands and the preview are decorative (`aria-hidden`); a visually hidden sentence describes the illustration. The preview reuses the dashboard's own renderer and API, so it cannot drift from the product, and stays empty if the API is down.
+
 ## 6. Motion inventory
 
 | Motion | What it explains | Reduced motion |
@@ -88,6 +107,7 @@ Search summaries only; the article hosts are outside the build environment's net
 - Swiss style on the web (12-column grid, one neutral sans, asymmetry, never centre text): [UX Planet](https://uxplanet.org/swiss-style-web-design-everything-you-need-to-know-2b128fd327b9) · [Justinmind](https://www.justinmind.com/blog/swiss-style-web-design-everything-you-need-to-know/) · [Webdesigner Depot, Swiss in CSS](https://www.webdesignerdepot.com/2016/01/swiss-in-css-animating-the-international-typographic-style/) · [daisyUI](https://trends.daisyui.com/trend/swiss-style/)
 - Stacked pulse plot origin: [Scientific American](https://www.scientificamerican.com/blog/sa-visual/pop-culture-pulsar-origin-story-of-joy-division-s-unknown-pleasures-album-cover-video/) · [University of Cambridge](https://www.cam.ac.uk/stories/journeysofdiscovery-pulsars)
 - NASA Graphics Standards Manual (restraint, few typefaces, strict system): https://www.nasa.gov/wp-content/uploads/2015/01/nasa_graphics_manual_nhb_1430-2_jan_1976.pdf
+- Landing-page composition: a Dreamflow landing page supplied by the team lead as a reference (ideas only). Hands motif: Michelangelo, *Creation of Adam* (c. 1512, public domain).
 - Mission-control UX patterns: [UX Planet benchmark](https://uxplanet.org/mission-control-software-ux-design-patterns-benchmarking-e8a2d802c1f3)
 - Font: Inter, SIL Open Font License 1.1 (`app/static/fonts/OFL-Inter.txt`).
 

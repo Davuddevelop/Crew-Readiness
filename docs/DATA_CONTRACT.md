@@ -134,7 +134,17 @@ All JSON. Errors: `{"error": "<code>", "message": "<human text>"}`.
 | GET | `/api/readiness` | latest readiness for every profile (no trend) | `200 {crew: [ProfileReadiness]}` |
 | GET | `/api/readiness/<profile_id>` | includes `trend` (last 14 sessions, oldest first; see **Trend point** below) | `200 ProfileReadiness` |
 | POST | `/api/attention` | `{profile_id, session_id?, trials, median_rt_ms, premature_count, miss_count}` | `201 {id}` |
-| GET | `/api/mission` | scenario + assignments joined with readiness + `advisory` | `200` |
+| GET | `/api/mission` | scenario + assignments joined with readiness + `advisory` + `watchdog` | `200` |
+
+`/api/mission` also returns each assignment's `last_check_in` (ISO-8601 UTC of its latest submitted session, or `null`) and a `watchdog`
+(plan v3, H2; docs/PLAN.md D-9), separate from `advisory` and never changing it:
+```json
+{"interval_hours": 36, "level": "OK" | "OVERDUE",
+ "overdue": [{"role": "Comms and log", "display_name": "Tomas Ibarra", "hours_since": 74}],
+ "clock_check": [{"role": "...", "display_name": "...", "reason": "future" | "unreadable"}],
+ "messages": ["..."], "suggested_actions": ["..."]}
+```
+`hours_since` is `null` when the person has never checked in. A time in the future is a `clock_check`, never overdue.
 
 `ProfileReadiness`:
 ```json

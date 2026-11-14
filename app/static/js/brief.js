@@ -19,6 +19,12 @@ async function load() {
     <ul class="reasons">${adv.messages.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
     ${adv.suggested_actions.length ? `<h3 class="cap">Suggested</h3><ul class="reasons">${adv.suggested_actions.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}`;
 
+  const w = m.watchdog;
+  $("brief-watchdog").innerHTML = `<p><span class="chip chip-${w.level === "OK" ? "green" : "yellow"}">${w.level === "OK" ? "ALL CHECKED IN" : "CHECK-IN OVERDUE"}</span>
+    <span class="muted small">longest agreed gap ${esc(String(w.interval_hours))} hours</span></p>
+    ${w.messages.length ? `<ul class="reasons">${w.messages.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    ${w.suggested_actions.length ? `<ul class="reasons">${w.suggested_actions.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}`;
+
   const crit = m.assignments.filter((a) => a.critical);
   $("brief-critical").innerHTML = crit.map((a) => `
     <div class="brief-person">

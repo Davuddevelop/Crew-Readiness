@@ -86,6 +86,8 @@ def seed_demo(db) -> None:
         for i in range(n):
             # one session per simulated day, most recent last
             created = now - timedelta(days=n - i, hours=int(rng.integers(0, 4)))
+            if profile_id == "ms-ibarra":
+                created -= timedelta(days=2)      # illustrative: this crew member has not checked in for about three days (watchdog demo)
             features = _synth_features(rng, STYLES[profile_id])
             quality, notes = assess_quality(features)
             store.insert_session(

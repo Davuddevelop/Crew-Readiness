@@ -110,6 +110,45 @@
 </section>
 {% endif %}
 
+{% if pilot %}
+{% set fa = pilot.false_alerts_on_normal.yellow %}
+<section class="section" id="pilot">
+  <div class="grid">
+    <div class="label"><span class="idx">03d</span>A small pilot with real volunteers</div>
+    <div class="body">
+      <p style="max-width:62ch"><strong>{{ pilot.n_people }} volunteers, {{ pilot.n_sessions }} sessions, one laptop.</strong>
+        Each person typed the checklist normally, then with a deliberate change (non-dominant hand, or counting backwards), then normally again.
+        This is a feasibility check, <strong>not validation</strong>: volunteers are not astronauts or crew.</p>
+      <div class="table-wrap" role="region" aria-label="Pilot results" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>What we measured</th><th>Flagged</th><th>Share</th><th>95 % interval</th></tr></thead>
+          <tbody>
+            <tr><td>Normal sessions flagged (false alerts)</td><td class="num">{{ fa.flagged }} of {{ fa.n }}</td>
+              <td class="num"><strong>{% if fa.rate is not none %}{{ '%.0f' | format(fa.rate * 100) }} %{% else %}n/a{% endif %}</strong></td>
+              <td class="num">{% if fa.ci95 %}{{ '%.0f' | format(fa.ci95[0] * 100) }} % to {{ '%.0f' | format(fa.ci95[1] * 100) }} %{% else %}n/a{% endif %}</td></tr>
+          {% for key, label in [('all', 'Changed sessions flagged (all)'), ('non_dominant_hand', 'Non-dominant hand'), ('counting_backwards', 'Counting backwards')] %}
+            {% set d = pilot.detection_on_perturbed[key].yellow %}
+            <tr><td>{{ label }}</td><td class="num">{{ d.flagged }} of {{ d.n }}</td>
+              <td class="num"><strong>{% if d.rate is not none %}{{ '%.0f' | format(d.rate * 100) }} %{% else %}n/a{% endif %}</strong></td>
+              <td class="num">{% if d.ci95 %}{{ '%.0f' | format(d.ci95[0] * 100) }} % to {{ '%.0f' | format(d.ci95[1] * 100) }} %{% else %}n/a{% endif %}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if pilot.variability.n_people %}
+      <p class="muted small" style="max-width:62ch">Is the simulator realistic? Real session-to-session variability in keystroke timing was
+        {{ pilot.variability.iki_cv.real_median }} against {{ pilot.variability.iki_cv.assumed }} assumed, and
+        {{ pilot.variability.resp_cv.real_median }} against {{ pilot.variability.resp_cv.assumed }} for checklist responses:
+        {% if pilot.variability.simulator_assumptions_hold %}within a factor of 1.5 of what the benchmark assumes.{% else %}more than 1.5 times off, so the benchmark above is less trustworthy than it looks.{% endif %}</p>
+      {% endif %}
+      <ul class="reasons">
+        {% for item in pilot.limits %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <section class="section">
   <div class="grid">
     <div class="label"><span class="idx">04</span>If our assumption is wrong</div>
@@ -136,7 +175,7 @@
     <div class="label"><span class="idx">05</span>What this does not show</div>
     <div class="body">
       <ul class="reasons">
-        <li><strong>Simulated data only.</strong> We wrote the simulator and the model. No real crew, no astronaut data.</li>
+        <li><strong>{% if pilot %}Mostly simulated data, plus a small volunteer pilot.{% else %}Simulated data only.{% endif %}</strong> We wrote the simulator and the model. No real crew, no astronaut data.</li>
         <li>The gain is real but modest; it is a measured improvement with a stated cause, not a breakthrough.</li>
         <li>Pause <em>time</em> is displayed but no longer scored, so one very long pause can go unflagged.</li>
         <li>The typing and checklist features still use the original method and are not yet re-tested.</li>

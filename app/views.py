@@ -52,6 +52,7 @@ def replay():
 
 
 RESULTS_FILE = Path(__file__).with_name("results_data.json")
+PILOT_FILE = Path(__file__).resolve().parents[1] / "docs" / "pilot" / "pilot_report.json"   # written by `python -m ml.pilot_report`; absent until the pilot is run
 
 
 @bp.get("/evidence")
@@ -61,4 +62,8 @@ def evidence():
         data = json.loads(RESULTS_FILE.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         data = None
-    return render_template("evidence.html", active="evidence", data=data)
+    try:
+        pilot = json.loads(PILOT_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        pilot = None                    # no pilot yet: the page says nothing about one
+    return render_template("evidence.html", active="evidence", data=data, pilot=pilot)

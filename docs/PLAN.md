@@ -98,7 +98,7 @@ Each decision: what, why, who signs off. **Status: DECIDED / PROPOSED (needs sig
 | D-5 | **What counts as an alert?** Which bands on which roles escalate, and when do we suggest the backup? | This is a product decision, not a math one | **Lead** | **OPEN**, blocks L-1 |
 | D-6 | Demo astronaut = fictional Pilot "Kai Okafor"; critical op = manual docking at T-6h | Highest-stakes, easy to understand | Lead | PROPOSED |
 | D-7 | **Live demo strategy:** who types on stage, on which profile, against which baseline? | A live typist compared with a *synthetic* baseline is meaningless (see R-1 below) | **Lead** | **OPEN** |
-| D-8 | Public link: hosted (Render / PythonAnywhere) vs. "runnable repo + video" | Submission needs one of them | Lead | OPEN |
+| D-8 | Public link: hosted vs. "runnable repo + video" | Submission needs one of them. A Vercel deployment now exists (read-only-ish: SQLite lives in `/tmp`, so submitted sessions are **not durable**; see README → Deploy). Keep it as a viewing link, or invest in a durable DB? | Lead | OPEN (interim: Vercel viewing link) |
 
 > **Recommendation for D-7 (Lead decides):** the presenter creates a `team_test` profile and records ≥ 5 real sessions **on the demo laptop** on Nov 14 evening. On stage, a deliberate perturbation (e.g. non-dominant hand) produces a visible, honest deviation. The seeded fictional crew remains as the context and as the fallback.
 

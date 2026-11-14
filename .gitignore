@@ -14,3 +14,6 @@ instance/
 Thumbs.db
 .vscode/
 .idea/
+
+# Generated at deploy time by vercel.json buildCommand (copy of app/static)
+public/

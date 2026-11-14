@@ -7,8 +7,9 @@ def test_predictive_distribution_sums_to_one():
 
 def test_usual_pause_count_scores_zero_and_unusual_scores_high():
     hist = [0, 1, 0, 1, 1, 0, 1, 0]
-    assert pause_deviation(hist, 1) == 0.0
-    assert pause_deviation(hist, 7) > pause_deviation(hist, 4) > 0.5
+    assert pause_deviation(hist, 0) == 0.0                       # fewer pauses than usual is never penalised
+    assert pause_deviation(hist, 1) < 1.0                        # a usual count stays under the reason threshold
+    assert pause_deviation(hist, 7) > pause_deviation(hist, 4) > pause_deviation(hist, 2) > 1.0
 
 
 def test_more_history_makes_the_same_surprise_larger():

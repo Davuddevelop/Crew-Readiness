@@ -60,6 +60,5 @@ def test_no_unfinished_todo_text_on_finished_pages(client, path):
     assert "TODO" not in text_of(client.get(path).data.decode())
 
 
-@pytest.mark.xfail(reason="L-1 (mission_advisory) is being implemented by the team lead", strict=False)
 def test_mission_advisory_is_implemented(client):
     assert client.get("/api/mission").get_json()["advisory"]["level"] != "TODO"

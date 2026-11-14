@@ -110,6 +110,39 @@
 </section>
 {% endif %}
 
+{% if data.equipment_change %}
+{% set ec = data.equipment_change %}
+{% set old = ec.rows[0] %}{% set cur = ec.rows[1] %}
+<section class="section" id="equipment-change">
+  <div class="grid">
+    <div class="label"><span class="idx">03e</span>New equipment (gloves, a different device)</div>
+    <div class="body">
+      <p style="max-width:62ch">A person becomes {{ '%.0f' | format(ec.magnitude * 100) }} % slower for good from session {{ ec.assumptions.start_session }},
+        a person accepts the change as their new normal after {{ ec.assumptions.accepted_after_sessions }} sessions, and from session {{ ec.assumptions.later_start_session }}
+        a real {{ '%.0f' | format(ec.assumptions.later_slowdown * 100) }} % slowdown lasts {{ ec.assumptions.later_length }} sessions.
+        {{ ec.people }} simulated people. <strong>Synthetic data; size and timing are illustrative assumptions.</strong></p>
+      <div class="table-wrap" role="region" aria-label="Equipment change table" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>Share of sessions flagged</th><th>While the equipment was new</th><th>After it was accepted</th><th>During a later real slowdown</th></tr></thead>
+          <tbody>
+          {% for r in ec.rows %}
+            <tr><td>{{ r.scoring }}</td>
+            {% for ph in ['equipment', 'after', 'later'] %}
+              <td class="num"><strong>{{ '%.0f' | format(r[ph].rate * 100) }} %</strong> <span class="ci">({{ '%.0f' | format(r[ph].ci95[0] * 100) }} to {{ '%.0f' | format(r[ph].ci95[1] * 100) }} %)</span></td>
+            {% endfor %}</tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small" style="max-width:62ch">
+        {% if cur.after.ci95[1] < old.after.ci95[0] %}After the person accepts the change, the current scoring raises fewer repeated alerts, and the intervals do not overlap.{% else %}After the change is accepted, the two scorings raise a similar number of alerts here.{% endif %}
+        {% if cur.later.ci95[0] > old.later.ci95[1] %}It also flags more of a later real slowdown.{% elif cur.later.ci95[1] < old.later.ci95[0] %}It flags fewer of a later real slowdown.{% else %}Detection of the later slowdown is not clearly different: the intervals overlap.{% endif %}
+        The current scoring only stops alerting because a person accepted the change. The tool never decides that.</p>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% if pilot %}
 {% set fa = pilot.false_alerts_on_normal.yellow %}
 <section class="section" id="pilot">

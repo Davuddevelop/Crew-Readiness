@@ -38,3 +38,17 @@ def test_bad_parameters_are_rejected(client):
 def test_replay_page_renders(client):
     r = client.get("/replay")
     assert r.status_code == 200 and "Synthetic" in r.data.decode()
+
+
+def test_equipment_change_scenario_tells_the_whole_story(client):
+    d = client.get("/api/simulate?scenario=equipment&magnitude=0.4&seed=1").get_json()
+    assert d["synthetic"] and d["scenario"] == "equipment" and len(d["sessions"]) == 45
+    assert d["accepted_sessions"] > 0                                      # a big change is flagged, so there is a run to accept
+    assert [r[0] for r in d["table"]["rows"]] == ["Old scoring", "Current scoring"]
+    assert len(d["table"]["headers"]) == 4 and all(len(r) == 4 for r in d["table"]["rows"])
+    assert {b["label"] for b in d["bands"]} == {"New equipment", "A real slowdown"}
+
+
+def test_a_tiny_equipment_change_has_nothing_to_accept(client):
+    d = client.get("/api/simulate?scenario=equipment&magnitude=0.03&seed=2").get_json()
+    assert d["accepted_sessions"] == 0 and "Nothing was flagged" in d["markers"][0]["label"]

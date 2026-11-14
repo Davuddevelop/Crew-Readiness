@@ -139,3 +139,15 @@ The 300-person results above are the evidence.
 .venv/bin/python -m ml.stress_prior            # wrong-prior test
 CREW_PAUSE_MODEL=robust python run.py          # run the product with the old scoring
 ```
+
+
+## New equipment scenario (gloves, a different device)
+`python -m ml.scenario` (and `ml.export_results`, which writes it to `app/results_data.json`). 300 simulated people, **synthetic, illustrative assumptions**:
+a 40 % permanent slowdown from session 16; a person accepts it after 7 sessions; a real 20 % slowdown for 8 sessions from session 36.
+
+| Share of sessions flagged (95 % interval) | While equipment was new | After it was accepted | During the later real slowdown |
+|---|---|---|---|
+| Old scoring | 99 % (98 to 99) | 27 % (26 to 28) | 54 % (51 to 55) |
+| Current scoring | 100 % (100 to 100) | 11 % (9 to 13) | 60 % (57 to 62) |
+
+Reading: both flag the change, as they should. After a person accepts it, the current scoring raises fewer repeated alerts; the later real slowdown is flagged somewhat more often. The current scoring only stops alerting because a **human** accepted the change. Limits: the size, timing and acceptance delay are our assumptions, and the simulator is ours. Real gloves or devices may change more than speed (see `docs/DEMO.md`, "what we would do next": a per-context baseline needs a new, non-aggregate field, which is ruled out by the privacy rule until the lead decides).

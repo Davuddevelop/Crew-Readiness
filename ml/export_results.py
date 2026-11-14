@@ -12,6 +12,7 @@ from . import candidates
 from .compare import N_PEOPLE, N_SESS, collect
 from .calibrate_cutoffs import BUDGETS, heldout_calibration, null_scores, what_budget_is_the_shipped_cutoff
 from .evaluate import evaluate, evaluate_ci, incumbent_detector
+from .scenario import equipment_benchmark
 
 FAR, SEED = 0.05, 7
 OUT = Path(__file__).resolve().parents[1] / "app" / "results_data.json"
@@ -55,12 +56,14 @@ if __name__ == "__main__":
               "shipped": what_budget_is_the_shipped_cutoff(people),
               "rows": [heldout_calibration(people, b) for b in BUDGETS]}
     print(budget, flush=True)
+    equipment = equipment_benchmark()
+    print(equipment, flush=True)
     OUT.write_text(json.dumps({
         "synthetic": True,
         "setup": {"false_alert_rate": FAR, "event": "5-session step slowdown", "people_per_cell": N_PEOPLE,
                   "sessions_per_person": N_SESS, "seed": SEED},
         "incumbent_false_alerts_at_yellow": round(fa, 3),
-        "table": table, "stress": stress, "operating_point": op, "budget_calibration": budget,
-        "commands": ["python -m ml.compare 0.5", "python -m ml.stress_prior", "python -m ml.calibrate_cutoffs", "python -m ml.export_results"],
+        "table": table, "stress": stress, "operating_point": op, "budget_calibration": budget, "equipment_change": equipment,
+        "commands": ["python -m ml.compare 0.5", "python -m ml.stress_prior", "python -m ml.calibrate_cutoffs", "python -m ml.scenario", "python -m ml.export_results"],
     }, indent=2) + "\n")
     print("wrote", OUT)

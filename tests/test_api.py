@@ -194,3 +194,13 @@ def test_evidence_pilot_section_only_appears_with_a_pilot_report(client, tmp_pat
     html = client.get("/evidence").get_data(as_text=True)
     assert 'id="pilot"' in html and "2 volunteers, 24 sessions" in html and "not validation" in html
     assert "1 of 8" in html and "5 of 6" in html and "13 %" in html                  # numbers come from the file
+
+
+def test_evidence_equipment_table_comes_from_the_file(client):
+    import json
+    from app import views
+    data = json.loads(views.RESULTS_FILE.read_text())
+    ec = data["equipment_change"]
+    html = client.get("/evidence").get_data(as_text=True)
+    assert 'id="equipment-change"' in html and "Synthetic data" in html
+    assert f"{ec['rows'][1]['after']['rate'] * 100:.0f} %" in html and f"{ec['people']} simulated people" in html

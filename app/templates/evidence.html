@@ -172,7 +172,8 @@
       <p class="muted small" style="max-width:62ch">Is the simulator realistic? Real session-to-session variability in keystroke timing was
         {{ pilot.variability.iki_cv.real_median }} against {{ pilot.variability.iki_cv.assumed }} assumed, and
         {{ pilot.variability.resp_cv.real_median }} against {{ pilot.variability.resp_cv.assumed }} for checklist responses:
-        {% if pilot.variability.simulator_assumptions_hold %}within a factor of 1.5 of what the benchmark assumes.{% else %}more than 1.5 times off, so the benchmark above is less trustworthy than it looks.{% endif %}</p>
+        {% if pilot.variability.simulator_assumptions_hold %}within a factor of 1.5 of what the benchmark assumes.{% else %}more than 1.5 times off, so the benchmark above is less trustworthy than it looks.{% endif %}
+        Real typists here were also faster (each person's typical time between keys: {{ pilot.variability.iki_median_ms.real_min }} to {{ pilot.variability.iki_median_ms.real_max }} ms, against {{ '%.0f' | format(pilot.variability.iki_median_ms.assumed_range[0]) }} to {{ '%.0f' | format(pilot.variability.iki_median_ms.assumed_range[1]) }} assumed) and paused far less ({{ pilot.variability.pause_mean_per_session.real_min }} to {{ pilot.variability.pause_mean_per_session.real_max }} long pauses per session, against {{ pilot.variability.pause_mean_per_session.assumed_range[0] }} to {{ pilot.variability.pause_mean_per_session.assumed_range[1] }} assumed). With so few people, one unusual session can move these figures a lot.</p>
       {% endif %}
       <ul class="reasons">
         {% for item in pilot.limits %}<li>{{ item }}</li>{% endfor %}

@@ -30,6 +30,7 @@ async function load() {
     <div class="brief-person">
       <h3 class="cap">${esc(a.role)}: ${esc(a.display_name)}</h3>
       <p>${bandChip(a)} <span class="muted small">confidence ${esc(String(a.confidence).toLowerCase())}</span></p>
+      ${a.responsiveness && a.responsiveness.summary ? `<p class="small"><strong>Reaction check:</strong> ${esc(a.responsiveness.summary)}</p>` : ""}
       ${a.reasons.length ? `<ul class="reasons">${a.reasons.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`
         : `<p class="muted small">${a.status === "SCORED" ? "Nothing stands out against their own usual pattern." : "No baseline yet, so there is nothing to compare with."}</p>`}
     </div>`).join("") || '<p class="muted">No critical roles in this scenario.</p>';

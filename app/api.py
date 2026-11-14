@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from flask import Blueprint, current_app, jsonify, request
 from werkzeug.exceptions import HTTPException
 
-from . import store
+from . import responsiveness, store
 from .db import get_db
 from .features import ValidationError, assess_quality, validate_session_payload
 from .mission import MISSION, check_in_watchdog, mission_advisory
@@ -163,7 +163,7 @@ def create_attention_result():
         premature_count=premature, miss_count=misses,
     )
     db.commit()
-    return jsonify(id=result_id), 201
+    return jsonify(id=result_id, responsiveness=responsiveness.assess(store.list_attention_results(db, profile["id"]))), 201
 
 
 @bp.get("/mission")
@@ -178,6 +178,7 @@ def mission():
         history = store.list_sessions(db, profile["id"], DEFAULT_TASK_TYPE, limit=1)
         assignments.append({**a, "display_name": profile["display_name"],
                             "last_check_in": history[-1]["created_at"] if history else None,
+                            "responsiveness": responsiveness.assess(store.list_attention_results(db, profile["id"])),
                             "mission_role": profile["mission_role"],
                             "status": r["status"], "band": r["band"],
                             "confidence": r["confidence"], "reasons": r["reasons"]})

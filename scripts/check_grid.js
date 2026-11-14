@@ -22,7 +22,7 @@ const TOLERANCE = 1.5;
 // everything that should sit on the grid
 const SELECTORS = [
   '.section > .grid > .label', '.section > .grid > .body', '.pagehead > .label', '.pagehead > .body',
-  '.hero-copy', '.art', '.crew-item', '.g10 > *', '.topbar nav',
+  '.hero-copy', '.art', '.crew-item', '.g10 > *', '.nav-brand', '.nav-links', '.nav-cta-wrap',
   '.land-three .col',
 ];
 

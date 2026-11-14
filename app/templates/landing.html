@@ -1,15 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
+{% block head %}
+  <link rel="preload" href="{{ url_for('static', filename='fonts/instrument-serif-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/jetbrains-mono-latin-wght-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+{% endblock %}
 {% block body %}
 <main class="land">
 
   <section class="page land-top">
-    <p class="land-kicker">A NASA Space Apps 2026 prototype &middot; tested on simulated data</p>
+    <p class="land-eyebrow">A NASA Space Apps 2026 prototype &middot; tested on simulated data</p>
     <h1 class="land-h" aria-label="A second look before docking."><span aria-hidden="true">{% for w in ["A", "second", "look", "before", "docking."] %}<span class="w"><span style="--i:{{ loop.index0 }}">{{ w }}</span></span> {% endfor %}</span></h1>
     <p class="land-sub">It compares each person only with their own usual pattern, and puts what changed in front of a human before a critical operation. It never reads what is typed. It never decides.</p>
     <div class="actions">
       <a class="btn" href="{{ url_for('views.monitor') }}">Start monitored task</a>
-      <a class="link" href="{{ url_for('views.evidence') }}">See the evidence</a>
+      <a class="btn btn-ghost" href="{{ url_for('views.evidence') }}">See the evidence</a>
     </div>
   </section>
 

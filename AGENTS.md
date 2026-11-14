@@ -15,5 +15,5 @@ Non-negotiable:
 - **Positioning:** it is a prototype of on-board decision support, tested only on simulated data. Never write that astronauts use it, that it is proven or tested in space, or that it is validated on crews.
 - **No network at runtime** (no CDN fonts or scripts); a test enforces it.
 - **Images:** only public-domain or licensed, recorded in `docs/ASSETS.md` (a test enforces it).
-- **Design:** one grid, one typeface, colour only for status. Read `docs/DESIGN.md` before changing styles. No new gradients, shadows or glass.
+- **Design:** one grid, one typeface, colour only for status. Read `docs/DESIGN.md` before changing styles. No new gradients, shadows or glass (the landing hero's two documented gradients in `docs/DESIGN.md` are the only exceptions).
 - Keep changes small, one topic per branch/PR, and update the relevant doc and tests in the same change. Don't leave TODO text on user-visible pages.

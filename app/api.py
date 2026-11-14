@@ -99,6 +99,28 @@ def accept_new_normal_route(profile_id: str):
     return jsonify(accepted_session_ids=ids, **readiness_for_profile(db, profile))
 
 
+@bp.get("/simulate")
+def simulate():
+    """Replay a synthetic scenario for one simulated person (for the Replay page). Query: scenario, magnitude, length, seed."""
+    from ml.scenario import LIMITS, SCENARIOS, run_scenario
+
+    def num(name, cast, default):
+        raw = request.args.get(name, default)
+        try:
+            v = cast(raw)
+        except (TypeError, ValueError):
+            raise ValidationError(f"{name} must be a number.")
+        lo, hi = LIMITS[name]
+        if not lo <= v <= hi:
+            raise ValidationError(f"{name} must be between {lo} and {hi}.")
+        return v
+
+    scenario = request.args.get("scenario", "step")
+    if scenario not in SCENARIOS:
+        raise ValidationError(f"scenario must be one of {list(SCENARIOS)}.")
+    return jsonify(run_scenario(scenario, num("magnitude", float, 0.2), num("length", int, 15), num("seed", int, 1)))
+
+
 @bp.post("/attention")
 def create_attention_result():
     """Store a reaction-time attention check result (task A-1).

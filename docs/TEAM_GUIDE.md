@@ -45,7 +45,7 @@ Then run the tests (in a second terminal, venv activated):
 python -m pytest
 ```
 
-Expected: `67 passed, 8 skipped`. The 8 skipped are the Team Lead's task L-1.
+Expected: `73 passed, 8 skipped`. The 8 skipped are the Team Lead's task L-1.
 
 | Problem | Fix |
 |---|---|

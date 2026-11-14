@@ -17,6 +17,7 @@ import urllib.request
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:5050").rstrip("/")
 PAGES = ["/", "/dashboard", "/monitor", "/attention", "/mission", "/replay", "/evidence", "/about"]
 BANNED = ["detects fatigue", "% accurate", "nasa-approved and", "used by astronauts", "flight-proven", "tested in space"]
+DENIES = re.compile(r"\bnot\b|\bno\b|\bnever\b|\bnothing\b|\bnor\b|\bwithout\b", re.I)
 fails = []
 
 
@@ -53,8 +54,9 @@ for p in PAGES:
     status, html = get(p)
     check(status == 200, f"page {p} loads (HTTP {status})")
     text = re.sub(r"<[^>]+>", " ", re.sub(r"<(script|style)[\s\S]*?</\1>", " ", html)).lower()
-    for b in BANNED:
-        check(b not in text, f"page {p} has no '{b}'") if b in text else None
+    for b in BANNED:     # a ruled-out claim is fine inside a sentence that DENIES it ("nothing here detects fatigue")
+        bad_sentences = [s for s in re.split(r"(?<=[.!?])\s+", text) if b in s and not DENIES.search(s)]
+        check(not bad_sentences, f"page {p} makes no claim '{b}'" + (f": {bad_sentences[0][:80]!r}" if bad_sentences else "")) if b in text else None
     own = re.sub(r"^https?://", "", BASE)
     others = {h for h in re.findall(r'(?:src|href)="https?://([^/"]+)', html) if h != own}
     check(not others, f"page {p} loads nothing from other hosts" + (f" (found {sorted(others)})" if others else ""))

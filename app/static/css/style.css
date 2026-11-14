@@ -357,3 +357,7 @@ table.evidence td.num { font-size: 15px; }
 .replay-controls input[type="range"] { accent-color: var(--ink); width: 100%; }
 .replay-chart { height: 340px; }
 .replay-controls [hidden] { display: none; }
+
+/* landing: the logo above the headline */
+.land-mark { display: block; width: 144px; height: auto; margin: 0 0 28px; }
+@media (max-width: 860px) { .land-mark { width: 88px; margin-bottom: 20px; } }

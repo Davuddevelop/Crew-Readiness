@@ -1,6 +1,6 @@
 # Design system and rationale
 
-**Direction: a mission document.** International Typographic structure (one grid, flush-left type, structure from rules and space, colour only when something needs a human) set in two voices: a serif to read and a mono for the instruments, on a warm near-black. Figures carry numbered captions, like a printed technical report. The first version used one neutral grotesque (Inter) on cold black and white; the team lead judged it generic, so the type and palette were redone (see History). Status: **trial on a branch**, chosen by the team lead after comparing styles (decision D-9 in PLAN.md).
+**Direction: International Typographic ("Swiss") style on a dark ground.** One grid, one typeface, flush-left type, structure from rules and space, and colour only when something needs a human. Status: **trial on a branch**, chosen by the team lead after comparing styles (decision D-9 in PLAN.md).
 
 Code: [`style.css`](../app/static/css/style.css) · tokens for canvas code: [`tokens.js`](../app/static/js/tokens.js) · art: [`ridgeline.js`](../app/static/js/ridgeline.js) · live trace: [`keytrace.js`](../app/static/js/keytrace.js)
 
@@ -24,7 +24,7 @@ The page is a grid with a **label gutter** on the left (section names, small and
 ## 3. Principles
 
 1. **One grid.** Section names hang in the left gutter; content aligns to the columns.
-2. **Two voices.** Newsreader (serif, regular weight, italic for emphasis) for headlines and reading; IBM Plex Mono for labels, numbers, captions and controls. Headlines are large and light, not bold. Mono is always small and usually uppercase with tracking, so it reads as instrumentation, never as body text.
+2. **One typeface.** Inter, weights 400 and 700 do the work: hierarchy from size and weight, never decoration. Numbers that are compared use tabular figures; running text does not (tabular figures widen Inter's hyphen).
 3. **Flush left, ragged right.** Nothing is centred.
 4. **Structure from rules and space.** No boxes, shadows, blur or gradients. A crisp 1 px ink rule opens every section; 1 px grey rules separate rows.
 5. **Colour only when something needs a human.** The interface is monochrome. Nominal is plain ink. Amber = check-in, coral = review. Status is always written as a word as well.
@@ -37,15 +37,15 @@ CSS custom properties are the single source of truth. CSS and JavaScript read **
 
 | Role | Value | Use |
 |---|---|---|
-| `--bg` / `--ink` / `--muted` | `#0D0C0A` / `#EDE8DC` / `#A9A396` | warm near-black, bone, secondary text (16 : 1 and 7.8 : 1 on the ground) |
-| `--rule` / `--line` / `--line-faint` | `#EDE8DC` / `#2E2B25` / `#1E1C18` | section rules, row separators, art guides |
-| `--accent` | `#EDE8DC` | interactive (buttons, focus): monochrome on purpose |
+| `--bg` / `--ink` / `--muted` | `#090A0F` / `#F8FAFC` / `#9AA0AA` | ground, text and rules, secondary text (7.5 : 1) |
+| `--rule` / `--line` / `--line-faint` | `#F8FAFC` / `#2C3140` / `#1D212C` | section rules, row separators, art guides |
+| `--accent` | `#F8FAFC` | interactive (buttons, focus): monochrome on purpose |
 | `--signal` | `#FFB800` | the brand highlight: the rising line |
 | `--nominal` / `--checkin` / `--review` | ink / `#FFB800` / `#FF5A6E` | status. **Coral was added** to the original palette: three levels need three distinguishable states |
-| `--surface` | `#181611` | raised surface (chart tooltip) |
+| `--surface` | `#16181F` | raised surface (chart tooltip) |
 
-Type: **Newsreader** (variable serif with optical sizes, regular and italic) and **IBM Plex Mono** (400, 500, 600), both self-hosted woff2 in `static/fonts/` with their SIL OFL licences alongside. `--serif`, `--mono`, and `--font` (= mono, what charts and controls read).
-Scale: display 46-124 px / .98 / regular; title 34-68 px; advisory 26-38 px; body 18 / 1.55 serif; lede 19-24 px; labels and captions 11-12 px mono uppercase tracking .08 em.
+Type: Inter (variable woff2, `static/fonts/`, SIL OFL licence alongside); `ui-monospace` stack for code and the payload preview only.
+Scale: display 44–104 px / 0.94 / −0.045 em / 700; title 32–64 px; advisory 22–32 px; body 16 / 24; labels 13 / 20 / 600; fine print 12 / 16.
 
 ## 5. The art: stacked sessions
 
@@ -88,7 +88,7 @@ Canvas loops pause when off-screen or the tab is hidden; DPR capped at 2.
 
 1. First pass: dark mission-control look with a flat system. Merged.
 2. Alternatives researched (dark mission-control, Swiss, editorial/bento such as Uiverse's Boldcase, neo-brutalism). Boldcase could not be read from the build environment (the site blocks it), so it was not implemented.
-3. Team lead chose **Swiss**, then judged the first result generic (Inter, cold black and white, bold tight headline, tilted mock-up, filler footer). The landing page was rebuilt around the real plot with real numbers, and the type and palette were redone as the mission-document system above (Newsreader + IBM Plex Mono, warm bone on near-black, numbered figures). Rejected earlier: glassmorphism, gradients, flow-field backgrounds, EEG/HRV imagery (we measure none of that), external fonts (offline demo, risk R-6).
+3. Team lead chose **Swiss**. Rejected earlier: glassmorphism, gradients, flow-field backgrounds, EEG/HRV imagery (we measure none of that), external fonts (offline demo, risk R-6).
 
 ## 9. Sources (verify each before the submission: task R-2)
 
@@ -99,7 +99,7 @@ Search summaries only; the article hosts are outside the build environment's net
 - NASA Graphics Standards Manual (restraint, few typefaces, strict system): https://www.nasa.gov/wp-content/uploads/2015/01/nasa_graphics_manual_nhb_1430-2_jan_1976.pdf
 - Landing-page composition: a Dreamflow landing page supplied by the team lead as a reference (ideas only). Hands motif: Michelangelo, *Creation of Adam* (c. 1512, public domain).
 - Mission-control UX patterns: [UX Planet benchmark](https://uxplanet.org/mission-control-software-ux-design-patterns-benchmarking-e8a2d802c1f3)
-- Fonts: Newsreader (The Newsreader Project Authors) and IBM Plex Mono (IBM Corp.), both SIL Open Font License 1.1 (`app/static/fonts/OFL-*.txt`).
+- Font: Inter, SIL Open Font License 1.1 (`app/static/fonts/OFL-Inter.txt`).
 
 ## 10. Open items
 

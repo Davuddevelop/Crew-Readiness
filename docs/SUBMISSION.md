@@ -41,7 +41,7 @@ Only nine aggregate timing numbers per session are stored (counts and durations)
 
 ## Credits and licences
 - Landing imagery: Michelangelo, *The Creation of Adam* (public domain, Wikimedia Commons reproduction); spacesuit glove from NASA's 2012 *Man and Machine* photograph (credit NASA; NASA media guidelines apply, no endorsement implied). Sources, checksums and an open verification step: `docs/ASSETS.md`.
-- Newsreader and IBM Plex Mono typefaces (SIL Open Font License 1.1), self-hosted. Chart.js (MIT), vendored. The stacked-sessions chart form was inspired by Harold D. Craft Jr.'s 1970 pulsar plot (idea only; no artwork or code used).
+- Inter typeface (SIL Open Font License 1.1), self-hosted. Chart.js (MIT), vendored. The stacked-sessions chart form was inspired by Harold D. Craft Jr.'s 1970 pulsar plot (idea only; no artwork or code used).
 - Tooling: Flask, SQLite, NumPy. Built with AI coding assistance (Claude); the team reviewed and owns the decisions recorded in `docs/PLAN.md` and `docs/ML_PLAN.md`. The logo was generated with an AI image tool (`[TOOL NAME]`, see `docs/ASSETS.md`); the product's other art is drawn in code or comes from the public-domain and NASA sources above.
 
 ## What we would do next

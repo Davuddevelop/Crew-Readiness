@@ -89,7 +89,7 @@ app/
     attention.js        reaction-time check TODO                              (A-1)
     common.js           fetch helper, escaping, chips
   static/vendor/        Chart.js (vendored so the demo works offline)
-  static/fonts/         Newsreader + IBM Plex Mono (self-hosted, SIL OFL)
+  static/fonts/         Inter (self-hosted, SIL OFL)
   static/img/           the two landing-page photographs (sources/licences: docs/ASSETS.md)
 tests/                  pytest; test_api.py protects the demo story
 docs/                   PLAN, TEAM_GUIDE, DATA_CONTRACT, DESIGN, ASSETS, TEST_LOG

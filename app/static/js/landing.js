@@ -3,7 +3,7 @@
  * read from the same API response (today's value against their own usual). Fictional crew, synthetic data.
  * Nothing here is invented: if the API is unavailable the section simply stays empty.
  */
-import { api, bandChip, esc } from "./common.js";
+import { api, bandChip } from "./common.js";
 import { createRidgeline } from "./ridgeline.js";
 
 const $ = (id) => document.getElementById(id);
@@ -22,7 +22,7 @@ function fact(id, value, usual, label) {
     const pick = [...crew].sort((a, b) => (NEED[b.readiness.band] || 0) - (NEED[a.readiness.band] || 0))[0];
     const data = await api(`/api/readiness/${encodeURIComponent(pick.profile.id)}`);
     const r = data.readiness;
-    $("pv-who").innerHTML = `<b>Fig. 1</b>${esc(data.profile.display_name)}, ${esc(data.profile.mission_role)}. One line per session, oldest at the top, the latest in amber. Fictional crew member, synthetic data.`;
+    $("pv-who").textContent = `${data.profile.display_name}, ${data.profile.mission_role}. Fictional crew member, synthetic data.`;
     ridge.setSessions(data.trend, r.band);
     const d = Object.fromEntries(r.deviations.map((x) => [x.feature, x]));
     if (r.status === "SCORED" && d.iki_median_ms && d.pause_count && d.checklist_response_median_ms) {

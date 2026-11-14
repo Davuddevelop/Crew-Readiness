@@ -58,6 +58,22 @@ Catch: excluding flagged sessions forever would also lock out a *genuine new nor
 the alerts would never stop. A re-admission rule or a human "accept as the new normal" action is required; that is a design
 decision (decision 4 in `docs/ML_PLAN.md`). **Implemented** (team lead chose "exclude + human accepts"): flagged sessions are excluded; a reviewer can accept the run, which restarts the baseline from it. The simulation measures only the exclusion; the human-acceptance step is not benchmarked, because it depends on a person's judgement.
 
+## Experiment: personal "rarity" as an alert rule (negative result; not shipped)
+`python -m ml.calibration`. Idea: rank today's score among the person's own recent past scores (a conformal p-value, window 20, at least
+8 past sessions) and alert when `p <= alpha`. In theory the false-alert rate is at most `alpha` whatever the shape of the person's noise.
+
+- **Calibration holds, conservatively** (400 simulated people, 10,800 sessions, no events): target 0.20, 0.10, 0.05 gave observed
+  0.180, 0.083, 0.030 (everyone alike) and 0.174, 0.080, 0.028 (people differ in how erratic they are).
+- **But it detects less than a plain population threshold at the same observed false-alert rate.** For a 10 % slowdown: 0.50 vs 0.61 at
+  a 16 % false-alert rate and 0.26 vs 0.36 at 6 %; for a 20 % slowdown: 0.76 vs 0.94 and 0.40 vs 0.85. Making people differ in how erratic
+  they are changed this very little. At `alpha = 0.05` it can almost never fire, because with 8 to 20 past sessions the smallest possible
+  p-value is about 1/(n+1).
+- **Why:** 8 to 20 sessions are too few to rank against; the population threshold borrows strength from many people.
+- **Decision (gate in `docs/PLAN_V2.md`):** personal rarity is not used to alert. Where the product already quotes "about 1 session in N"
+  (the pause reason) that is a descriptive statement, not a calibrated alert. What we do instead: calibrate the **cutoff** to a stated
+  false-alert budget on pooled normal sessions, and check it on held-out people (real pilot data when we have it; see `docs/TASKS.md` C1).
+- **Assumptions:** same simulator and illustrative parameters as above; a window and minimum history we chose and did not tune.
+
 ## Robustness to a wrong assumption (`python -m ml.stress_prior`)
 Assumed burstiness prior 0.05 / 0.5 / 2.0, against simulated people whose true burstiness is 0 / 0.5 / 1.5
 (10 % slowdown, 5 % false alerts): detection stays 0.35-0.38 / 0.36-0.38 / 0.29 against 0.24 / 0.29 / 0.22 for

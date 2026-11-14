@@ -49,6 +49,7 @@ async function show(id) {
     $("me-resp-reasons").innerHTML = (q.reasons || []).map((x) => `<li>${esc(x)}</li>`).join("");
     $("me-resp-link").innerHTML = `<a href="/attention?crew=${encodeURIComponent(id)}">${q.status === "NONE" ? "Take your first reaction check (about a minute)" : "Take a reaction check (about a minute)"}</a>`;
     art.setSessions(data.trend, r.band);
+    document.dispatchEvent(new CustomEvent("me:shown", { detail: { id } }));       // lets the private notes (notes.js) load this person's notes
   } catch (err) {
     $("me-sentence").textContent = `Could not load: ${err.message}`;
     $("me-body").hidden = false;

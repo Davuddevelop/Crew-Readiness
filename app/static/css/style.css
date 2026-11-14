@@ -309,16 +309,38 @@ table.evidence td.num { font-size: 15px; }
 .land-col a { text-decoration: none; }
 .land-col a:hover { color: var(--signal); }
 
-/* the finale: a giant ghosted wordmark (the hero image goes here) */
-.land-stage { position: relative; margin-top: 8px; height: clamp(120px, 18vw, 280px); overflow: hidden; }
+/* the finale: two hands over a giant ghosted wordmark. Each image is pre-padded so its fingertip sits on the
+   vertical centre line at its inner edge, so the gap and the spark are plain CSS (no JavaScript, no tuning). */
+.land-stage { position: relative; margin-top: 8px; height: clamp(250px, 34vw, 520px); overflow: hidden; overflow: clip; }   /* clip, not hidden: hidden makes this a scroll container and freezes the view() timelines below */
 .land-stage .ghost {
   position: absolute; left: 50%; bottom: -0.17em; transform: translateX(-50%); white-space: nowrap; user-select: none; pointer-events: none;
   font-size: clamp(56px, 12.6vw, 220px); line-height: 1; font-weight: 700; letter-spacing: -0.05em; color: var(--ink); opacity: .07;
 }
+/* each image's box IS the stage (full height); object-fit centres the picture, with its fingertip flush to the inner edge */
+.hand { position: absolute; top: 0; height: 100%; max-width: none; object-fit: contain; pointer-events: none; user-select: none; }
+.hand-l { left: 0; width: 58vw; object-position: right center; animation: reach-l 2.2s cubic-bezier(.2,.7,.2,1) both; }
+.hand-r { right: 0; width: 33vw; object-position: left center; animation: reach-r 2.2s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes reach-l { from { transform: translateX(-5vw); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes reach-r { from { transform: translateX(5vw); opacity: 0; } to { transform: none; opacity: 1; } }
+.spark { position: absolute; top: 50%; left: 58vw; width: 9vw; height: 0; border-top: 1.5px solid var(--signal); animation: spark-in .8s 1.8s both; }
+.spark i { position: absolute; top: -4.5px; left: 0; width: 7px; height: 7px; background: var(--signal); animation: travel 2.6s ease-in-out infinite alternate; }
+@keyframes spark-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes travel { to { left: calc(100% - 7px); } }
+/* progressive enhancement: where supported, the hands reach toward each other AS YOU SCROLL to them (the stage is
+   below the fold, so a load-time animation would play unseen). Elsewhere the plain animation above applies. */
+@supports (animation-timeline: view()) {
+  .hand-l, .hand-r { animation-timeline: view(); animation-range: entry 5% entry 95%; animation-duration: 1ms; animation-timing-function: ease-out; }
+  .spark { animation: spark-in 1ms linear both; animation-timeline: view(); animation-range: entry 70% entry 100%; }
+  .spark i { animation: travel 2.6s ease-in-out infinite alternate; }
+}
+.land-credit { font-size: 12px; line-height: 16px; color: var(--muted); padding-top: 12px; padding-bottom: 40px; }
 
 @media (max-width: 860px) {
   .land-copy, .land-preview, .land-brand { grid-column: 1 / -1; }
   .land-col, .land-col:nth-of-type(1) { grid-column: span 2; }
   .pv-card { transform: none; -webkit-mask-image: none; mask-image: none; }
-  .land-stage { height: clamp(90px, 26vw, 160px); }
+  .land-stage { height: clamp(150px, 46vw, 300px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hand-l, .hand-r, .spark, .spark i { animation: none !important; }
 }

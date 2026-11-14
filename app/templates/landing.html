@@ -75,7 +75,12 @@
 
   <section class="land-stage" id="land-stage">
     <div class="ghost" aria-hidden="true">Crew Readiness</div>
+    <img class="hand hand-l" src="{{ url_for('static', filename='img/hand-human.webp') }}" width="1500" height="757" alt="" aria-hidden="true" decoding="async" loading="lazy">
+    <img class="hand hand-r" src="{{ url_for('static', filename='img/hand-astronaut.webp') }}" width="1260" height="1058" alt="" aria-hidden="true" decoding="async" loading="lazy">
+    <div class="spark" aria-hidden="true"><i></i></div>
+    <p class="sr-only">Illustration: a person's hand, from Michelangelo's Creation of Adam, and an astronaut's gloved hand reach toward each other and almost touch. The gap is where a human reviews the readiness advisory.</p>
   </section>
+  <p class="page land-credit">Imagery: Michelangelo, <em>The Creation of Adam</em> (Sistine Chapel, c. 1512; public domain). Astronaut glove: NASA/JPL-Caltech. Both processed to black and white. Sources and licences: docs/ASSETS.md.</p>
 
 </main>
 {% endblock %}

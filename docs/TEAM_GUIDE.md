@@ -90,9 +90,11 @@ app/
     common.js           fetch helper, escaping, chips
   static/vendor/        Chart.js (vendored so the demo works offline)
   static/fonts/         Inter (self-hosted, SIL OFL)
+  static/img/           the two landing-page photographs (sources/licences: docs/ASSETS.md)
 tests/                  pytest; test_api.py protects the demo story
-docs/                   PLAN, TEAM_GUIDE, DATA_CONTRACT, DESIGN, TEST_LOG
+docs/                   PLAN, TEAM_GUIDE, DATA_CONTRACT, DESIGN, ASSETS, TEST_LOG
 scripts/check_grid.js   optional: asserts layout edges sit on the grid (Node + Playwright)
+scripts/assets/         optional: rebuilds the landing images from their public sources (OpenCV)
 ```
 
 ### Follow one session end to end (do this with the code open)

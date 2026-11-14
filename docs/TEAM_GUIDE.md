@@ -82,8 +82,7 @@ app/
     dashboard.js        crew selector, detail, trend chart                    (Member 3)
     ridgeline.js        ★ stacked-sessions art, drawn from trend[].deviations (Member 3)
     tokens.js           colour roles from CSS, for canvas/chart code (never hard-code hexes)
-    hands.js            the two hands (stacked contour lines), drawn from poses in code
-    landing.js          landing page: the hands + a live preview of the dashboard
+    landing.js          landing page: a live preview of the dashboard
     grid.js             dev aid: add ?grid to any URL to see the 12 columns
     keytrace.js         live key-press trace on Monitoring (timestamps only)  (Member 3)
     mission.js          mission view

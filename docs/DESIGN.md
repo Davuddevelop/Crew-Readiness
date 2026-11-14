@@ -55,24 +55,14 @@ Every curve is built from `trend[].deviations` (`docs/DATA_CONTRACT.md` §5). Th
 
 **Credit.** The form is a *stacked pulse plot*; the best-known example is Harold D. Craft Jr.'s 1970 plot of pulsar CP 1919. We borrowed the idea of stacking repeated measurements to make deviation visible. No artwork or code was used.
 
-## 5b. The landing page and the hands
+## 5b. The landing page
 
-`/` is a landing page; the dashboard lives at `/dashboard`. The composition borrows *ideas* from a landing page the team lead supplied as a reference (a dark poster, a tilted product preview, a footer-style link block, two hands almost touching over a giant ghosted wordmark). **No assets, copy or code were taken from it**; everything here is original and drawn in code.
+`/` is a landing page; the dashboard lives at `/dashboard`. The composition borrows *ideas* from a landing page the team lead supplied as a reference (a dark poster, a tilted product preview, a footer-style link block, two hands almost touching over a giant ghosted wordmark). **No assets, copy or code were taken from it.**
 
-**The motif.** Michelangelo's *Creation of Adam* (c. 1512): two hands, a small gap. Ours is a person's hand and an astronaut's gloved hand. The gap is the product's point: the system never decides, a human closes the gap. The amber line in the gap is the check-in.
-
-**How it is made** (`static/js/hands.js`; no photographs, no AI imagery, no assets):
-1. Each hand is a skeleton: a palm ellipse plus finger chains (joint angles, tapering radii). The glove is the same skeleton with fatter radii, puffed joints and bellows ridges, and a two-ring metal cuff.
-2. The skeleton is rasterised to a low-resolution mask. A second, interior-detail field (knuckles, tendons, thumb pad, glove plate) is added to a two-scale blur of the mask to give a relief.
-3. Horizontal lines are drawn only inside the mask, displaced by the relief, top to bottom, each erasing what it hides: **the same stacked-line technique as the session art**, so the hands and the data are one visual language.
-
-Cost: about 55 ms to draw both hands once per size (measured, desktop Chromium); nothing runs per frame. Their motion is CSS only (they slide in, the spark travels) and is off under reduced motion. Poses are plain numbers at the top of `hands.js`; tune by editing and reloading.
-
-**Why code, not photographs or AI imagery.** Licensing and AI-use disclosure for a competition submission, offline operation (risk R-6), and the sandbox cannot fetch image hosts. It also keeps the art on-brand.
-
-**Transparency fades only.** The tilted preview fades out with an alpha mask; there are no colour gradients.
-
-**Accessibility.** The hands and the preview are decorative (`aria-hidden`); a visually hidden sentence describes the illustration. The preview reuses the dashboard's own renderer and API, so it cannot drift from the product, and stays empty if the API is down.
+- **Preview:** a live, tilted view of the real dashboard art. It reuses the dashboard's own renderer and API, so it cannot drift from the product, and it stays empty if the API is down. Decorative (`aria-hidden`). It fades out with an alpha mask; there are no colour gradients.
+- **Finale (pending):** the motif is Michelangelo's *Creation of Adam* (c. 1512): two hands, a small gap. Ours is a person's hand and an astronaut's gloved hand; the gap is the product's point (the system never decides, a human closes the gap). It will use **public-domain photographs** (Adam's hand from the fresco, and a NASA astronaut-glove photograph), processed to black and white on black so they blend into the page. Until they are in, only the ghosted wordmark is shown.
+- **History:** a first attempt drew the hands procedurally as stacked contour lines. The team lead judged it not good enough (the glove read as a mitt) and it was removed; see git history (`da7f160`) if you want to look.
+- **Licensing rule for any image we add:** public domain or licensed to us, with the source and licence recorded in `docs/ASSETS.md`. Never another company's artwork, and no NASA logos.
 
 ## 6. Motion inventory
 

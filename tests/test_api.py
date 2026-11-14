@@ -17,11 +17,6 @@ def test_landing_and_dashboard_are_distinct_pages(client):
     assert b"Compared only with yourself" in client.get("/dashboard").data
 
 
-def test_landing_describes_its_illustration_for_assistive_tech(client):
-    html = client.get("/").data
-    assert b"astronaut" in html and b'class="sr-only"' in html        # the hands are art, so they need words
-
-
 def test_no_page_calls_out_to_the_network(client):
     """Offline demo rule (risk R-6): every script, stylesheet and font is served by us."""
     import re

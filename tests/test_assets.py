@@ -33,5 +33,5 @@ def test_images_stay_within_the_size_budget():
 
 def test_landing_credits_the_images_and_describes_the_illustration(client):
     html = client.get("/").data.decode()
-    assert "NASA/JPL-Caltech" in html and "public domain" in html       # visible credit
+    assert "NASA" in html and "Man and Machine" in html and "public domain" in html       # visible credit
     assert 'class="sr-only"' in html and "astronaut" in html            # the art has words for assistive tech

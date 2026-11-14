@@ -43,3 +43,9 @@ def test_brand_images_are_wired_in_and_the_logo_has_a_real_alt_text(client):
     assert 'rel="icon"' in html and "img/favicon.png" in html
     assert 'property="og:image"' in html and "img/share-card.png" in html
     assert "AI-generated" in ASSETS_DOC                      # the origin is disclosed, not hidden
+
+
+def test_landing_motion_hooks_and_an_accessible_headline(client):
+    html = client.get("/").data.decode()
+    assert 'aria-label="A second look before docking."' in html          # the animated words stay one readable heading
+    assert 'id="wrap-l"' in html and 'id="wrap-r"' in html and 'js/landing.js' in html

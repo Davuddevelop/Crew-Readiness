@@ -135,6 +135,7 @@ All JSON. Errors: `{"error": "<code>", "message": "<human text>"}`.
 | GET | `/api/readiness/<profile_id>` | includes `trend` (last 14 sessions, oldest first; see **Trend point** below) | `200 ProfileReadiness` |
 | POST | `/api/attention` | `{profile_id, session_id?, trials, median_rt_ms, premature_count, miss_count}` | `201 {id}` |
 | GET | `/api/mission` | scenario + assignments joined with readiness + `advisory` | `200` |
+| GET | `/api/selftest` | health of the monitor (task R1): database write/read/rollback, scoring on a fixed hand-worked fixture (1.2 YELLOW), clock sanity, no page loads from another host, app version. Reads nothing about any person; its test row is rolled back | `200 {ok, checked_at, version, checks: [{id, name, ok, detail}], does_not_show}` (always 200; `ok` carries the result) |
 
 `ProfileReadiness`:
 ```json

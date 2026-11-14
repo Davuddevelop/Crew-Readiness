@@ -36,6 +36,12 @@ def attention():
     return render_template("attention.html", active="attention")
 
 
+@bp.get("/brief")
+def brief():
+    """One printable page for the human who reviews a flagged crew before a critical operation."""
+    return render_template("brief.html", active="mission")
+
+
 @bp.get("/mission")
 def mission():
     return render_template("mission.html", active="mission")

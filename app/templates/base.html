@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Crew Readiness{% endblock %} · Crew Readiness</title>
   <link rel="preload" href="{{ url_for('static', filename='fonts/inter-latin-wght-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+  <meta name="description" content="Crew Readiness compares how each crew member works with their own usual pattern and puts the difference in front of a human. Prototype with simulated data; decision support only.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Crew Readiness">
+  <meta property="og:description" content="A second look before docking. It detects changes in interaction timing against a person's own pattern, never what is typed. Prototype, simulated data.">
+  <meta property="og:image" content="{{ url_for('static', filename='img/share-card.png', _external=True) }}">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>

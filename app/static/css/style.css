@@ -107,11 +107,8 @@ h3.cap { font-size: 13px; line-height: 20px; font-weight: 600; color: var(--mute
 .proto-banner .page { padding-top: 8px; padding-bottom: 8px; font-size: 12px; line-height: 16px; color: var(--muted); }
 .topbar { padding: 20px 0 20px; }
 .topbar .grid { align-items: center; row-gap: 12px; }
+.brand-mark { display: block; flex: none; height: 28px; width: auto; }
 .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: -0.01em; white-space: nowrap; }
-.brand svg { display: block; flex: none; }
-.brand .m1 { stroke: var(--line); }
-.brand .m2 { stroke: var(--muted); }
-.brand .m3 { stroke: var(--signal); }
 .topbar nav { display: flex; gap: 4px 32px; flex-wrap: wrap; }
 .topbar nav a {
   color: var(--muted); text-decoration: none; padding: 6px 0; font-size: 14px; line-height: 20px; font-weight: 500;
@@ -299,7 +296,6 @@ table.evidence td.num { font-size: 15px; }
 .land-links .grid { row-gap: 40px; border-top: 1px solid var(--line); padding-top: 32px; }
 .land-brand { grid-column: 1 / span 4; }
 .land-brand .brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.land-brand .m1 { stroke: var(--line); } .land-brand .m2 { stroke: var(--muted); } .land-brand .m3 { stroke: var(--signal); }
 .land-brand p { max-width: 36ch; }
 .land-col { grid-column: span 2; }
 .land-col:nth-of-type(1) { grid-column: 7 / span 2; }

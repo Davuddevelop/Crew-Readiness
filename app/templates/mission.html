@@ -1,28 +1,39 @@
 {% extends "base.html" %}
 {% block title %}Mission{% endblock %}
 {% block content %}
-<section class="page-head">
-  <div>
-    <h1 id="mission-name">Mission scenario</h1>
-    <p class="muted" id="mission-op"></p>
+<section class="pagehead grid">
+  <div class="label">
+    Mission
+    <div class="tminus" id="tminus" style="margin-top:16px"></div>
   </div>
-  <div class="tminus" id="tminus"></div>
-</section>
-
-<section class="panel">
-  <h2>Assignments for the critical operation</h2>
-  <div class="table-wrap">
-    <table class="evidence">
-      <thead><tr><th>Role</th><th>Crew member</th><th>Critical?</th><th>Readiness</th><th>Confidence</th><th>Top reason</th></tr></thead>
-      <tbody id="assignments"><tr><td colspan="6" class="muted">Loading…</td></tr></tbody>
-    </table>
+  <div class="body">
+    <h1 class="title" id="mission-name">Mission scenario</h1>
+    <p class="lede" id="mission-op"></p>
   </div>
 </section>
 
-<section class="panel" id="advisory-panel">
-  <h2>Decision support</h2>
-  <div id="advisory"></div>
-  <p class="fineprint">The system suggests; humans decide. It never assigns, clears or grounds anyone.</p>
+<section class="section">
+  <div class="grid">
+    <div class="label"><span class="idx">01</span>Assignments for the critical operation</div>
+    <div class="body">
+      <div class="table-wrap">
+        <table class="evidence">
+          <thead><tr><th>Role</th><th>Crew member</th><th>Critical?</th><th>Readiness</th><th>Confidence</th><th>Top reason</th></tr></thead>
+          <tbody id="assignments"><tr><td colspan="6" class="muted">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="advisory-panel">
+  <div class="grid">
+    <div class="label"><span class="idx">02</span>Decision support</div>
+    <div class="body">
+      <div id="advisory"></div>
+      <p class="fineprint" style="margin-top:20px">The system suggests; humans decide. It never assigns, clears or grounds anyone.</p>
+    </div>
+  </div>
 </section>
 {% endblock %}
 {% block scripts %}

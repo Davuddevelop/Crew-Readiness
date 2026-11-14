@@ -81,14 +81,17 @@ app/
     monitor.js          checklist flow + payload preview + submit            (Member 3)
     dashboard.js        crew selector, detail, trend chart                    (Member 3)
     ridgeline.js        ★ stacked-sessions art, drawn from trend[].deviations (Member 3)
+    tokens.js           colour roles from CSS, for canvas/chart code (never hard-code hexes)
+    grid.js             dev aid: add ?grid to any URL to see the 12 columns
     keytrace.js         live key-press trace on Monitoring (timestamps only)  (Member 3)
     mission.js          mission view
     attention.js        reaction-time check TODO                              (A-1)
     common.js           fetch helper, escaping, chips
   static/vendor/        Chart.js (vendored so the demo works offline)
-  static/fonts/         Space Grotesk + JetBrains Mono (self-hosted, SIL OFL)
+  static/fonts/         Inter (self-hosted, SIL OFL)
 tests/                  pytest; test_api.py protects the demo story
 docs/                   PLAN, TEAM_GUIDE, DATA_CONTRACT, DESIGN, TEST_LOG
+scripts/check_grid.js   optional: asserts layout edges sit on the grid (Node + Playwright)
 ```
 
 ### Follow one session end to end (do this with the code open)

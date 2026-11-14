@@ -60,7 +60,7 @@ Browser (capture.js)  ──9 aggregate numbers──▶  Flask API (strict allo
 ```
 
 Python 3.10+ · Flask · SQLite · NumPy · vanilla JS · Chart.js and fonts vendored (works offline).
-Visual design and its rationale: [docs/DESIGN.md](docs/DESIGN.md).
+Visual design (Swiss grid, single typeface) and its rationale: [docs/DESIGN.md](docs/DESIGN.md). Add `?grid` to any URL to see the layout grid.
 Full details: [docs/DATA_CONTRACT.md](docs/DATA_CONTRACT.md).
 
 ## Data handling

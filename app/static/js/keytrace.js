@@ -13,13 +13,15 @@
  * Owner: Member 3 (Frontend). Not scored, not sent to the server: purely a visual mirror.
  */
 import { PAUSE_MS } from "./capture.js";
+import { tokens } from "./tokens.js";
 
 const SPEED = 90;      // px per second the trace scrolls left
 const RIGHT_PAD = 28;  // "now" sits this far from the right edge
-const COLORS = { ink: "#F8FAFC", muted: "#9AA0AA", line: "#2C3140", amber: "#FFB800" };
 
 export function createKeyTrace(canvas) {
   const ctx = canvas.getContext("2d");
+  const t = tokens();
+  const COLORS = { ink: t.ink, muted: t.muted, line: t.line, amber: t.YELLOW };   // amber = the CHECK-IN role
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   let W = 0, H = 0, dpr = 1, raf = 0, active = false;
   let events = [];   // { t: ms, boundary?: true }, oldest first; timestamps only

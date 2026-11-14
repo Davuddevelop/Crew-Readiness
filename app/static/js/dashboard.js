@@ -8,6 +8,7 @@
  */
 import { api, bandChip, esc, timeAgo } from "./common.js";
 import { createRidgeline } from "./ridgeline.js";
+import { tokens } from "./tokens.js";
 
 const $ = (id) => document.getElementById(id);
 const list = $("crew-list");
@@ -45,13 +46,14 @@ function mark(id) {
 
 // ---- score-over-time chart: hairline, no fills ----
 function renderTrend(trend) {
+  const T = tokens();
   const points = trend.filter((t) => t.score !== null);
   const cutoffs = {
     id: "cutoffs",
     beforeDatasetsDraw(c) {
       const { ctx, chartArea: a, scales: { y } } = c;
       ctx.save();
-      ctx.strokeStyle = "#2C3140"; ctx.setLineDash([2, 4]); ctx.lineWidth = 1;
+      ctx.strokeStyle = T.line; ctx.setLineDash([2, 4]); ctx.lineWidth = 1;
       [1, 2].forEach((v) => {
         const py = y.getPixelForValue(v);
         ctx.beginPath(); ctx.moveTo(a.left, py); ctx.lineTo(a.right, py); ctx.stroke();
@@ -59,17 +61,17 @@ function renderTrend(trend) {
       ctx.restore();
     },
   };
-  const bandColor = { GREEN: "#00F0FF", YELLOW: "#FFB800", RED: "#FF5A6E" };
+  const bandColor = { GREEN: T.GREEN, YELLOW: T.YELLOW, RED: T.RED };
   if (chart) chart.destroy();
-  Chart.defaults.font.family = '"JetBrains Mono", monospace';
-  Chart.defaults.color = "#9AA0AA";
+  Chart.defaults.font.family = T.font;
+  Chart.defaults.color = T.muted;
   chart = new Chart($("trend-chart"), {
     type: "line",
     data: {
       labels: points.map((t) => new Date(t.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })),
       datasets: [{
         data: points.map((t) => t.score),
-        borderColor: "#F8FAFC", borderWidth: 1.5, tension: 0,
+        borderColor: T.ink, borderWidth: 1.5, tension: 0,
         pointBackgroundColor: points.map((t) => bandColor[t.band]),
         pointBorderWidth: 0, pointRadius: 4,
       }],
@@ -78,9 +80,9 @@ function renderTrend(trend) {
       responsive: true, maintainAspectRatio: false, animation: false,
       scales: {
         y: { min: 0, max: 3, ticks: { stepSize: 1, font: { size: 11 } }, grid: { display: false }, border: { display: false } },
-        x: { ticks: { font: { size: 11 }, maxRotation: 0, autoSkip: true }, grid: { display: false }, border: { color: "#2C3140" } },
+        x: { ticks: { font: { size: 11 }, maxRotation: 0, autoSkip: true }, grid: { display: false }, border: { color: T.line } },
       },
-      plugins: { legend: { display: false }, tooltip: { displayColors: false, backgroundColor: "#16181F", borderColor: "#2C3140", borderWidth: 1 } },
+      plugins: { legend: { display: false }, tooltip: { displayColors: false, backgroundColor: T.surface, borderColor: T.line, borderWidth: 1 } },
     },
     plugins: [cutoffs],
   });

@@ -51,3 +51,43 @@ def candidate_pause_model(history: list, today: dict) -> "float | None":
     groups = dict(view.group_scores)
     groups["pauses"] = pause_deviation([s["pause_count"] for s in base_sessions], int(today["pause_count"]))
     return sum(GROUP_WEIGHTS[g] * s for g, s in groups.items())
+
+
+# ---- v2: negative binomial with a per-person dispersion ------------------------------------------
+PRIOR_DISPERSION = 0.5   # ILLUSTRATIVE: crew-level burstiness (variance = mean + phi * mean^2). Decision material.
+DISPERSION_STRENGTH = 8.0
+
+
+def nb_pmf_mean(x: int, mu: float, phi: float) -> float:
+    """Negative binomial parameterised by mean mu and dispersion phi (phi -> 0 is Poisson)."""
+    phi = max(phi, 1e-6)
+    r = 1.0 / phi
+    return exp(lgamma(x + r) - lgamma(r) - lgamma(x + 1) + r * log(r / (r + mu)) + x * log(mu / (r + mu)))
+
+
+def pause_deviation_nb(history_counts: list, today: int) -> float:
+    n = len(history_counts)
+    a = PRIOR_MEAN * PRIOR_STRENGTH + sum(history_counts)
+    mu = a / (PRIOR_STRENGTH + n)                                   # shrunk personal mean
+    if n >= 2:
+        m = sum(history_counts) / n
+        var = sum((c - m) ** 2 for c in history_counts) / (n - 1)
+        phi_hat = max(0.0, (var - m) / max(m * m, 1e-9)) if m > 0 else 0.0
+    else:
+        phi_hat = PRIOR_DISPERSION
+    phi = (DISPERSION_STRENGTH * PRIOR_DISPERSION + n * phi_hat) / (DISPERSION_STRENGTH + n)   # shrunk dispersion
+    phi += 1.0 / a                                                  # widen for uncertainty in mu (Gamma posterior)
+    below = sum(nb_pmf_mean(k, mu, phi) for k in range(today))
+    tail = max(1e-9, 1.0 - below - 0.5 * nb_pmf_mean(today, mu, phi))
+    return min(max(0.0, _N.inv_cdf(1.0 - tail)), DEVIATION_CAP)
+
+
+def candidate_nb(history: list, today: dict) -> "float | None":
+    base_sessions = select_baseline_sessions(history)
+    baseline = compute_baseline(base_sessions, FEATURE_NAMES, DEFAULT_TASK_TYPE)
+    view = score_session({n: today[n] for n in FEATURE_NAMES}, baseline, today["data_quality"])
+    if view.status != "SCORED":
+        return None
+    groups = dict(view.group_scores)
+    groups["pauses"] = pause_deviation_nb([s["pause_count"] for s in base_sessions], int(today["pause_count"]))
+    return sum(GROUP_WEIGHTS[g] * s for g, s in groups.items())

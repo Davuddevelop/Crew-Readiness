@@ -19,6 +19,7 @@
             <option value="step" selected>Sustained slowdown</option>
             <option value="ramp">Gradual slowdown</option>
             <option value="spike">One-off bad session</option>
+            <option value="equipment">New equipment (gloves, a different device)</option>
             <option value="steady">Nothing happens (steady)</option>
           </select>
         </label>
@@ -53,7 +54,7 @@
     <div class="body">
       <div class="table-wrap" role="region" aria-label="What happened table" tabindex="0">
         <table class="evidence">
-          <thead><tr><th></th><th>Affected sessions flagged</th><th>False alerts in normal sessions</th></tr></thead>
+          <thead id="replay-head"><tr><th></th><th>Affected sessions flagged</th><th>False alerts in normal sessions</th></tr></thead>
           <tbody id="replay-summary"></tbody>
         </table>
       </div>
@@ -69,6 +70,7 @@
       <ul class="reasons">
         <li><strong>Old scoring:</strong> every feature compared to the person's median, and every session, flagged or not, joins their baseline. In a long slowdown the baseline learns the problem and the alerts fade.</li>
         <li><strong>Current scoring:</strong> pauses are judged against the person's own pause pattern, and flagged sessions stay out of the baseline until a human accepts them.</li>
+        <li><strong>New equipment:</strong> the person becomes slower for good (gloves, a different device). The tool flags it so a human looks, the human accepts it as their new normal, and a later real slowdown is judged against that. Size, timing and the later slowdown are illustrative assumptions.</li>
         <li>One simulated person proves nothing. Try several random people. The 300-person results, with their limits, are on the <a href="{{ url_for('views.evidence') }}">Evidence page</a>.</li>
         <li>This simulates changes in <em>interaction timing</em>. It says nothing about fatigue, illness or fitness for duty.</li>
       </ul>

@@ -147,7 +147,7 @@ async function finish() {
   say("Done. Press Start to run it again.");
   let saved = "Saved.";
   try {
-    await api("/api/attention", { method: "POST", body: JSON.stringify(summary) });
+    const saved_resp = await api("/api/attention", { method: "POST", body: JSON.stringify(summary) }); summary.__resp = saved_resp.responsiveness;
   } catch (err) {
     saved = `Not saved: ${err.message}`;
   }
@@ -166,6 +166,7 @@ function renderResult(s, saved) {
       <li>Too early: <span class="num">${s.premature_count}</span></li>
       <li>Missed: <span class="num">${s.miss_count}</span></li>
     </ul>
+    ${s.__resp ? `<p>${esc(s.__resp.summary)}</p>${(s.__resp.reasons || []).length ? `<ul class="reasons">${s.__resp.reasons.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}` : ""}
     <p class="fineprint">${esc(saved)} Only these four numbers are stored, as context for a human reviewer.</p>`;
   result.hidden = false;
 }

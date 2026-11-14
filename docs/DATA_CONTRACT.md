@@ -182,3 +182,13 @@ stacked-sessions art draws exactly these numbers and nothing else (see `docs/DES
   `sessions.accepted_at` (UTC timestamp; no identity, the prototype has no accounts), count toward the baseline, and the baseline
   **restarts from the first accepted session** (fewer than 5 means CALIBRATING). 200 returns `accepted_session_ids` plus the readiness
   payload; 404 unknown profile; 409 nothing waiting for review.
+
+
+## Responsiveness (plan v3, H1)
+`GET /api/readiness/<id>` has `responsiveness`, and `POST /api/attention` returns `{id, responsiveness}`; `/api/mission` assignments carry it too.
+```json
+{"status": "SCORED" | "CALIBRATING" | "NO_RESPONSE" | "NONE", "level": "USUAL" | "SLOWER" | "MUCH_SLOWER" | null,
+ "summary": "Your response time today (328 ms) is slower than your own usual (about 277 ms).", "reasons": ["..."],
+ "baseline": {"n": 8, "median_rt_ms": 277.0, "spread_ms": 17.0}, "deviation": 3.1, "today": {"median_rt_ms": 328.0, "miss_count": 1, "trials": 10, "created_at": "...Z"}, "n_checks": 9}
+```
+Compared only with the same person's earlier checks (at least 5 valid ones, otherwise `CALIBRATING`). Cut-offs are illustrative and not validated; it never changes `readiness.band`.

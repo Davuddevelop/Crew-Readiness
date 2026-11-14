@@ -42,9 +42,21 @@
     </div>
   </section>
 
+  <section class="section" id="me-responsiveness">
+    <div class="grid">
+      <div class="label"><span class="idx">04</span>Responsiveness</div>
+      <div class="body">
+        <p id="me-resp-sentence" class="advisory" aria-live="polite"></p>
+        <ul id="me-resp-reasons" class="reasons"></ul>
+        <p class="fineprint" id="me-resp-link" style="margin:12px 0 16px"></p>
+        <p class="fineprint">A short reaction check, compared only with your own earlier checks. It is not a test of alertness or health, its cut-offs are illustrative and not validated on real people, and it never changes the status above.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="grid">
-      <div class="label"><span class="idx">04</span>Your own pattern</div>
+      <div class="label"><span class="idx">05</span>Your own pattern</div>
       <div class="body">
         <figure class="art" style="grid-column: auto" aria-labelledby="me-art-caption">
           <div class="art-stage">
@@ -60,7 +72,7 @@
 
   <section class="section">
     <div class="grid">
-      <div class="label"><span class="idx">05</span>What you can do</div>
+      <div class="label"><span class="idx">06</span>What you can do</div>
       <div class="body">
         <ul id="me-actions" class="reasons"></ul>
         <p class="fineprint" style="margin-top:16px">Timing changes have many ordinary causes: a different keyboard, time of day, sleep, practice. This software cannot tell which one it is, and it says nothing about your health.</p>
@@ -70,7 +82,7 @@
 
   <section class="section">
     <div class="grid">
-      <div class="label"><span class="idx">06</span>Who sees this</div>
+      <div class="label"><span class="idx">07</span>Who sees this</div>
       <div class="body">
         <p style="max-width:62ch">The proposal is that <strong>you see your own numbers first, and sharing them is your choice</strong>. This prototype has no accounts, so anyone who opens it can see every profile, and every profile here is fictional. The page loads nothing from other hosts and reads its data only from this app. On board, the app would run on the crew computer itself, so nothing would need a link to the ground. Details and limits: <a href="{{ url_for('views.about') }}">Privacy &amp; limits</a>.</p>
       </div>

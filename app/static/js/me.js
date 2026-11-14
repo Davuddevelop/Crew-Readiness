@@ -42,6 +42,10 @@ async function show(id) {
     let acts = actions(r, id).map((x) => `<li>${x.startsWith("<a") ? x : esc(x)}</li>`);
     if (data.baseline_review) acts.unshift(`<li>${esc(data.baseline_review.message)} A reviewer can do that on the dashboard.</li>`);
     $("me-actions").innerHTML = acts.join("");
+    const q = data.responsiveness || { summary: "", reasons: [] };
+    $("me-resp-sentence").textContent = q.summary;
+    $("me-resp-reasons").innerHTML = (q.reasons || []).map((x) => `<li>${esc(x)}</li>`).join("");
+    $("me-resp-link").innerHTML = `<a href="/attention?crew=${encodeURIComponent(id)}">${q.status === "NONE" ? "Take your first reaction check (about a minute)" : "Take a reaction check (about a minute)"}</a>`;
     art.setSessions(data.trend, r.band);
   } catch (err) {
     $("me-sentence").textContent = `Could not load: ${err.message}`;

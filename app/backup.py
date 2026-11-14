@@ -22,6 +22,8 @@ import math
 import re
 import sqlite3
 
+import click
+
 from .features import FEATURE_NAMES, FEATURES_BY_NAME, TASK_TYPES
 
 FORMAT = "crew-readiness-backup"
@@ -196,3 +198,27 @@ def restore(db: sqlite3.Connection, payload: dict) -> dict:
         db.rollback()
         raise BackupError(f"the database refused the backup ({e}); nothing was restored") from None
     return {t: len(payload["tables"][t]) for t in TABLE_ORDER}
+
+
+def register_cli(app) -> None:
+    """`flask export-backup <file>` and `flask import-backup <file>` (wired in app/cli.py)."""
+    from .db import get_db
+
+    @app.cli.command("export-backup")
+    @click.argument("path", type=click.Path(dir_okay=False, writable=True))
+    def export_backup_cmd(path):
+        """Write the database (profiles, sessions, attention results) as JSON with a SHA-256 checksum."""
+        counts = write_backup(get_db(), path)
+        click.echo(f"Wrote {path}: " + ", ".join(f"{n} {t}" for t, n in counts.items()))
+        click.echo("Not encrypted: it holds the same pseudonyms and timings as the database. Keep it where the database is kept.")
+
+    @app.cli.command("import-backup")
+    @click.argument("path", type=click.Path(exists=True, dir_okay=False))
+    def import_backup_cmd(path):
+        """Restore a backup into an EMPTY database. Refuses a damaged file, unknown fields or a database that holds data."""
+        try:
+            counts = restore(get_db(), read_backup(path))
+        except BackupError as e:
+            click.echo(f"Refused: {e}", err=True)
+            raise SystemExit(1)
+        click.echo("Restored: " + ", ".join(f"{n} {t}" for t, n in counts.items()))

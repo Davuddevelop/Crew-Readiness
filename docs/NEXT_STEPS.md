@@ -21,7 +21,8 @@ Work on separate branches, small PRs, and run `pytest -q` and `node scripts/chec
 ## Block 3: freeze and rehearse (last 5 hours)
 - **No new features after T-5 h.** Only bug fixes.
 - Read `docs/DEMO.md` aloud once, timed, with a stopwatch. Fix whatever is awkward.
-- Record a 3-minute screen video of the demo as a backup in case the live one fails.
+- A captioned backup video can be regenerated with `node scripts/record_demo.js` (see `docs/DEMO.md`); add a voice-over if you want one.
+- Run `python scripts/smoke.py <deployed URL>` the night before and again before submitting.
 - Run the demo locally (`python run.py`); the hosted copy forgets its data.
 - Final pass on claims: nothing about fatigue, illness, fitness for duty, or NASA approval. Submit with time to spare.
 

@@ -86,7 +86,7 @@ app/
     grid.js             dev aid: add ?grid to any URL to see the 12 columns
     keytrace.js         live key-press trace on Monitoring (timestamps only)  (Member 3)
     mission.js          mission view
-    attention.js        reaction-time check TODO                              (A-1)
+    attention.js        reaction-time check (A-1); browser check: scripts/check_attention.js
     common.js           fetch helper, escaping, chips
   static/vendor/        Chart.js (vendored so the demo works offline)
   static/fonts/         Instrument Sans, Instrument Serif, JetBrains Mono (self-hosted, SIL OFL)
@@ -199,6 +199,7 @@ Each card: **goal → files → done when → think about → hints.** If a card
 **R-1 · Privacy & limits page** (13:45–17:00)
 - **File:** `app/templates/about.html` (the TODO panel lists what's missing)
 - **Done when:** retention/access proposal, confounders, our validation summary and sources are on the page, all in plain language.
+- **Status:** retention/access (labelled a proposal), confounders and validated / not validated are on the page; `tests/test_about.py` checks every number against `app/results_data.json` and `docs/ML_RESULTS.md`. **Sources are not on the page yet:** they wait for R-2, because each one must be read and verified first.
 
 **R-2 · Sources** (Nov 15)
 - Every source gets one line on **how it informed us**. Separate *their* findings from *our* prototype results.
@@ -210,6 +211,7 @@ Each card: **goal → files → done when → think about → hints.** If a card
 - **Files:** `static/js/attention.js` (full spec in the header comment), `templates/attention.html`. The API `POST /api/attention` already works and is tested.
 - **Done when:** 10 trials, random foreperiod, premature and miss handling, median RT, result stored and shown with the "illustrative, not a medical test" label.
 - **Think about:** why is the foreperiod random? Why treat RT < 100 ms as premature?
+- **Status: done.** Escape cancels a run without sending anything; a hidden tab cancels too (it cannot see the light). Responses use `pointerdown`, not `click`, so the press duration is not added to the reaction time. `node scripts/check_attention.js` (app running) drives a full run with a fake clock and checks the exact POST body.
 
 ---
 

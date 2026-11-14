@@ -32,6 +32,15 @@ normal speed), stop at the review step. Say: "Only timing numbers leave the brow
 preview: nine numbers, a profile id and a task type, and no text. Click **Discard**. The dry run confirmed that neither the
 preview nor the data actually sent contains any typed phrase.
 
+## Backup video and a pre-flight check
+- **Backup video** (if the live demo fails): `scripts/record_demo.js` drives the real app through this walkthrough and burns in captions
+  made from the "Say" lines; numbers in them are read from the live page and from `app/results_data.json`. It records against a
+  throwaway database so the pilot starts in the real demo state. Usage is in the file header. It has no voice-over: add your own
+  or present over it.
+- **Pre-flight / pre-submission check:** `python scripts/smoke.py [URL]` visits every page of a running copy (local or deployed),
+  checks the API contract, confirms typed text is rejected, and scans the page text for claims we ruled out. Exit code 1 means
+  something is wrong. Run it against the deployed URL the night before.
+
 ## What we claim, and what we do not
 **We claim:** it detects changes in interaction timing against a person's own history, privately, and puts them in front of a human. On simulated data the count model for pauses cuts false alerts by about 60 % at the shipped level, and keeping flagged sessions out of the baseline stops a sustained change from being absorbed.
 

@@ -17,26 +17,31 @@
       <label for="profile-select">Crew member</label>
       <select id="profile-select"><option>Loading…</option></select>
 
-      <!-- The stimulus area. Click or press Space when it turns bright. -->
-      <div id="rt-stage" class="rt-stage" tabindex="0" role="button" aria-label="Reaction area">
+      <!-- The stimulus area. Click or press Space when it turns bright. Escape cancels. -->
+      <p id="rt-progress" class="rt-progress" aria-live="polite" hidden></p>
+      <div id="rt-stage" class="rt-stage" tabindex="0" role="button"
+           aria-label="Reaction area. Press Space or click when it lights up."
+           aria-describedby="rt-message">
         <span id="rt-message">Press Start. When this box lights up, click it or press Space as fast as you can.</span>
       </div>
       <button id="rt-start" class="btn" disabled>Start (10 trials)</button>
 
-      <div id="rt-result" class="rt-result" hidden></div>
+      <div id="rt-result" class="rt-result" aria-live="polite" hidden></div>
     </div>
   </div>
 </section>
 
 <section class="section">
   <div class="grid">
-    <div class="label"><span class="idx">02</span>Builder notes</div>
+    <div class="label"><span class="idx">02</span>How it works</div>
     <div class="body">
-      <div class="todo-box">
-        <h2 class="h2" style="margin-bottom:12px">Builder notes (task A-1)</h2>
-        <p>This page is a frame only. The spec is in <code>docs/TEAM_GUIDE.md → A-1</code> and the TODOs in
-          <code>app/static/js/attention.js</code>. The API endpoint <code>POST /api/attention</code> already works.</p>
-      </div>
+      <ul class="reasons">
+        <li>Ten trials. Each one waits a random 1.5 to 4 seconds, so the rhythm cannot be anticipated, then lights up.</li>
+        <li>Responding before the light, or less than 100 ms after it (too fast to be a reaction to it), counts as too early and restarts that trial's wait.</li>
+        <li>No response within 1.5 seconds of the light counts as a miss.</li>
+        <li>Only four numbers are stored: the median reaction time of valid trials, the trial count, and the too-early and missed counts. Escape cancels a run without sending anything.</li>
+        <li>Illustrative reaction-time check. Not a medical test. It is context for a human reviewer and has no threshold or score.</li>
+      </ul>
     </div>
   </div>
 </section>

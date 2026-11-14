@@ -15,9 +15,7 @@ FAR, MAG = 0.05, 0.10
 
 
 def det_at_far(det, od, seed=7):
-    import ml.compare as c
-    c.OD = od
-    normal, event = collect(det, MAG, seed)
+    normal, event = collect(det, MAG, seed, od)
     return float(np.mean(event > np.quantile(normal, 1 - FAR)))
 
 

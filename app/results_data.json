@@ -1,0 +1,86 @@
+{
+  "synthetic": true,
+  "setup": {
+    "false_alert_rate": 0.05,
+    "event": "5-session step slowdown",
+    "people_per_cell": 300,
+    "sessions_per_person": 40,
+    "seed": 7
+  },
+  "incumbent_false_alerts_at_yellow": 0.13,
+  "table": [
+    {
+      "slowdown": 0.06,
+      "burstiness": "none",
+      "incumbent": 0.14,
+      "gamma_poisson": 0.17,
+      "neg_binomial": 0.18
+    },
+    {
+      "slowdown": 0.1,
+      "burstiness": "none",
+      "incumbent": 0.24,
+      "gamma_poisson": 0.34,
+      "neg_binomial": 0.36
+    },
+    {
+      "slowdown": 0.15,
+      "burstiness": "none",
+      "incumbent": 0.42,
+      "gamma_poisson": 0.57,
+      "neg_binomial": 0.59
+    },
+    {
+      "slowdown": 0.06,
+      "burstiness": "high",
+      "incumbent": 0.12,
+      "gamma_poisson": 0.13,
+      "neg_binomial": 0.15
+    },
+    {
+      "slowdown": 0.1,
+      "burstiness": "high",
+      "incumbent": 0.22,
+      "gamma_poisson": 0.26,
+      "neg_binomial": 0.29
+    },
+    {
+      "slowdown": 0.15,
+      "burstiness": "high",
+      "incumbent": 0.39,
+      "gamma_poisson": 0.47,
+      "neg_binomial": 0.53
+    }
+  ],
+  "stress": [
+    {
+      "assumed_prior": 0.05,
+      "true_od_0.0": 0.35,
+      "true_od_0.5": 0.36,
+      "true_od_1.5": 0.29
+    },
+    {
+      "assumed_prior": 0.5,
+      "true_od_0.0": 0.36,
+      "true_od_0.5": 0.37,
+      "true_od_1.5": 0.29
+    },
+    {
+      "assumed_prior": 2.0,
+      "true_od_0.0": 0.38,
+      "true_od_0.5": 0.38,
+      "true_od_1.5": 0.29
+    },
+    {
+      "assumed_prior": "incumbent",
+      "true_od_0.0": 0.24,
+      "true_od_0.5": 0.29,
+      "true_od_1.5": 0.22
+    }
+  ],
+  "commands": [
+    "python -m ml.compare 0.5",
+    "python -m ml.stress_prior",
+    "python -m ml.export_results"
+  ]
+}

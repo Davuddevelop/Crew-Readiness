@@ -16,12 +16,13 @@ START, N_SESS, N_PEOPLE = 15, 40, 300
 OD = float(sys.argv[1]) if len(sys.argv) > 1 else 0.0   # pause overdispersion of the SIMULATED people
 
 
-def collect(det, magnitude, seed):
+def collect(det, magnitude, seed, od=None):
+    od = OD if od is None else od
     rng = np.random.default_rng(seed)
     ev = Event("step", START, 5, magnitude)
     normal, event = [], []
     for _ in range(N_PEOPLE):
-        s, t = simulate_person(rng, N_SESS, PopulationSpec(pause_overdispersion=OD), events=(ev,))
+        s, t = simulate_person(rng, N_SESS, PopulationSpec(pause_overdispersion=od), events=(ev,))
         for i in range(N_SESS):
             sc = det(s[:i], s[i])
             if sc is None:

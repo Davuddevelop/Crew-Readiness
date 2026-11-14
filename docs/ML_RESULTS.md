@@ -5,7 +5,7 @@ every event effect is an illustrative assumption (`ml/synth.py`). Reproduce ever
 
 ## The question
 Today's scoring compares each feature to the person's own median using robust z-scores (median/MAD). We found
-that this raises a false alert on roughly 12 % of *normal* sessions at the YELLOW cutoff, and that **78 % of those
+that this raises a false alert on about 12-13 % of *normal* sessions (it varies a little with the simulated people) at the YELLOW cutoff, and that **78 % of those
 alerts come from `pause_total_ms`**: pauses are small counts (usually 0 or 1), the MAD is often 0, and one ordinary
 pause then looks huge. See `python -m ml.diagnose_false_alerts`.
 

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Monitoring{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>{{ task.title }}</h1>
+    <p class="muted">Routine work, passively timed. No extra test for the crew.</p>
+  </div>
+  <div id="monitor-pill" class="monitor-pill" hidden>● Monitoring active: timing only</div>
+</section>
+
+<!-- Step 1: who + consent -->
+<section id="step-setup" class="panel">
+  <h2>1. Who is working?</h2>
+  <label for="profile-select">Crew member</label>
+  <select id="profile-select"><option>Loading…</option></select>
+
+  <div class="consent">
+    <div>
+      <h3>What we record</h3>
+      <ul>
+        <li>Time between key presses (aggregated)</li>
+        <li>Number and length of pauses</li>
+        <li>Time from each step appearing to your first key press</li>
+        <li>Counts of corrections and re-entered confirmations</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What we never record</h3>
+      <ul>
+        <li>What you type, including the confirmation phrases</li>
+        <li>Which keys you press</li>
+        <li>Passwords, messages, or anything outside this task</li>
+        <li>Keystrokes when this page is not running the task</li>
+      </ul>
+    </div>
+  </div>
+  <button id="start-btn" class="btn" disabled>Start task</button>
+</section>
+
+<!-- Step 2: the task -->
+<section id="step-task" class="panel" hidden>
+  <p class="muted">{{ task.intro }}</p>
+  <div class="progress"><div id="progress-bar"></div></div>
+  <p class="step-counter" id="step-counter"></p>
+  <p class="step-text" id="step-text"></p>
+  <p class="confirm-hint">Type: <code id="confirm-hint"></code></p>
+  <input id="task-input" type="text" autocomplete="off" autocapitalize="off"
+         spellcheck="false" aria-label="Confirmation phrase">
+  <p id="task-feedback" class="feedback" aria-live="polite"></p>
+</section>
+
+<!-- Step 3: transparency, then submit -->
+<section id="step-review" class="panel" hidden>
+  <h2>2. This is everything that leaves the browser</h2>
+  <p class="muted">No text and no key identities, just these aggregate numbers:</p>
+  <pre id="payload-preview" class="payload"></pre>
+  <button id="submit-btn" class="btn">Submit timing features</button>
+  <button id="discard-btn" class="btn btn-ghost">Discard</button>
+</section>
+
+<!-- Step 4: result -->
+<section id="step-result" class="panel" hidden>
+  <h2>3. Result</h2>
+  <div id="result-body"></div>
+</section>
+
+<script id="task-data" type="application/json">{{ task | tojson }}</script>
+<script id="task-type" type="application/json">{{ task_type | tojson }}</script>
+{% endblock %}
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/monitor.js') }}"></script>
+{% endblock %}

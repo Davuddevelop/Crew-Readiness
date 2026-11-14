@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Crew Readiness{% endblock %} · Crew Readiness</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="proto-banner" role="note">
+    PROTOTYPE · fictional crew · illustrative thresholds · decision support only, not a medical or operational tool
+  </div>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('views.dashboard') }}">
+      <span class="brand-mark" aria-hidden="true">◎</span> Crew Readiness
+    </a>
+    <nav>
+      <a href="{{ url_for('views.dashboard') }}" class="{{ 'active' if active == 'dashboard' }}">Dashboard</a>
+      <a href="{{ url_for('views.monitor') }}" class="{{ 'active' if active == 'monitor' }}">Monitoring</a>
+      <a href="{{ url_for('views.attention') }}" class="{{ 'active' if active == 'attention' }}">Attention check</a>
+      <a href="{{ url_for('views.mission') }}" class="{{ 'active' if active == 'mission' }}">Mission</a>
+      <a href="{{ url_for('views.about') }}" class="{{ 'active' if active == 'about' }}">Privacy &amp; limits</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

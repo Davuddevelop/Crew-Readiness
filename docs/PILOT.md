@@ -69,6 +69,18 @@ in the script's summary; if not, fix the sheet before anything else. If a volunt
 Commit the CSV and the filled sheet (`docs/pilot/session_sheet.csv`, copied from the template) to `docs/pilot/`. **Do not edit any
 number in the CSV.** If a session went wrong, say so in the sheet's issue code; the analysis (task C4) decides what to do with it.
 
+Then run the analysis (it needs both files and refuses if they disagree):
+
+```bash
+python -m ml.pilot_report      # reads docs/pilot/pilot_sessions.csv and docs/pilot/session_sheet.csv, writes docs/pilot/pilot_report.json
+```
+
+It prints false alerts on the normal sessions, detection on the perturbed ones (split by perturbation), and whether real
+variability matches what the simulator assumes. Intervals are wide on purpose (a few people; sessions of one person are not
+independent). If it says the simulator assumptions are off by more than 1.5x, `suggest_population()` gives the numbers to put into
+`ml/export_results.py`; re-run the benchmark and say in the docs that the figures moved for that reason. `tests/test_pilot_report.py`
+checks the code on a **synthetic** stand-in pilot; no number from that may be quoted as a pilot result.
+
 ## 4. Consent text (read aloud, plain language)
 
 > This is a small test of a student prototype for the NASA Space Apps hackathon. It is not a medical test and it says nothing

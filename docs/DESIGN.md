@@ -26,7 +26,7 @@ The page is a grid with a **label gutter** on the left (section names, small and
 1. **One grid.** Section names hang in the left gutter; content aligns to the columns.
 2. **One typeface.** Instrument Sans, weights 400 and 600 do the work: hierarchy from size and weight, never decoration. Numbers that are compared use tabular figures; running text does not (tabular figures widen the hyphen).
 3. **Flush left, ragged right.** Nothing is centred.
-4. **Structure from rules and space.** No boxes, shadows, blur or gradients. A crisp 1 px ink rule opens every section; 1 px grey rules separate rows.
+4. **Structure from rules and space.** No boxes, shadows, blur or gradients. **Two documented exceptions, both on the landing hero only** (requested by the team lead): an ultra-subtle radial ambient glow behind the headline (`rgba(255,255,255,.04)`), and a vertical mask that fades the hands artwork into the ground. Nothing else may use a gradient. A crisp 1 px ink rule opens every section; 1 px grey rules separate rows.
 5. **Colour only when something needs a human.** The interface is monochrome. Nominal is plain ink. Amber = check-in, coral = review. Status is always written as a word as well.
 6. **Motion must explain something** and has a reduced-motion fallback.
 7. **Honest.** No claim the data can't support (PLAN §1).
@@ -37,14 +37,14 @@ CSS custom properties are the single source of truth. CSS and JavaScript read **
 
 | Role | Value | Use |
 |---|---|---|
-| `--bg` / `--ink` / `--muted` | `#090A0F` / `#F8FAFC` / `#9AA0AA` | ground, text and rules, secondary text (7.5 : 1) |
+| `--bg` / `--ink` / `--muted` | `#0A0A0A` / `#F8FAFC` / `#A1A1AA` | ground, text and rules, secondary text (7.7 : 1) |
 | `--rule` / `--line` / `--line-faint` | `#F8FAFC` / `#2C3140` / `#1D212C` | section rules, row separators, art guides |
 | `--accent` | `#F8FAFC` | interactive (buttons, focus): monochrome on purpose |
 | `--signal` | `#FFB800` | the brand highlight: the rising line |
 | `--nominal` / `--checkin` / `--review` | ink / `#FFB800` / `#FF5A6E` | status. **Coral was added** to the original palette: three levels need three distinguishable states |
 | `--surface` | `#16181F` | raised surface (chart tooltip) |
 
-Type: Instrument Sans (variable woff2, `static/fonts/`, SIL OFL licence alongside); `ui-monospace` stack for code and the payload preview only.
+Type: Instrument Sans for everything; **Instrument Serif** (one weight, 400) for the landing headline only; **JetBrains Mono** for the landing eyebrow and code. Instrument Sans (variable woff2, `static/fonts/`, SIL OFL licence alongside); `ui-monospace` stack for code and the payload preview only.
 Scale: display 44–104 px / 0.94 / −0.045 em / 700; title 32–64 px; advisory 22–32 px; body 16 / 24; labels 13 / 20 / 600; fine print 12 / 16.
 
 ## 5. The art: stacked sessions
@@ -59,7 +59,7 @@ Every curve is built from `trend[].deviations` (`docs/DATA_CONTRACT.md` §5). Th
 
 `/` is a **poster**, and the one deliberate exception to "nothing is centred": a short centred headline, one sentence, two actions, and below them the two hands reaching toward each other as the centrepiece, in the first screen. Then one quiet row of three statements and the image credit. The dashboard lives at `/dashboard` and carries the data. The composition borrows *ideas* from a landing page the team lead supplied as a reference (a dark poster with two hands almost touching over a ghosted wordmark). **No assets, copy or code were taken from it.**
 
-- **Finale:** two black-and-white **photographs**: Adam's hand from Michelangelo's *Creation of Adam* (public domain) and a real NASA spacesuit glove (NASA, from the 2012 "Man and Machine" photograph). The gap is the product's point: the system never decides, a human closes the gap; the amber line between the fingertips is the check-in. Each image is cut out, graded, and padded so its fingertip sits on the vertical centre line at its inner edge, so the gap and the line are plain CSS (no JavaScript). They reach in on load (they are above the fold). Sources, licences and checksums: `docs/ASSETS.md`; rebuilt with one command by `scripts/assets/make_landing_images.py`. Both are visibly credited on the page.
+- **Finale:** two black-and-white **photographs**: Adam's hand from Michelangelo's *Creation of Adam* (public domain) and a real NASA spacesuit glove (NASA, from the 2012 "Man and Machine" photograph). The gap is the product's point: the system never decides, a human closes the gap; the empty space between the fingertips is the point, and nothing fills it. Each image is cut out, graded, and padded so its fingertip sits on the vertical centre line at its inner edge, so the gap and the line are plain CSS (no JavaScript). They reach in on load (they are above the fold). Sources, licences and checksums: `docs/ASSETS.md`; rebuilt with one command by `scripts/assets/make_landing_images.py`. Both are visibly credited on the page.
 - **History:** a first attempt drew the hands procedurally as stacked contour lines and was removed. The landing page was then built three more ways: a tilted live-preview poster with a footer-style link block (judged generic), a flat plot-and-facts page, and a serif and monospace "mission document" look (rejected by the team lead). The team lead then chose to follow the reference poster, which is what this is.
 - **Licensing rule for any image we add:** public domain or licensed to us, with the source and licence recorded in `docs/ASSETS.md`. Never another company's artwork, and no NASA logos.
 
@@ -70,7 +70,7 @@ Every curve is built from `trend[].deviations` (`docs/DATA_CONTRACT.md` §5). Th
 | Art entrance (~1.5 s once, when first visible) | Sessions accumulate; the newest draws last | drawn instantly |
 | Art morph on crew change | Same plot, different person's history | snaps |
 | Idle drift (±0.8 px) | The data is live | off |
-| Landing: words rise, hands lean toward the pointer (gap shrinks to 60 % and never closes), idle float, statements fade up on scroll | The system never closes the gap; a person does | all off; everything is simply shown |
+| Landing: words rise, hands lean toward the pointer (the gap shrinks to 60 % and never closes), idle float, statements fade up on scroll | The system never closes the gap; a person does | all off; everything is simply shown |
 | Line hover | Which session is this line | works, no animation |
 | Live key trace (Monitoring) | What is captured: *when*, never *what*. Pauses show amber while they happen | redraws per key, no scroll |
 

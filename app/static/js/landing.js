@@ -1,7 +1,7 @@
 /**
  * Landing motion. Every movement here explains the product or is a quiet idle breath:
  *   - the hands LEAN IN as the pointer nears the gap, but never close it (the system never decides; a person does),
- *     and the amber line shortens with the gap;
+ *     and the empty space between them narrows, never to zero;
  *   - a slow opposite float on the hands and a drift on the ghosted wordmark;
  *   - the three statements fade up as they scroll into view.
  * Transform-only, paused when the stage is off screen or the tab is hidden, and fully off under reduced motion
@@ -12,7 +12,6 @@ const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 const stage = document.getElementById("land-stage");
 const wrapL = document.getElementById("wrap-l");
 const wrapR = document.getElementById("wrap-r");
-const spark = stage && stage.querySelector(".spark");
 const ghost = stage && stage.querySelector(".ghost");
 
 const MAX_LEAN_VW = 1.8;      // each hand moves at most this far in, so the gap never falls below 60 % of its size
@@ -28,14 +27,12 @@ function frame(now) {
   const bob = Math.sin(t * 0.9) * 5;
   wrapL.style.transform = `translate3d(${x.toFixed(2)}px, ${(bob + tilt * 10).toFixed(2)}px, 0)`;
   wrapR.style.transform = `translate3d(${(-x).toFixed(2)}px, ${(-bob * 0.8 + tilt * 10).toFixed(2)}px, 0)`;
-  spark.style.left = `calc(58vw + ${x.toFixed(2)}px)`;
-  spark.style.width = `calc(9vw - ${(2 * x).toFixed(2)}px)`;
   if (ghost) ghost.style.transform = `translateX(calc(-50% + ${(Math.sin(t * 0.25) * 1.2 * vw).toFixed(2)}px))`;
   raf = requestAnimationFrame(frame);
 }
 function start() { if (!running && visible && !document.hidden) { running = true; raf = requestAnimationFrame(frame); } }
 
-if (stage && wrapL && wrapR && spark && !reduce.matches) {
+if (stage && wrapL && wrapR && !reduce.matches) {
   window.addEventListener("pointermove", (e) => {
     if (e.pointerType === "touch") return;
     const r = stage.getBoundingClientRect();

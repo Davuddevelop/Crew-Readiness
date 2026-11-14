@@ -12,6 +12,7 @@
   <meta property="og:description" content="A second look before docking. It detects changes in interaction timing against a person's own pattern, never what is typed. Prototype, simulated data.">
   <meta property="og:image" content="{{ url_for('static', filename='img/share-card.png', _external=True) }}">
   <meta name="twitter:card" content="summary_large_image">
+  {% block head %}{% endblock %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -20,15 +21,14 @@
   </div>
   <header class="topbar">
     <div class="page">
-      <div class="grid">
-        <div class="label">
+      <div class="grid nav-grid">
+        <div class="nav-brand">
           <a class="brand" href="{{ url_for('views.home') }}" aria-label="Crew Readiness, home">
             <img class="brand-mark" src="{{ url_for('static', filename='img/logo-mark.webp') }}" width="58" height="56" alt="">
             Crew Readiness
           </a>
         </div>
-        <nav class="body" aria-label="Primary">
-          <a href="{{ url_for('views.dashboard') }}" class="{{ 'active' if active == 'dashboard' }}">Dashboard</a>
+        <nav class="nav-links" aria-label="Primary">
           <a href="{{ url_for('views.monitor') }}" class="{{ 'active' if active == 'monitor' }}">Monitoring</a>
           <a href="{{ url_for('views.attention') }}" class="{{ 'active' if active == 'attention' }}">Attention</a>
           <a href="{{ url_for('views.mission') }}" class="{{ 'active' if active == 'mission' }}">Mission</a>
@@ -36,6 +36,7 @@
           <a href="{{ url_for('views.evidence') }}" class="{{ 'active' if active == 'evidence' }}">Evidence</a>
           <a href="{{ url_for('views.about') }}" class="{{ 'active' if active == 'about' }}">Privacy &amp; limits</a>
         </nav>
+        <div class="nav-cta-wrap"><a class="nav-cta{{ ' active' if active == 'dashboard' }}" href="{{ url_for('views.dashboard') }}">Dashboard</a></div>
       </div>
     </div>
   </header>
@@ -45,6 +46,7 @@
   </main>
   {% endblock %}
   <script type="module" src="{{ url_for('static', filename='js/grid.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/tables.js') }}"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

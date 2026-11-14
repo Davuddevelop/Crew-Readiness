@@ -49,3 +49,9 @@ def test_landing_motion_hooks_and_an_accessible_headline(client):
     html = client.get("/").data.decode()
     assert 'aria-label="A second look before docking."' in html          # the animated words stay one readable heading
     assert 'id="wrap-l"' in html and 'id="wrap-r"' in html and 'js/landing.js' in html
+
+
+def test_hero_structure_and_nav(client):
+    html = client.get("/").data.decode()
+    assert 'class="land-eyebrow"' in html and 'class="btn btn-ghost"' in html     # mono pill eyebrow, ghost secondary button
+    assert 'class="nav-cta' in html and html.index("Monitoring") < html.index("nav-cta")   # links, then the Dashboard pill on the right

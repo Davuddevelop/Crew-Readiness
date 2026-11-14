@@ -48,17 +48,86 @@
 
 <section class="section">
   <div class="grid">
-    <div class="label"><span class="idx">04</span>To do</div>
+    <div class="label"><span class="idx">04</span>Retention and access</div>
     <div class="body">
-      <div class="todo-box">
-        <h2 class="h2" style="margin-bottom:12px">TODO(R-1, Member 4): complete this page</h2>
-        <ul class="reasons">
-          <li>Retention and access: who can see a crew member's data, and for how long (proposal).</li>
-          <li>Known confounders: keyboard, language, task difficulty, time of day, sleep, caffeine, practice effect.</li>
-          <li>Our validation: number of participants, sessions each, what we did and did not show.</li>
-          <li>Sources: NASA challenge resources and research, each with one line on <em>how</em> it informed us.</li>
-        </ul>
-      </div>
+      <p style="max-width:62ch;margin-bottom:12px"><strong>This is a proposal, not something the prototype does.</strong> The prototype has no
+        accounts: anyone who can open it can see every profile, and data is kept until the demo database is reset.</p>
+      <ul class="reasons">
+        <li>The crew member sees their own numbers first, and every flag about them.</li>
+        <li>Only the reviewer named for the operation sees a crew member's flags and evidence. Nobody else, by default.</li>
+        <li>Keep only what the baseline needs. It already uses at most the 20 most recent comparable sessions, so older
+          sessions add nothing and could be deleted.</li>
+        <li>A crew member can ask for their data to be deleted, and it is.</li>
+        <li>Record who accepted a new normal, and when. Today only the time is stored, because there are no accounts.</li>
+        <li>The retention period and the reviewer role are for the crew and the mission's operations team to decide, not for us.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="grid">
+    <div class="label"><span class="idx">05</span>Other reasons timing changes</div>
+    <div class="body">
+      <p style="max-width:62ch;margin-bottom:12px">Timing can change for many ordinary reasons. The prototype cannot tell them apart and does
+        not try; that is why a flag leads to a conversation, and a person decides.</p>
+      <ul class="reasons">
+        <li><strong>Keyboard.</strong> A new or different keyboard changes typing rhythm. If the change is lasting, a
+          reviewer can accept it as the person's new normal.</li>
+        <li><strong>Language.</strong> The checklist phrases are in English. Typing in a second language, or switching
+          keyboard layouts, changes timing.</li>
+        <li><strong>Time of day.</strong> A session at an unusual hour can differ from a baseline recorded at another time.</li>
+        <li><strong>Sleep.</strong> A short or disrupted night can change timing. The prototype measures no sleep data
+          and says nothing about how someone slept.</li>
+        <li><strong>Practice.</strong> People get faster as a task becomes familiar. Being faster than usual is never
+          flagged, but early sessions make a baseline that later sessions may drift away from.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="grid">
+    <div class="label"><span class="idx">06</span>What we validated</div>
+    <div class="body">
+      <p style="max-width:62ch;margin-bottom:12px">On <strong>simulated data only</strong>: a benchmark of simulated crews with injected
+        changes whose timing and size we know, two scoring methods measured on the same people (300 simulated people per
+        row, 40 sessions each).</p>
+      <ul class="reasons">
+        <li><strong>Fewer false alarms.</strong> At the alert level the product uses, false alerts on normal sessions
+          fall from about 13.0 % to about 4.7 %.</li>
+        <li><strong>A trade-off.</strong> Detection also falls at that level: for a 10 % slowdown, 0.42 to 0.35 of
+          affected sessions flagged.</li>
+        <li><strong>Better at matched false-alert rates.</strong> With false alerts held at 5 %, for a 10 % slowdown:
+          0.24 to 0.36 when pauses are Poisson-like, 0.22 to 0.29 when they are very bursty.</li>
+        <li><strong>A flaw found and fixed.</strong> In a sustained 20 % slowdown, the old method learned the change as
+          normal and detection fell from 0.88 to 0.07 by the fifteenth affected session. Keeping flagged sessions out of
+          the baseline held it at 0.40.</li>
+      </ul>
+      <p class="fineprint" style="margin-top:16px">Details and the commands to reproduce them are on the
+        <a href="{{ url_for('views.evidence') }}">Evidence</a> page.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="grid">
+    <div class="label"><span class="idx">07</span>What we did not validate</div>
+    <div class="body">
+      <ul class="reasons">
+        <li><strong>No real people.</strong> We have no data from astronauts, crews or volunteers. The demo crew is
+          fictional and its data synthetic.</li>
+        <li><strong>No licensed public dataset.</strong> We found none with enough repeated sessions per person and a
+          licence we could cite, so we did not use one.</li>
+        <li><strong>Our own simulator.</strong> We wrote the simulator and the model, so the benchmark is partly circular.
+          Testing several pause patterns and a wrong assumption reduces that but cannot remove it.</li>
+        <li><strong>Modest gains.</strong> The improvement is real and reproducible, not a breakthrough, and part of it is
+          a trade of sensitivity for fewer false alerts.</li>
+        <li><strong>Total pause time is no longer scored,</strong> so one very long pause can go unflagged. It is shown as context.</li>
+        <li><strong>Accepting a new normal</strong> depends on a reviewer's judgement and is not benchmarked.</li>
+        <li><strong>No clinical or operational claim.</strong> Thresholds are illustrative. Nothing here detects fatigue
+          or illness, clears anyone for duty, or is approved or endorsed by NASA.</li>
+      </ul>
     </div>
   </div>
 </section>

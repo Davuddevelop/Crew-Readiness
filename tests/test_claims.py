@@ -55,14 +55,8 @@ def test_nasa_is_never_claimed_as_approver_or_partner(client):
                 assert DENIES.search(s), (name, s[:110])
 
 
-@pytest.mark.parametrize("path", ["/", "/dashboard", "/monitor", "/replay", "/evidence", "/attention"])
+@pytest.mark.parametrize("path", ["/", "/dashboard", "/monitor", "/replay", "/evidence", "/attention", "/about"])
 def test_no_unfinished_todo_text_on_finished_pages(client, path):
-    assert "TODO" not in text_of(client.get(path).data.decode())
-
-
-@pytest.mark.xfail(reason="R-1 (privacy page) is still being built; see docs/NEXT_STEPS.md", strict=False)
-@pytest.mark.parametrize("path", ["/about"])
-def test_no_unfinished_todo_text_on_pages_still_being_built(client, path):
     assert "TODO" not in text_of(client.get(path).data.decode())
 
 

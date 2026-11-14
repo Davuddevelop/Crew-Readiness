@@ -28,6 +28,17 @@ python -m pytest                                    # tests
 The first run creates `instance/crew_readiness.sqlite3` with four fictional crew members.
 Reset any time: `flask --app run reset-demo`.
 
+## Deploy (Vercel)
+`index.py` is the Vercel entrypoint and `vercel.json` copies `app/static` into `public/` at build time.
+Connect the repo to a Vercel project (framework preset: Flask) and it deploys on every push to `main`.
+
+**Known limitation of the hosted build:** serverless functions can only write to `/tmp`, and that
+SQLite file is private to one function instance and is lost when the instance is recycled. Every
+instance re-seeds the same fictional crew, so the dashboard, mission and about pages look the same
+everywhere, but a session submitted through the hosted *Monitoring* page is **not durable** and may not
+appear on the next request. For the live-capture demo use `python run.py` locally. Making hosted data
+durable needs an external database (decision D-8 in [docs/PLAN.md](docs/PLAN.md)).
+
 ## Demo walkthrough
 1. **Mission:** docking at T-6h; the primary pilot shows YELLOW.
 2. **Monitoring:** pick a crew member, read what is and isn't recorded, complete the checklist. Before submitting, the app shows the **exact JSON** that leaves the browser.

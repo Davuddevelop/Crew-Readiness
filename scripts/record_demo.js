@@ -1,5 +1,5 @@
 /**
- * Records a captioned backup demo video of the real app, following docs/DEMO.md (about 3 minutes, no audio).
+ * Records a captioned backup demo video of the real app, following docs/DEMO.md version 2 (about 3 minutes, no audio).
  * Captions are on-screen text; numbers in them are read from the live page and from app/results_data.json, never typed in.
  *
  *   # a fresh demo database on its own port, so the pilot starts in the real demo state and your data is untouched
@@ -53,60 +53,61 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   async function sweep(fromX, toX, y, steps = 60) { await ring(true); for (let i = 0; i <= steps; i++) { await page.mouse.move(fromX + ((toX - fromX) * i) / steps, y); await wait(28); } await ring(false); }
 
   // ---- 0:00 landing
-  await go('/', 3600);
-  await say('People differ: 220 ms between keys is normal for one person and a big change for another.', 5200);
-  await say('So one threshold for everyone fits nobody. We compare each person only with themselves, and a human decides.', 6000);
-  await page.evaluate(() => window.scrollTo({ top: 300, behavior: 'smooth' })); await wait(1200);
-  await say('Move toward the gap: the hands lean in, and never touch. The system never closes it. A person does.', 1200);
-  await sweep(100, 800, 440); await wait(1500); await sweep(800, 100, 440); await wait(800);
+  await go('/', 3000);
+  await say('On a long mission the ground may be minutes away, and someone still has to decide who does a critical task.', 5200);
+  await say('People differ: 220 ms between keys is normal for one person and a big change for another. So we compare each person only with themselves.', 6000);
+  await page.evaluate(() => window.scrollTo({ top: 300, behavior: 'smooth' })); await wait(1000);
+  await say('Move toward the gap: the hands lean in, and never touch. The system never closes it. A person does.', 1000);
+  await sweep(100, 800, 440); await wait(1200); await sweep(800, 100, 440); await wait(600);
 
-  // ---- 0:20 dashboard
-  await hush(); await go('/dashboard?crew=plt-okafor', 2600);
-  await scrollTo('.art'); await wait(700);
-  await say('Pilot Okafor is YELLOW. This is an illustrative seeded case, not a measure of how well the model works.', 6000);
-  await scrollTo('#detail'); await wait(900);
-  await say('It is not a diagnosis. It is a change from their own pattern.', 4200);
-  await scrollTo('#detail-reasons'); await wait(900);
+  // ---- 0:20 my status
+  await hush(); await go('/me', 2500);
+  await say('The crew member sees their own status first, on their own device, in plain words, and what they can do next.', 6500);
+
+  // ---- 0:40 dashboard
+  await hush(); await go('/dashboard?crew=plt-okafor', 2400);
+  await scrollTo('#detail'); await wait(800);
+  await say('Pilot Okafor is YELLOW. An illustrative seeded case, not a measure of how well it works. Not a diagnosis.', 5500);
+  await scrollTo('#detail-reasons'); await wait(800);
   const reason = await page.evaluate(() => [...document.querySelectorAll('#detail-reasons li')].map((l) => l.textContent).find((t) => /1 session in/.test(t)) || '');
   const n = (reason.match(/1 session in (\d+)/) || [])[1], usual = (reason.match(/usual ([\d.]+) per session/) || [])[1], now = (reason.match(/: (\d+) vs usual/) || [])[1];
-  await say(n ? `And it explains itself in plain words: ${now} pauses against a usual ${usual}, which we would expect only about one session in ${n}.`
-              : 'And it explains itself in plain words, for a human to read.', 7500);
-  await scrollTo('#trend-chart'); await wait(2500);
+  await say(n ? `It explains itself: ${now} pauses against a usual ${usual}, expected only about one session in ${n}.` : 'It explains itself in plain words, for a human to read.', 6500);
 
-  // ---- 0:55 replay
+  // ---- 1:05 mission and brief
+  await hush(); await go('/mission', 2400);
+  await say('Before a critical operation it suggests a check-in and says why. It never assigns or clears anyone.', 5500);
+  await go('/brief', 2400);
+  await say('The page a reviewer holds: reasons, what it cannot tell you, and a blank record filled in by hand. Nothing is stored.', 6500);
+  await scrollTo('#brief-critical'); await wait(1500);
+  await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })); await wait(2500);
+
+  // ---- 1:35 replay: new equipment
   await hush(); await go('/replay', 2200);
-  await scrollTo('.replay-chart'); await wait(700);
-  await say('The idea in motion, on a simulated person: 20% slower for 15 sessions, shaded.', 5200);
-  await say('The dashed line is the old scoring. It learns the slowdown as normal, so its alerts fade.', 6200);
-  await say('The white line is the current scoring: flagged sessions stay out of the baseline, so the change keeps showing.', 6800);
-  await page.click('#reroll'); await say('A different random person. Single runs vary, and sometimes the old scoring does as well.', 6500);
-  await page.click('#reroll'); await say('The proof is not one run.', 3500);
-  await scrollTo('#replay-summary'); await say('The table counts what each scoring flagged. One person is an illustration, not evidence.', 5500);
+  await page.selectOption('#scenario', 'equipment'); await wait(1600);
+  await scrollTo('.replay-chart'); await wait(600);
+  await say('Gloves or a different device make someone slower for good. Both methods flag it at first.', 5200);
+  await say('A person accepts it as their new normal. Repeated alerts fall, and a later real slowdown is still caught.', 6200);
+  await scrollTo('#replay-summary'); await say('It only stops because a human accepted. One simulated person is an illustration, not evidence.', 5500);
 
-  // ---- 1:50 evidence
+  // ---- 2:10 evidence
   await hush(); await go('/evidence', 2200);
-  await say('The proof: 300 simulated people per row.', 4000);
   const op = results.operating_point.find((r) => r.slowdown === 0.1);
-  await scrollTo('table.evidence:nth-of-type(1)'); await page.evaluate(() => document.querySelectorAll('table.evidence')[1]?.scrollIntoView({ behavior: 'smooth', block: 'center' })); await wait(900);
-  await say(`At the level the product uses, false alerts fall from about ${Math.round(op.before.false_alerts * 100)}% to about ${Math.round(op.now.false_alerts * 100)}%.`, 6500);
-  await say(`We pay for it: detection also falls, from ${op.before.detection} to ${op.now.detection} at a 10% slowdown.`, 6000);
-  await say('At matched false-alert rates the new model is better everywhere.', 5000);
+  await say('The proof: 300 simulated people per row.', 3200);
+  await page.evaluate(() => document.querySelectorAll('table.evidence')[1]?.scrollIntoView({ behavior: 'smooth', block: 'center' })); await wait(900);
+  await say(`False alerts fall from about ${Math.round(op.before.false_alerts * 100)}% to about ${Math.round(op.now.false_alerts * 100)}%.`, 5000);
+  await say(`We pay for it: detection also falls, from ${op.before.detection} to ${op.now.detection} at a 10% slowdown.`, 5500);
+  const hasPilot = await page.evaluate(() => !!document.getElementById('pilot'));
+  if (hasPilot) { await scrollTo('#pilot'); await say('And a small pilot with real volunteers: a feasibility check, not validation.', 5500); }
   await page.evaluate(() => [...document.querySelectorAll('h2,h3,.label')].find((e) => /does not show/i.test(e.textContent))?.scrollIntoView({ behavior: 'smooth', block: 'start' })); await wait(900);
-  await say('And this box lists what we did not show: simulated data only. No real crews.', 7500);
+  await say('And this box lists what we did not show. No real crews.', 5000);
 
-  // ---- 2:35 review
-  await hush(); await go('/dashboard?crew=plt-okafor', 2000);
-  await page.evaluate(async () => {
-    const f = { keystroke_count: 125, iki_median_ms: 330, iki_iqr_ms: 140, pause_count: 4, pause_total_ms: 9000, checklist_response_median_ms: 2600, task_duration_ms: 60000, correction_count: 2, retry_count: 0 };
-    for (let i = 0; i < 4; i++) await fetch('/api/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ profile_id: 'plt-okafor', task_type: 'docking_checklist_v1', features: f }) });
-  });
-  await go('/dashboard?crew=plt-okafor', 2200);
-  await scrollTo('#detail-review'); await wait(800);
-  await say('When a person genuinely changes, say a new keyboard, a human accepts the new normal.', 5800);
-  await page.click('#detail-accept'); await wait(1800);
-  await say('We never decide that for them. After accepting, the baseline restarts, so it shows CALIBRATING.', 6000);
-  await hush(); await wait(600);
-  await say('Next: validate on real data with a licence we can cite. We have not done that yet, and the page says so.', 5200);
+  // ---- 2:40 offline check, close
+  await hush(); await go('/about', 1800);
+  await scrollTo('#offline-check'); await wait(700);
+  await page.click('#netcheck-run'); await wait(600);
+  await say('It runs with no network: every file this page loaded came from this device.', 5500);
+  await hush(); await go('/', 2200);
+  await say('A prototype, tested only on simulated data. It detects changes, never fatigue, and a human decides.', 5500);
   await hush(); await wait(500);
 
   await ctx.close(); await browser.close();

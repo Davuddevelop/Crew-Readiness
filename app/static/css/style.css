@@ -373,3 +373,18 @@ table.evidence td.num { font-size: 15px; }
 .replay-controls input[type="range"] { accent-color: var(--ink); width: 100%; }
 .replay-chart { height: 340px; }
 .replay-controls [hidden] { display: none; }
+
+.ci { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+/* readiness brief: one printable page for the human reviewer */
+.brief-person { border-top: 1px solid var(--line); padding: 16px 0; }
+.brief-person:first-child { border-top: 0; padding-top: 0; }
+.record { list-style: none; padding: 0; margin: 12px 0 0; }
+.record li { padding: 14px 0; border-top: 1px solid var(--line); }
+@media print {
+  :root { color-scheme: light; --bg: #fff; --ink: #000; --muted: #333; --rule: #000; --line: #999; --surface: #fff; }
+  html, body { background: #fff; color: #000; }
+  .topbar, .no-print { display: none !important; }
+  .brief-person, .record li { break-inside: avoid; }
+  .section { padding-top: 16px; padding-bottom: 16px; }
+}

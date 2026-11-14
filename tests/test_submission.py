@@ -25,6 +25,19 @@ def test_matched_false_alert_numbers_match_the_results_file():
 
 
 def test_the_document_states_its_limits_and_placeholders():
-    for phrase in ("on simulated data only", "No real people", "partly circular", "Nothing here detects fatigue or illness", "approved or endorsed by NASA",
+    for phrase in ("simulated data", "very small volunteer check", "Almost no real people", "partly circular", "Nothing here detects fatigue or illness", "approved or endorsed by NASA",
                    "[TEAM NAME]", "[EXACT CHALLENGE TITLE"):
         assert phrase in DOC
+
+
+def test_equipment_change_numbers_match_the_results_file():
+    ec = DATA["equipment_change"]
+    old, cur = ec["rows"]
+    assert f"from **{old['after']['rate'] * 100:.0f} %** to **{cur['after']['rate'] * 100:.0f} %**" in DOC
+    assert f"**{cur['later']['rate'] * 100:.0f} %** of the time against **{old['later']['rate'] * 100:.0f} %**" in DOC
+
+
+def test_pilot_numbers_in_the_submission_match_the_pilot_report():
+    pilot = json.loads((ROOT / "docs" / "pilot" / "pilot_report.json").read_text(encoding="utf-8"))
+    d, f = pilot["detection_on_perturbed"]["all"]["yellow"], pilot["false_alerts_on_normal"]["yellow"]
+    assert f"**{d['flagged']} of {d['n']}** sessions recorded as changed were flagged, and **{f['flagged']} of {f['n']}** normal sessions were" in DOC

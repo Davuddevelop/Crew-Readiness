@@ -39,10 +39,25 @@ def test_page_covers_the_r1_topics_and_labels_the_proposal(client):
     assert "This is a proposal, not something the prototype does." in t
     for word in ("Keyboard.", "Language.", "Time of day.", "Sleep.", "Practice."):
         assert word in t
-    for phrase in ("simulated data only", "No real people", "partly circular", "approved or endorsed by NASA"):
+    for phrase in ("simulated data", "very small volunteer check", "Almost no real people", "no data from astronauts or crews", "partly circular", "approved or endorsed by NASA"):
         assert phrase in t
 
 
 def test_baseline_window_on_the_page_matches_the_code(client):
     from app.baseline import MAX_BASELINE_SESSIONS
     assert f"at most the {MAX_BASELINE_SESSIONS} most recent comparable sessions" in page(client)
+
+
+def test_about_has_the_offline_self_check_and_says_what_it_does_not_cover(client):
+    html = client.get("/about").get_data(as_text=True)
+    assert 'id="offline-check"' in html and "js/netcheck.js" in html
+    assert "Not tested: a real on-board computer" in html and "turn off Wi-Fi" in html
+
+
+def test_about_places_the_tool_beside_health_monitoring_without_health_claims(client):
+    html = client.get("/about").get_data(as_text=True)
+    assert 'id="health-fit"' in html and "not</strong> a health monitor" in html
+    assert "Reaction Self Test" in html and "no endorsement by NASA is implied" in html
+    assert "tell crew medical support directly" in html
+    landing = client.get("/").get_data(as_text=True)
+    assert "beside crew health monitoring, not in place of it" in landing

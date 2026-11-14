@@ -63,15 +63,17 @@
     <div class="label"><span class="idx">03b</span>At the real alert level</div>
     <div class="body">
       <p class="muted small" style="max-width:62ch">The same comparison at the level the product actually uses (YELLOW at a score of 1.0), with no matching.
-        <strong>Synthetic data.</strong> Both columns matter: fewer false alerts is only a win if real changes are still caught.</p>
+        <strong>Synthetic data.</strong> Both columns matter: fewer false alerts is only a win if real changes are still caught. Brackets are 95 % intervals from resampling the simulated people; they say how much the result depends on which simulated people we drew, not how it would do on real people.</p>
       <div class="table-wrap" role="region" aria-label="Real alert level table" tabindex="0">
         <table class="evidence">
           <thead><tr><th>Slowdown</th><th>Detected, before</th><th>Detected, now</th><th>False alerts, before</th><th>False alerts, now</th></tr></thead>
           <tbody>
           {% for r in data.operating_point %}
             <tr><td>{{ (r.slowdown * 100) | round(0) | int }} %</td>
-              <td class="num">{{ '%.2f' | format(r.before.detection) }}</td><td class="num">{{ '%.2f' | format(r.now.detection) }}</td>
-              <td class="num">{{ '%.1f' | format(r.before.false_alerts * 100) }} %</td><td class="num"><strong>{{ '%.1f' | format(r.now.false_alerts * 100) }} %</strong></td></tr>
+              <td class="num">{{ '%.2f' | format(r.before.detection) }}{% if r.before.detection_ci %} <span class="ci">({{ '%.2f' | format(r.before.detection_ci[0]) }} to {{ '%.2f' | format(r.before.detection_ci[1]) }})</span>{% endif %}</td>
+              <td class="num">{{ '%.2f' | format(r.now.detection) }}{% if r.now.detection_ci %} <span class="ci">({{ '%.2f' | format(r.now.detection_ci[0]) }} to {{ '%.2f' | format(r.now.detection_ci[1]) }})</span>{% endif %}</td>
+              <td class="num">{{ '%.1f' | format(r.before.false_alerts * 100) }} %{% if r.before.false_alerts_ci %} <span class="ci">({{ '%.1f' | format(r.before.false_alerts_ci[0] * 100) }} to {{ '%.1f' | format(r.before.false_alerts_ci[1] * 100) }})</span>{% endif %}</td>
+              <td class="num"><strong>{{ '%.1f' | format(r.now.false_alerts * 100) }} %</strong>{% if r.now.false_alerts_ci %} <span class="ci">({{ '%.1f' | format(r.now.false_alerts_ci[0] * 100) }} to {{ '%.1f' | format(r.now.false_alerts_ci[1] * 100) }})</span>{% endif %}</td></tr>
           {% endfor %}
           </tbody>
         </table>
@@ -79,6 +81,107 @@
     </div>
   </div>
 </section>
+
+{% if data.budget_calibration %}
+<section class="section">
+  <div class="grid">
+    <div class="label"><span class="idx">03c</span>What the alert level stands for</div>
+    <div class="body">
+      <p style="max-width:62ch">A <strong>false-alert budget</strong> of 1 in 20 means: on a normal session, about 1 in 20 would be flagged by chance.
+        The product's YELLOW level stands for about <strong>1 normal session in {{ data.budget_calibration.shipped.one_in | round(0) | int }}</strong> on simulated data.
+        Below, a cutoff is fitted on some simulated people and then measured on <em>other</em> people it never saw
+        ({{ data.budget_calibration.people }} people, {{ data.budget_calibration.normal_sessions }} normal sessions). <strong>Synthetic data.</strong></p>
+      <div class="table-wrap" role="region" aria-label="Alert budget table" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>Budget</th><th>Cutoff</th><th>False alerts on held-out people</th><th>95 % interval</th></tr></thead>
+          <tbody>
+          {% for r in data.budget_calibration.rows %}
+            <tr><td>1 in {{ (1 / r.budget) | round(0) | int }}</td><td class="num">{{ '%.2f' | format(r.cutoff) }}</td>
+              <td class="num"><strong>{{ '%.1f' | format(r.observed * 100) }} %</strong></td>
+              <td class="num">{{ '%.1f' | format(r.ci95[0] * 100) }} % to {{ '%.1f' | format(r.ci95[1] * 100) }} %</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small" style="max-width:62ch">On target for held-out simulated people, so the <em>method</em> of choosing a cutoff for a budget works on simulated data.
+        Some people sit above the average, but about as many as chance alone would give at this few sessions each. Real people may differ: that is what a real pilot is for.</p>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if data.equipment_change %}
+{% set ec = data.equipment_change %}
+{% set old = ec.rows[0] %}{% set cur = ec.rows[1] %}
+<section class="section" id="equipment-change">
+  <div class="grid">
+    <div class="label"><span class="idx">03e</span>New equipment (gloves, a different device)</div>
+    <div class="body">
+      <p style="max-width:62ch">A person becomes {{ '%.0f' | format(ec.magnitude * 100) }} % slower for good from session {{ ec.assumptions.start_session }},
+        a person accepts the change as their new normal after {{ ec.assumptions.accepted_after_sessions }} sessions, and from session {{ ec.assumptions.later_start_session }}
+        a real {{ '%.0f' | format(ec.assumptions.later_slowdown * 100) }} % slowdown lasts {{ ec.assumptions.later_length }} sessions.
+        {{ ec.people }} simulated people. <strong>Synthetic data; size and timing are illustrative assumptions.</strong></p>
+      <div class="table-wrap" role="region" aria-label="Equipment change table" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>Share of sessions flagged</th><th>While the equipment was new</th><th>After it was accepted</th><th>During a later real slowdown</th></tr></thead>
+          <tbody>
+          {% for r in ec.rows %}
+            <tr><td>{{ r.scoring }}</td>
+            {% for ph in ['equipment', 'after', 'later'] %}
+              <td class="num"><strong>{{ '%.0f' | format(r[ph].rate * 100) }} %</strong> <span class="ci">({{ '%.0f' | format(r[ph].ci95[0] * 100) }} to {{ '%.0f' | format(r[ph].ci95[1] * 100) }} %)</span></td>
+            {% endfor %}</tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small" style="max-width:62ch">
+        {% if cur.after.ci95[1] < old.after.ci95[0] %}After the person accepts the change, the current scoring raises fewer repeated alerts, and the intervals do not overlap.{% else %}After the change is accepted, the two scorings raise a similar number of alerts here.{% endif %}
+        {% if cur.later.ci95[0] > old.later.ci95[1] %}It also flags more of a later real slowdown.{% elif cur.later.ci95[1] < old.later.ci95[0] %}It flags fewer of a later real slowdown.{% else %}Detection of the later slowdown is not clearly different: the intervals overlap.{% endif %}
+        The current scoring only stops alerting because a person accepted the change. The tool never decides that.</p>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if pilot %}
+{% set fa = pilot.false_alerts_on_normal.yellow %}
+<section class="section" id="pilot">
+  <div class="grid">
+    <div class="label"><span class="idx">03d</span>A small pilot with real volunteers</div>
+    <div class="body">
+      <p style="max-width:62ch"><strong>{{ pilot.n_people }} volunteers, {{ pilot.n_sessions }} sessions, one laptop.</strong>
+        Each person typed the checklist normally, then with a deliberate change (non-dominant hand, or counting backwards), then normally again.
+        This is a feasibility check, <strong>not validation</strong>: volunteers are not astronauts or crew.</p>
+      <div class="table-wrap" role="region" aria-label="Pilot results" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>What we measured</th><th>Flagged</th><th>Share</th><th>95 % interval</th></tr></thead>
+          <tbody>
+            <tr><td>Normal sessions flagged (false alerts)</td><td class="num">{{ fa.flagged }} of {{ fa.n }}</td>
+              <td class="num"><strong>{% if fa.rate is not none %}{{ '%.0f' | format(fa.rate * 100) }} %{% else %}n/a{% endif %}</strong></td>
+              <td class="num">{% if fa.ci95 %}{{ '%.0f' | format(fa.ci95[0] * 100) }} % to {{ '%.0f' | format(fa.ci95[1] * 100) }} %{% else %}n/a{% endif %}</td></tr>
+          {% for key, label in [('all', 'Changed sessions flagged (all)'), ('non_dominant_hand', 'Non-dominant hand'), ('counting_backwards', 'Counting backwards')] %}
+            {% set d = pilot.detection_on_perturbed[key].yellow %}
+            <tr><td>{{ label }}</td><td class="num">{{ d.flagged }} of {{ d.n }}</td>
+              <td class="num"><strong>{% if d.rate is not none %}{{ '%.0f' | format(d.rate * 100) }} %{% else %}n/a{% endif %}</strong></td>
+              <td class="num">{% if d.ci95 %}{{ '%.0f' | format(d.ci95[0] * 100) }} % to {{ '%.0f' | format(d.ci95[1] * 100) }} %{% else %}n/a{% endif %}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if pilot.variability.n_people %}
+      <p class="muted small" style="max-width:62ch">Is the simulator realistic? Real session-to-session variability in keystroke timing was
+        {{ pilot.variability.iki_cv.real_median }} against {{ pilot.variability.iki_cv.assumed }} assumed, and
+        {{ pilot.variability.resp_cv.real_median }} against {{ pilot.variability.resp_cv.assumed }} for checklist responses:
+        {% if pilot.variability.simulator_assumptions_hold %}within a factor of 1.5 of what the benchmark assumes.{% else %}more than 1.5 times off, so the benchmark above is less trustworthy than it looks.{% endif %}
+        Real typists here were also faster (each person's typical time between keys: {{ pilot.variability.iki_median_ms.real_min }} to {{ pilot.variability.iki_median_ms.real_max }} ms, against {{ '%.0f' | format(pilot.variability.iki_median_ms.assumed_range[0]) }} to {{ '%.0f' | format(pilot.variability.iki_median_ms.assumed_range[1]) }} assumed) and paused far less ({{ pilot.variability.pause_mean_per_session.real_min }} to {{ pilot.variability.pause_mean_per_session.real_max }} long pauses per session, against {{ pilot.variability.pause_mean_per_session.assumed_range[0] }} to {{ pilot.variability.pause_mean_per_session.assumed_range[1] }} assumed). With so few people, one unusual session can move these figures a lot.</p>
+      {% endif %}
+      <ul class="reasons">
+        {% for item in pilot.limits %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{% endif %}
 
 <section class="section">
   <div class="grid">
@@ -106,7 +209,7 @@
     <div class="label"><span class="idx">05</span>What this does not show</div>
     <div class="body">
       <ul class="reasons">
-        <li><strong>Simulated data only.</strong> We wrote the simulator and the model. No real crew, no astronaut data.</li>
+        <li><strong>{% if pilot %}Mostly simulated data, plus a small volunteer pilot.{% else %}Simulated data only.{% endif %}</strong> We wrote the simulator and the model. No real crew, no astronaut data.</li>
         <li>The gain is real but modest; it is a measured improvement with a stated cause, not a breakthrough.</li>
         <li>Pause <em>time</em> is displayed but no longer scored, so one very long pause can go unflagged.</li>
         <li>The typing and checklist features still use the original method and are not yet re-tested.</li>

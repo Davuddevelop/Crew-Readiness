@@ -22,7 +22,7 @@ function sync() {
   $("size-out").textContent = `${$("size").value} %`;
   $("length-out").textContent = $("length").value;
   $("size-wrap").hidden = sc === "steady";
-  $("length-wrap").hidden = sc === "steady" || sc === "spike";
+  $("length-wrap").hidden = sc === "steady" || sc === "spike" || sc === "equipment";
 }
 
 function draw(d) {
@@ -34,8 +34,19 @@ function draw(d) {
       const { ctx, chartArea: a, scales: { x, y } } = c;
       const idx = rows.map((r, i) => (r.event ? i : -1)).filter((i) => i >= 0);
       ctx.save();
-      if (idx.length) {
-        const half = (x.getPixelForValue(1) - x.getPixelForValue(0)) / 2;
+      const half = (x.getPixelForValue(1) - x.getPixelForValue(0)) / 2;
+      if (d.bands) {
+        ctx.fillStyle = "rgba(248,250,252,0.07)";
+        for (const b of d.bands) ctx.fillRect(x.getPixelForValue(b.from - 1) - half, a.top, x.getPixelForValue(b.to - 1) - x.getPixelForValue(b.from - 1) + 2 * half, a.bottom - a.top);
+        ctx.font = "11px " + T.font; ctx.fillStyle = T.muted; ctx.textAlign = "left";
+        for (const b of d.bands) ctx.fillText(b.label, x.getPixelForValue(b.from - 1) - half + 4, a.top + 12);
+        ctx.strokeStyle = T.ink; ctx.setLineDash([]); ctx.lineWidth = 1;
+        for (const m of d.markers || []) {
+          const px = x.getPixelForValue(m.at - 1) - half;
+          ctx.beginPath(); ctx.moveTo(px, a.top + 18); ctx.lineTo(px, a.bottom); ctx.stroke();
+          ctx.textAlign = "left"; ctx.fillStyle = T.ink; ctx.fillText(m.label, px + 4, a.top + 30);
+        }
+      } else if (idx.length) {
         ctx.fillStyle = "rgba(248,250,252,0.07)";
         ctx.fillRect(x.getPixelForValue(idx[0]) - half, a.top, x.getPixelForValue(idx[idx.length - 1]) - x.getPixelForValue(idx[0]) + 2 * half, a.bottom - a.top);
       }
@@ -78,6 +89,13 @@ function draw(d) {
 }
 
 function summarise(d) {
+  if (d.table) {
+    $("replay-head").innerHTML = `<tr>${d.table.headers.map((h) => `<th>${esc(h)}</th>`).join("")}</tr>`;
+    $("replay-summary").innerHTML = d.table.rows.map((r) => `<tr><td>${esc(r[0])}</td>${r.slice(1).map((c) => `<td class="num">${esc(c)}</td>`).join("")}</tr>`).join("");
+    $("replay-note").textContent = "Same simulated person and sessions for both. The current scoring only stops alerting because a person accepted the change; it never decides that itself. One simulated person is an illustration, not evidence. The 300-person figures are on the Evidence page.";
+    return;
+  }
+  $("replay-head").innerHTML = "<tr><th></th><th>Affected sessions flagged</th><th>False alerts in normal sessions</th></tr>";
   const row = (name, s) => `<tr><td>${esc(name)}</td>
     <td class="num">${s.event_sessions ? `${s.flagged_in_event} of ${s.event_sessions}` : "no change to find"}</td>
     <td class="num">${s.false_alerts} of ${s.normal_sessions}</td></tr>`;
@@ -109,6 +127,7 @@ async function load() {
   }
 }
 
+$("scenario").addEventListener("input", () => { $("size").value = $("scenario").value === "equipment" ? 40 : 20; });
 ["scenario", "size", "length", "seed"].forEach((id) => $(id).addEventListener("input", load));
 $("reroll").addEventListener("click", () => { $("seed").value = Math.floor(Math.random() * 10000); load(); });
 load();

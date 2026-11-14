@@ -19,9 +19,35 @@
   </div>
 </section>
 
+<section class="section" id="health-fit">
+  <div class="grid">
+    <div class="label"><span class="idx">02</span>Where this fits next to health monitoring</div>
+    <div class="body">
+      <p style="max-width:62ch">This is <strong>not</strong> a health monitor. It is a behavioural signal that could sit beside one. Space agencies already treat changes in how quickly and steadily people respond as a behavioural indicator: NASA's Behavioral Health and Performance research flew a 3-minute reaction test, the <em>Reaction Self Test</em>, on the International Space Station to give astronauts objective feedback on changes in vigilant attention. This prototype asks a related question a different way: can a change show up in ordinary procedure work, with no extra hardware and no extra test?</p>
+      <div class="table-wrap" role="region" aria-label="How this compares" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th></th><th>Health monitoring</th><th>A dedicated reaction test</th><th>This prototype</th></tr></thead>
+          <tbody>
+            <tr><td>What it looks at</td><td>Body measurements and clinical assessment</td><td>Response speed on a short, separate test</td><td>Timing of ordinary task work, against the person's own earlier sessions</td></tr>
+            <tr><td>Extra hardware or time</td><td>Sensors, kits, clinician time</td><td>A few minutes set aside</td><td>None beyond the device the task already uses; an optional short attention check</td></tr>
+            <tr><td>What it can say</td><td>A health state, from clinicians</td><td>A change in vigilant attention</td><td>Only "this differs from your usual pattern". Never why</td></tr>
+            <tr><td>Status</td><td>Established</td><td>A NASA research experiment</td><td>Prototype, simulated data and at most a small volunteer pilot</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="reasons">
+        <li><strong>A flag is a prompt for people, not a finding.</strong> It names nobody for treatment and diagnoses nothing. A reviewer may choose to involve crew medical support; the printable brief has a box for that.</li>
+        <li>If a person feels unwell, they should tell crew medical support directly, whatever this tool shows.</li>
+        <li>Whether a change in task timing is a useful companion to health monitoring is exactly what we have <strong>not</strong> shown. We show that the method flags changes against a person's own baseline, on simulated data.</li>
+      </ul>
+      <p class="fineprint" style="max-width:62ch">Sources, cited as background only (no endorsement by NASA is implied; links are in <code>docs/TASKS.md</code> so this page links nowhere else): NASA Technical Reports Server record 20090029851, description of the Reaction Self Test experiment; and the study "Sleep deficiency in spaceflight is associated with degraded neurobehavioral functions and elevated stress in astronauts on six month missions aboard the International Space Station", which found short sleep associated with slower psychomotor response in 24 astronauts.</p>
+    </div>
+  </div>
+</section>
+
 <section class="section">
   <div class="grid">
-    <div class="label"><span class="idx">02</span>What it does not do</div>
+    <div class="label"><span class="idx">03</span>What it does not do</div>
     <div class="body">
       <ul class="reasons">
         <li>It does not detect or diagnose fatigue, illness, or cognitive impairment.</li>
@@ -34,7 +60,7 @@
 
 <section class="section">
   <div class="grid">
-    <div class="label"><span class="idx">03</span>Data handling</div>
+    <div class="label"><span class="idx">04</span>Data handling</div>
     <div class="body">
       <ul class="reasons">
         <li>Only aggregate timing numbers are stored (see the preview shown before every submission).</li>
@@ -48,7 +74,7 @@
 
 <section class="section">
   <div class="grid">
-    <div class="label"><span class="idx">04</span>Retention and access</div>
+    <div class="label"><span class="idx">05</span>Retention and access</div>
     <div class="body">
       <p style="max-width:62ch;margin-bottom:12px"><strong>This is a proposal, not something the prototype does.</strong> The prototype has no
         accounts: anyone who can open it can see every profile, and data is kept until the demo database is reset.</p>
@@ -67,7 +93,7 @@
 
 <section class="section">
   <div class="grid">
-    <div class="label"><span class="idx">05</span>Other reasons timing changes</div>
+    <div class="label"><span class="idx">06</span>Other reasons timing changes</div>
     <div class="body">
       <p style="max-width:62ch;margin-bottom:12px">Timing can change for many ordinary reasons. The prototype cannot tell them apart and does
         not try; that is why a flag leads to a conversation, and a person decides.</p>
@@ -88,9 +114,9 @@
 
 <section class="section">
   <div class="grid">
-    <div class="label"><span class="idx">06</span>What we validated</div>
+    <div class="label"><span class="idx">07</span>What we validated</div>
     <div class="body">
-      <p style="max-width:62ch;margin-bottom:12px">On <strong>simulated data only</strong>: a benchmark of simulated crews with injected
+      <p style="max-width:62ch;margin-bottom:12px">Mostly on <strong>simulated data</strong> (plus one very small volunteer check, see Evidence): a benchmark of simulated crews with injected
         changes whose timing and size we know, two scoring methods measured on the same people (300 simulated people per
         row, 40 sessions each).</p>
       <ul class="reasons">
@@ -112,10 +138,11 @@
 
 <section class="section">
   <div class="grid">
-    <div class="label"><span class="idx">07</span>What we did not validate</div>
+    <div class="label"><span class="idx">08</span>What we did not validate</div>
     <div class="body">
       <ul class="reasons">
-        <li><strong>No real people.</strong> We have no data from astronauts, crews or volunteers. The demo crew is
+        <li><strong>Almost no real people.</strong> Beyond the simulations we ran one very small check with two
+          volunteers on one laptop (see Evidence). We have no data from astronauts or crews. The demo crew is
           fictional and its data synthetic.</li>
         <li><strong>No licensed public dataset.</strong> We found none with enough repeated sessions per person and a
           licence we could cite, so we did not use one.</li>
@@ -131,4 +158,26 @@
     </div>
   </div>
 </section>
+
+<section class="section" id="offline-check">
+  <div class="grid">
+    <div class="label"><span class="idx">09</span>Check it yourself: no network</div>
+    <div class="body">
+      <p style="max-width:62ch">When the app runs on the device itself, it needs no internet: no fonts, scripts or data are fetched from anywhere else, and nothing is sent out.
+        The button below lists every file <strong>this page</strong> loaded and where it came from. To test it for real, turn off Wi-Fi, reload, and use the app.</p>
+      <button type="button" class="btn btn-ghost" id="netcheck-run" style="margin:16px 0 24px">List what this page loaded</button>
+      <div class="table-wrap" role="region" aria-label="Files this page loaded" tabindex="0" id="netcheck-out" hidden>
+        <table class="evidence">
+          <thead><tr><th>Kind of file</th><th>Files</th><th>From this device</th><th>From elsewhere</th></tr></thead>
+          <tbody id="netcheck-rows"></tbody>
+        </table>
+      </div>
+      <p class="muted small" id="netcheck-note" style="max-width:62ch"></p>
+      <p class="fineprint" style="max-width:62ch">Limits: this checks the one page you are on, in this browser, now. A test in the project (<code>test_no_page_calls_out_to_the_network</code>) checks every page's links. The hosted demo copy needs the internet to reach you, of course; run the app locally for the offline claim. Not tested: a real on-board computer.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/netcheck.js') }}"></script>
 {% endblock %}

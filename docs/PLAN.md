@@ -95,10 +95,28 @@ Each decision: what, why, who signs off. **Status: DECIDED / PROPOSED (needs sig
 | D-2 | Features computed **in the browser**; server accepts only 9 aggregate numbers and rejects anything else (HTTP 400) | Privacy is enforced and testable, not promised. Raw keystrokes never exist on the server | Lead | DECIDED (prototype) |
 | D-3 | Baseline = median + MAD (×1.4826) of the last ≤ 20 `ok` sessions; **CALIBRATING below 5** | Robust to one-off weird sessions with tiny n | Member 2 | PROPOSED |
 | D-4 | One-sided deviation (only slower / more pausing counts), cap 4, weights 40/30/30, cutoffs 1.0 / 2.0 | Simple and explainable. **Needs M-2 evidence before we defend it to judges** | Member 2 | PROPOSED |
-| D-5 | **What counts as an alert?** Which bands on which roles escalate, and when do we suggest the backup? | This is a product decision, not a math one | **Lead** | **OPEN**, blocks L-1 |
+| D-5 | **What counts as an alert?** Which bands on which roles escalate, and when do we suggest the backup? | This is a product decision, not a math one. Rules in the **D-5 rules** table below | **Lead** | **DECIDED** (4 cases; open edges listed below), unblocks L-1 |
 | D-6 | Demo astronaut = fictional Pilot "Kai Okafor"; critical op = manual docking at T-6h | Highest-stakes, easy to understand | Lead | PROPOSED |
 | D-7 | **Live demo strategy:** who types on stage, on which profile, against which baseline? | A live typist compared with a *synthetic* baseline is meaningless (see R-1 below) | **Lead** | **OPEN** |
 | D-8 | Public link: hosted vs. "runnable repo + video" | Submission needs one of them. A Vercel deployment now exists (read-only-ish: SQLite lives in `/tmp`, so submitted sessions are **not durable**; see README → Deploy). Keep it as a viewing link, or invest in a durable DB? | Lead | OPEN (interim: Vercel viewing link) |
+
+### D-5 rules: what counts as an alert (decided by the Lead)
+
+The mission advisory is driven by **critical roles only**. Level = the highest row that applies.
+
+| Situation (critical roles) | Level | The advisory must say |
+|---|---|---|
+| Any critical member is **RED** | `REVIEW` | Recommend human review and a second verification. If another critical member is **GREEN**, name them as an option *for the reviewer to consider* |
+| No RED, any critical member **YELLOW** | `CHECK_IN` | Suggest a brief check-in or the optional attention check for that person |
+| No RED/YELLOW, any critical member **CALIBRATING** / no data | `CHECK_IN` | No baseline yet; "unknown" is never presented as "fine" |
+| All critical members **GREEN** | `NOMINAL` | No action suggested |
+| **No clean backup** (e.g. pilot RED, backup YELLOW) | `REVIEW` | Flag **both**; name **nobody** as a replacement; humans decide who covers |
+| Any **non-critical** role, any band | no effect | Shown in the assignments table only; never changes the level |
+
+**Open edges, to be settled by whoever implements L-1 (record the answer here):**
+- Primary GREEN but backup RED: does a RED backup alone force `REVIEW`? (The table's "any critical RED" says yes.)
+- One critical member RED and another CALIBRATING: wording when both apply.
+- Does LOW confidence soften the message? (Not yet decided; the band currently speaks for itself.)
 
 > **Recommendation for D-7 (Lead decides):** the presenter creates a `team_test` profile and records ≥ 5 real sessions **on the demo laptop** on Nov 14 evening. On stage, a deliberate perturbation (e.g. non-dominant hand) produces a visible, honest deviation. The seeded fictional crew remains as the context and as the fallback.
 

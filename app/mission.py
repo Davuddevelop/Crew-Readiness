@@ -43,10 +43,16 @@ def mission_advisory(assignments: list[dict]) -> dict:
       * Never use the words fatigue, impaired, unfit, diagnosis.
       * A CALIBRATING person is "unknown", not "fine".
 
-    Questions to decide before you code (write your answers in docs/PLAN.md, Decision D-5):
-      * What exactly counts as an alert? Any YELLOW? Only on critical roles?
-      * When do we suggest the backup? Only if the backup is GREEN?
-      * Does LOW confidence soften the message?
+    DECIDED RULES (docs/PLAN.md, "D-5 rules"). Level = highest row that applies, critical roles only:
+      * any critical RED                      -> REVIEW; if another critical member is GREEN,
+                                                 name them as an option for the reviewer
+      * else any critical YELLOW              -> CHECK_IN
+      * else any critical CALIBRATING/no data -> CHECK_IN ("no baseline yet", never "fine")
+      * else                                  -> NOMINAL
+      * no clean backup (e.g. RED + YELLOW)   -> REVIEW, flag both, name NOBODY as a replacement
+      * non-critical roles                    -> never change the level or the messages
+    OPEN EDGES you must settle and then write into PLAN.md: RED backup with GREEN primary;
+    RED + CALIBRATING together; whether LOW confidence softens wording.
     """
     return {
         "level": "TODO",

@@ -40,6 +40,11 @@ def about():
     return render_template("about.html", active="about")
 
 
+@bp.get("/replay")
+def replay():
+    return render_template("replay.html", active="replay")
+
+
 RESULTS_FILE = Path(__file__).with_name("results_data.json")
 
 

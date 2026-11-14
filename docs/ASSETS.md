@@ -31,25 +31,36 @@ section.
 
 | | |
 |---|---|
-| Work | "Astronaut Glove Tested in JPL's CITADEL", NASA ID **PIA26430**, 2025-04-24 |
-| Description | An EVA glove for spacewalks on the International Space Station, prepared for thermal vacuum testing at NASA's Jet Propulsion Laboratory on 1 Nov 2023 |
-| Credit | **NASA/JPL-Caltech** |
-| Licence | NASA media: generally not subject to copyright in the US; NASA's media usage guidelines apply (no endorsement implied) |
-| Details page | https://images.nasa.gov/details/PIA26430 |
-| Original | `https://images-assets.nasa.gov/image/PIA26430/PIA26430~orig.jpg`, 7141 x 4017 px, SHA-1 `20f482f20315eb74c1dd3df6dea104c300fe914e` |
-| Contains people? | No. Test rig, glove, thermocouple wires only |
+| Work | **"Man and Machine"**, NASA photograph (March 2012): Robonaut 2 reaching toward a spacesuit-gloved hand, staged as a nod to Michelangelo's *Creation of Adam*. We use only the spacesuit glove (the right-hand side of the photo) |
+| Credit | **NASA** ("Image Credit: NASA" in NASA's image article and in Live Science, Phys.org and NBC News coverage) |
+| Licence | NASA media: generally not subject to copyright in the US; NASA's media usage guidelines apply (credit NASA, no endorsement implied, no NASA logos) |
+| Where it came from | A 1200 x 600 WebP copy supplied by the team lead from the space.com republication (https://www.space.com/15088-robonaut-photo-michelangelo-sistine-chapel.html). SHA-1 of that file: `6202ba9c74c71c32845a2ed3590a7fcd55503dab` (62,412 bytes) |
+| NASA page | https://www.nasa.gov/image-article/man-machine/ (credit line read from search summaries; **the page itself could not be opened from the build environment**) |
+| NASA image ID / original | **Not found.** Our searches of NASA's Image and Video Library did not return it, so we have no NASA ID and no higher-resolution original |
+| Contains people? | No. A robot and a glove |
+
+**Open verification (task R-2, Member 4).** Open the NASA page above, confirm the credit line and that the photograph carries
+no restriction, and if possible find the original in NASA's library and its ID, then replace the small copy with the original
+(the script takes it as `--glove`; the outline may need re-checking at a different resolution). Until then this image rests on
+NASA's credit as reported by four outlets, not on a NASA page we read ourselves.
+
+**Honest caveat.** The source is only 1200 px wide, so the glove is about 570 px wide before we enlarge it to 1140 px. It is
+a smooth-textured glove, so it holds up, but it is softer than the NASA JPL photograph we used before. That photograph
+(**NASA/JPL-Caltech, PIA26430**, "Astronaut Glove Tested in JPL's CITADEL", https://images.nasa.gov/details/PIA26430,
+7141 x 4017 px, SHA-1 `20f482f20315eb74c1dd3df6dea104c300fe914e`) remains supported by the script with
+`--glove-kind pia26430` and is a sharper fallback.
 
 ## Processing (both images)
 
 Reproducible with one command: `scripts/assets/make_landing_images.py` (see its docstring).
 
 1. Crop the region of interest. 2. Cut out the subject: a coarse outline drawn by a person seeds OpenCV GrabCut, which
-decides the true edge. 3. Convert to black and white and apply a mild tone curve. 4. Mirror the glove so it points
-toward the hand. 5. Pad each image so its leading fingertip sits on the vertical centre line at its inner edge (this
+decides the true edge. 3. Convert to black and white and apply a mild tone curve. 4. Mirror the glove if it points away from
+the hand (the Man and Machine glove already points left, so it is not mirrored). 5. Pad each image so its leading fingertip sits on the vertical centre line at its inner edge (this
 is why the page can place the hands and the gap with plain CSS). 6. Fade the outer 10 percent to transparent so the
 sleeves dissolve. 7. Save as WebP (quality 84).
 
-The images are altered (cut out, recoloured, mirrored). They are not presented as the original photographs.
+The images are altered (cut out and recoloured; the older JPL glove was also mirrored). They are not presented as the original photographs.
 
 ## How to add an image
 

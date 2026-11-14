@@ -89,6 +89,12 @@ so nobody repeats it:
   per person and a licence appears (the CMU keystroke-dynamics benchmark is a plausible candidate; its terms are
   **unverified**), the first use is the false-alert rate on real people with no injected events.
 
+## Replay page (`/replay`)
+One simulated person, scored by the old and the current scoring side by side (`ml/scenario.py`, `GET /api/simulate`). Same
+generator and the same scoring code as the benchmark, so it cannot show something the product does not do. It is an
+illustration: single runs vary a lot (some show the new scoring flagging fewer affected sessions, and the page says so).
+The 300-person results above are the evidence.
+
 ## Reproduce
 ```
 .venv/bin/python -m ml.report_incumbent        # before: detection and false alerts

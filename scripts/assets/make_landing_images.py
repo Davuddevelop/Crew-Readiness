@@ -2,14 +2,18 @@
 Rebuilds the two landing-page images from their public sources. Nothing here runs in the app.
 
   app/static/img/hand-human.webp      <- Adam's forearm and hand, Michelangelo, The Creation of Adam (public domain)
-  app/static/img/hand-astronaut.webp  <- an EVA glove, NASA/JPL-Caltech PIA26430 (NASA content, public domain)
+  app/static/img/hand-astronaut.webp  <- a spacesuit glove, NASA imagery (two sources supported, see --glove-kind)
 
 Sources are NOT committed (several MB each). URLs, licences and SHA-1 checksums: docs/ASSETS.md.
 
   python -m venv .assets-venv && .assets-venv/bin/pip install -r scripts/assets/requirements.txt
   .assets-venv/bin/python scripts/assets/make_landing_images.py \\
       --glove PIA26430~orig.jpg --adam "Michelangelo - Creation of Adam (cropped).jpg" \\
-      --adam-crop 240,245,600,365 --out app/static/img [--debug DIR]
+      --adam-crop 240,245,600,365 --out app/static/img [--debug DIR] [--glove-kind pia26430|man-and-machine]
+
+--glove-kind pia26430 (default): NASA/JPL-Caltech PIA26430, points right in the source and is mirrored.
+--glove-kind man-and-machine: the right-hand glove of NASA's 2012 "Man and Machine" photo (Robonaut 2 and a spacesuit
+glove). It already points left, so it is not mirrored. The source is small (1200 x 600), so it is output at 1140 px.
 
 --adam-crop is a box in the coordinates of a 1500px-wide overview of the fresco file. The default only fits
 that exact file (3524 x 1599, SHA-1 in docs/ASSETS.md). A different reproduction frames Adam differently:
@@ -36,6 +40,17 @@ ADAM_POLY = [(560,240),(640,215),(760,200),(860,180),(930,140),(980,118),(1050,1
              (1345,250),(1362,282),(1345,296),(1320,326),(1295,342),(1262,338),(1236,326),(1212,338),(1186,346),(1170,322),
              (1130,288),(1085,266),(1052,238),(1010,236),(950,300),(870,355),(790,400),(700,440),(640,456),(560,464)]
 GLOVE_CROP_VIEW = (480, 270, 1300, 740)      # region of the 1500px overview of the NASA original
+
+# "Man and Machine" glove: crop box in a 1500px-wide view of the 1200x600 source; outline in a 1500px-wide view of that crop
+MM_CROP_VIEW = (760, 120, 1500, 600)
+_MM_PX = [(52,570),(60,530),(110,490),(155,480),(250,462),(340,430),(430,385),(480,325),(520,290),(580,268),(650,238),
+          (730,222),(765,240),(830,205),(950,150),(1050,110),(1150,95),(1250,80),(1340,55),(1400,70),(1480,80),
+          (1480,700),(1380,740),(1280,765),(1190,815),(1150,820),(1130,785),(1050,742),(950,730),(840,668),(760,672),
+          (700,690),(692,830),(680,872),(650,886),(620,880),(610,910),(580,926),(540,916),(490,880),(482,820),(476,720),
+          (470,760),(466,850),(440,900),(400,916),(360,900),(335,860),(322,780),(322,700),(330,640),(335,592),(290,592),
+          (250,616),(180,626),(110,620),(60,600)]
+MM_POLY = [(x * 1500 / 1480, y * 1500 / 1480) for x, y in _MM_PX]    # the outline was read off a 1480px-wide render
+MM_W = 1140
 
 ADAM_W, GLOVE_W = 1500, 1260                 # output pixel widths (about 2x the CSS widths)
 FADE = 0.10                                  # outer 10% of the width fades out (transparency only)
@@ -132,6 +147,7 @@ def main():
     ap.add_argument("--glove", required=True, help="NASA PIA26430~orig.jpg")
     ap.add_argument("--adam", required=True, help="fresco reproduction (see docs/ASSETS.md)")
     ap.add_argument("--adam-crop", default="240,245,600,365", help="x0,y0,x1,y1 of Adam's arm in a 1500px-wide overview of --adam")
+    ap.add_argument("--glove-kind", choices=("pia26430", "man-and-machine"), default="pia26430")
     ap.add_argument("--out", required=True)
     ap.add_argument("--debug", help="write cut-out previews here")
     a = ap.parse_args()
@@ -139,8 +155,9 @@ def main():
     if a.debug: os.makedirs(a.debug, exist_ok=True)
 
     # --- astronaut glove (points right in the source; mirrored later) ---
-    g_src = crop_view(Image.open(a.glove).convert("RGB"), GLOVE_CROP_VIEW)
-    g_alpha = cut(g_src, GLOVE_POLY, band_frac=0.016)
+    mm = a.glove_kind == "man-and-machine"
+    g_src = crop_view(Image.open(a.glove).convert("RGB"), MM_CROP_VIEW if mm else GLOVE_CROP_VIEW)
+    g_alpha = cut(g_src, MM_POLY if mm else GLOVE_POLY, band_frac=0.016)
     glove = trim(to_rgba_gray(g_src, g_alpha, black=18, gain=1.08))
     # --- Adam's hand (points right) ---
     box = tuple(float(v) for v in a.adam_crop.split(","))
@@ -155,8 +172,10 @@ def main():
 
     human = fade_outer(centre_tip(grade(human, 1.35, 1.12), "right"), "left")
     human = human.resize((ADAM_W, round(human.height * ADAM_W / human.width)), Image.LANCZOS)
-    glove = fade_outer(centre_tip(ImageOps.mirror(grade(glove, 1.18, 1.0)), "left"), "right")
-    glove = glove.resize((GLOVE_W, round(glove.height * GLOVE_W / glove.width)), Image.LANCZOS)
+    graded = grade(glove, 1.18, 1.0)
+    glove = fade_outer(centre_tip(graded if mm else ImageOps.mirror(graded), "left"), "right")
+    gw = MM_W if mm else GLOVE_W
+    glove = glove.resize((gw, round(glove.height * gw / glove.width)), Image.LANCZOS)
     for name, im in (("hand-human", human), ("hand-astronaut", glove)):
         im.save(os.path.join(a.out, f"{name}.webp"), "WEBP", quality=84, method=6)
         print(f"{name}.webp  {im.width}x{im.height}")

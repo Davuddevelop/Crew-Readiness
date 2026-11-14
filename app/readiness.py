@@ -62,6 +62,9 @@ def _walk(history: list[dict], task_type: str) -> list[tuple]:
     return out
 
 
+score_history = _walk      # public name: scores every session in a history exactly as the product does
+
+
 def _pending_run(walked: list[tuple], history: list[dict]) -> list[int]:
     """Ids of the unbroken run of excluded sessions that ends at the latest session (may be empty)."""
     ids: list[int] = []

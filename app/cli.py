@@ -13,6 +13,8 @@ from .seed import seed_demo
 
 
 def init_app(app: Flask) -> None:
+    from .backup import register_cli as register_backup_cli   # export-backup / import-backup (task R3)
+    register_backup_cli(app)
 
     @app.cli.command("reset-demo")
     @click.confirmation_option(prompt="This deletes ALL sessions. Continue?")

@@ -29,9 +29,9 @@
   --ink: #F8FAFC;
   --muted: #A1A1AA;        /* 7.9:1 on --bg */
   --rule: #F8FAFC;         /* structural rules: crisp, full ink */
-  --line: #2C3140;         /* row separators */
-  --line-faint: #1D212C;   /* decorative only (art guides) */
-  --surface: #16181F;      /* raised surfaces (chart tooltip) */
+  --line: #2A2A2E;         /* row separators */
+  --line-faint: #1B1B1F;   /* decorative only (art guides) */
+  --surface: #141416;      /* raised surfaces (chart tooltip) */
 
   /* colour roles: a theme changes these values only. CSS and JS read the roles, never hexes */
   --accent: #F8FAFC;       /* interactive: monochrome on purpose */
@@ -90,7 +90,7 @@ code { font-family: var(--mono); font-size: .92em; }
 }
 
 /* a section: crisp rule on top, name on the left, content on the right */
-.section { border-top: 1px solid var(--rule); padding: 16px 0 72px; }
+.section { border-top: 1px solid var(--rule); padding: 28px 0 72px; }
 .section .label { font-size: 13px; line-height: 20px; font-weight: 600; }
 .section .label .idx { display: block; color: var(--muted); font-weight: 400; }
 .section.tight { padding-bottom: 40px; }
@@ -139,7 +139,7 @@ h3.cap { font-size: 13px; line-height: 20px; font-weight: 600; color: var(--mute
 }
 
 .container { padding-bottom: 32px; }
-.pagehead { border-top: 1px solid var(--rule); padding: 16px 0 56px; }
+.pagehead { border-top: 1px solid var(--rule); padding: 28px 0 56px; }
 .pagehead .label { font-size: 13px; line-height: 20px; font-weight: 600; }
 .pagehead .title { margin-bottom: 20px; }
 .pagehead .lede { max-width: 52ch; }
@@ -188,7 +188,19 @@ table.evidence th {
 table.evidence td { padding: 14px 24px 14px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
 table.evidence td.num { font-size: 15px; }
 .critical-row td:first-child { font-weight: 700; }
-@media (max-width: 860px) { table.evidence { min-width: 560px; } table.evidence th:first-child, table.evidence td:first-child { min-width: 180px; } }
+/* phones: each row becomes a labelled card instead of a clipped, scrolling table (labels come from js/tables.js) */
+@media (max-width: 860px) {
+  table.evidence, table.evidence tbody, table.evidence tr { display: block; }
+  table.evidence thead { display: none; }
+  table.evidence tr { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  table.evidence td { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 3px 0; border: 0; text-align: right; }
+  table.evidence td::before { content: attr(data-label); flex: none; text-align: left; font-size: 12px; line-height: 20px; color: var(--muted); }
+  table.evidence td:first-child { justify-content: flex-start; text-align: left; font-weight: 600; padding-bottom: 6px; }
+  table.evidence td:first-child::before { content: none; }
+  table.evidence td.small, table.evidence td[colspan] { display: block; text-align: left; }
+  table.evidence td.small::before { display: block; margin-bottom: 2px; }
+  select, input[type="text"] { font-size: 17px; }
+}
 .reasons { list-style: none; padding: 0; margin: 0; max-width: 62ch; }
 .reasons li { padding: 12px 0; border-bottom: 1px solid var(--line); }
 .consent ul { list-style: none; padding: 0; margin: 0; }
@@ -270,12 +282,12 @@ table.evidence td.num { font-size: 15px; }
 /* ---------- mission + attention ---------- */
 .tminus { font-size: clamp(32px, 5vw, 64px); line-height: 1; font-weight: 700; letter-spacing: -0.04em; color: var(--checkin); }
 .rt-stage {
-  margin: 24px 0; height: 240px; border: 1px solid var(--ink); background: transparent; color: var(--muted);
+  margin: 24px 0; height: 240px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; background: transparent; color: var(--muted);
   display: flex; align-items: center; justify-content: flex-start; text-align: left; padding: 24px; user-select: none; cursor: pointer;
 }
 .rt-stage.rt-go { background: var(--signal); border-color: var(--signal); color: var(--bg); }
 .rt-stage.rt-todo { border-style: dashed; }
-.todo-box { border: 1px dashed var(--line); padding: 20px 24px; }
+.todo-box { border: 1px dashed var(--line); border-radius: 6px; padding: 20px 24px; }
 
 /* ---------- dev aid: add ?grid to any URL to see the 12 columns ---------- */
 .gridviz { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }

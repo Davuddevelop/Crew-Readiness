@@ -268,42 +268,24 @@ table.evidence td.num { font-size: 15px; }
 /* ---------- landing ---------- */
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .land { overflow-x: clip; }
-.land-hero { padding-top: 56px; padding-bottom: 24px; }
-.land-hero .grid { align-items: center; row-gap: 56px; }
-.land-copy { grid-column: 1 / span 5; }
-.land-pill {
-  display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); padding: 6px 12px;
-  font-size: 12px; line-height: 16px; color: var(--muted); margin-bottom: 28px;
-}
-.land-pill::before { content: ""; width: 8px; height: 8px; background: var(--signal); }
-.land-title { font-size: clamp(40px, 5.8vw, 88px); margin-bottom: 24px; }
-.land-copy .lede { margin-bottom: 32px; }
-
-/* the tilted preview: the real dashboard art, faded out toward the edge (transparency only, no colour gradient) */
-.land-preview { grid-column: 7 / -1; perspective: 1700px; min-width: 0; }
-.pv-card {
-  transform: rotateY(-15deg) rotateX(6deg) rotateZ(1.2deg); transform-origin: 0 50%;
-  border: 1px solid var(--line); background: var(--surface); padding: 20px 22px 16px;
-  -webkit-mask-image: linear-gradient(90deg, #000 58%, transparent 100%); mask-image: linear-gradient(90deg, #000 58%, transparent 100%);
-}
-.pv-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 12px; }
-.pv-name { font-size: 14px; line-height: 20px; font-weight: 700; }
-.pv-plot { position: relative; height: clamp(240px, 26vw, 360px); border-top: 1px solid var(--rule); }
-.pv-plot canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.pv-foot { margin: 12px 0 0; font-size: 12px; line-height: 16px; color: var(--muted); }
-
-.land-links { padding-top: 48px; padding-bottom: 8px; }
-.land-links .grid { row-gap: 40px; border-top: 1px solid var(--line); padding-top: 32px; }
-.land-brand { grid-column: 1 / span 4; }
-.land-brand .brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.land-brand p { max-width: 36ch; }
-.land-col { grid-column: span 2; }
-.land-col:nth-of-type(1) { grid-column: 7 / span 2; }
+/* .section sets padding: ... 0 ... and comes after .page, which would cancel the page margins on an element with both classes */
+.land .page.section { padding-left: var(--margin); padding-right: var(--margin); }
+.land-hero { padding-bottom: 8px; }
+.label-sub { display: block; margin-top: 12px; font-weight: 400; color: var(--muted); }
+.land-hero .land-title { font-size: clamp(40px, 6.4vw, 96px); margin-bottom: 44px; max-width: 14ch; }
+.land-lede { max-width: 52ch; margin-bottom: 32px; }
+.land-today .g10 { row-gap: 20px; }
+.land-who { grid-column: 1 / -1; margin: 0; font-size: 13px; line-height: 20px; color: var(--muted); }
+.art-wide { grid-column: 1 / -1; }
+.art-wide .art-stage { height: clamp(300px, 42vh, 480px); }
+.facts { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); column-gap: 24px; row-gap: 24px; padding-top: 4px; }
+.facts[hidden] { display: none; }
+.fact { display: flex; flex-direction: column; gap: 6px; grid-column: span 3; }
+.fact:nth-child(3) { grid-column: span 3; }
+.fact-band { grid-column: span 1 / span 1; }
+.fact-n { font-size: clamp(24px, 2.6vw, 36px); line-height: 1.05; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.fact-l { font-size: 13px; line-height: 20px; color: var(--muted); max-width: 30ch; }
 .cap-h { font-size: 13px; line-height: 20px; font-weight: 600; color: var(--muted); margin: 0 0 12px; }
-.land-col ul { list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 20px; }
-.land-col li { padding: 4px 0; }
-.land-col a { text-decoration: none; }
-.land-col a:hover { color: var(--signal); }
 
 /* the finale: two hands over a giant ghosted wordmark. Each image is pre-padded so its fingertip sits on the
    vertical centre line at its inner edge, so the gap and the spark are plain CSS (no JavaScript, no tuning). */
@@ -332,9 +314,8 @@ table.evidence td.num { font-size: 15px; }
 .land-credit { font-size: 12px; line-height: 16px; color: var(--muted); padding-top: 12px; padding-bottom: 40px; }
 
 @media (max-width: 860px) {
-  .land-copy, .land-preview, .land-brand { grid-column: 1 / -1; }
-  .land-col, .land-col:nth-of-type(1) { grid-column: span 2; }
-  .pv-card { transform: none; -webkit-mask-image: none; mask-image: none; }
+  .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .fact, .fact:nth-child(3), .fact-band { grid-column: span 4; }
   .land-stage { height: clamp(150px, 46vw, 300px); }
 }
 @media (prefers-reduced-motion: reduce) {

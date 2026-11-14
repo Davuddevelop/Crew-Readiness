@@ -3,67 +3,50 @@
 {% block body %}
 <main class="land">
 
-  <section class="page land-hero">
+  <section class="page section hero land-hero">
     <div class="grid">
-      <div class="land-copy">
-        <p class="land-pill">Prototype · built for NASA Space Apps 2026</p>
+      <div class="label">Crew Readiness<span class="label-sub">Prototype<br>NASA Space Apps 2026</span></div>
+      <div class="body">
         <h1 class="display land-title">A second look before docking.</h1>
-        <p class="lede">Crew Readiness compares how each person works with their own usual pattern, and puts the difference in front of a human before a critical operation. It never reads what is typed. It never decides.</p>
+        <p class="lede land-lede">It compares each person only with their own usual pattern, and puts what changed in front of a human before a critical operation. It never reads what is typed. It never decides.</p>
         <div class="actions">
           <a class="btn" href="{{ url_for('views.monitor') }}">Start monitored task</a>
-          <a class="link" href="{{ url_for('views.dashboard') }}">Open the dashboard</a>
-        </div>
-      </div>
-
-      <!-- a live, tilted view of the real dashboard: decorative, so hidden from assistive tech -->
-      <div class="land-preview" aria-hidden="true">
-        <div class="pv-card">
-          <div class="pv-head">
-            <span class="pv-name" id="pv-name">Crew member</span>
-            <span id="pv-chip"></span>
-          </div>
-          <div class="pv-plot">
-            <canvas id="pv-canvas"></canvas>
-            <div id="pv-axis" hidden></div>
-            <div id="pv-readout" hidden></div>
-          </div>
-          <p class="pv-foot">One line per session. Flat means it matched their own baseline.</p>
+          <a class="link" href="{{ url_for('views.evidence') }}">See the evidence</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="page land-links">
+  <section class="page section land-today">
     <div class="grid">
-      <div class="land-brand">
-        <div class="brand-row">
-          <img class="brand-mark" src="{{ url_for('static', filename='img/logo-mark.webp') }}" width="58" height="56" alt="">
-          <strong>Crew Readiness</strong>
+      <div class="label"><span class="idx">01</span>Today</div>
+      <div class="body g10">
+        <p class="land-who" id="pv-who">Fictional crew member, synthetic data.</p>
+        <figure class="art art-wide" aria-label="Stacked sessions: one line per session for a fictional crew member">
+          <div class="art-stage">
+            <canvas id="pv-canvas" role="img" aria-label="One line per recent session, oldest at the top. Flat lines match the person's own baseline; the amber line is the latest session and rises where timing differed."></canvas>
+            <div class="art-readout" id="pv-readout" aria-hidden="true"></div>
+            <div class="art-axis" id="pv-axis" aria-hidden="true"></div>
+          </div>
+        </figure>
+        <div class="facts" id="pv-facts" hidden>
+          <div class="fact"><span class="fact-n" id="f-rhythm"></span><span class="fact-l" id="f-rhythm-l"></span></div>
+          <div class="fact"><span class="fact-n" id="f-pause"></span><span class="fact-l" id="f-pause-l"></span></div>
+          <div class="fact"><span class="fact-n" id="f-resp"></span><span class="fact-l" id="f-resp-l"></span></div>
+          <div class="fact fact-band"><span id="pv-chip"></span><span class="fact-l" id="f-band-l"></span></div>
         </div>
-        <p class="small muted">Decision support for crews and the people who review them. Prototype with a fictional crew and illustrative thresholds. It detects changes in interaction timing, not fatigue or fitness for duty.</p>
       </div>
-      <div class="land-col">
-        <h2 class="cap-h">Product</h2>
-        <ul>
-          <li><a href="{{ url_for('views.dashboard') }}">Dashboard</a></li>
-          <li><a href="{{ url_for('views.monitor') }}">Monitoring</a></li>
-          <li><a href="{{ url_for('views.attention') }}">Attention check</a></li>
-          <li><a href="{{ url_for('views.mission') }}">Mission</a></li>
-        </ul>
-      </div>
-      <div class="land-col">
-        <h2 class="cap-h">Trust</h2>
-        <ul>
-          <li><a href="{{ url_for('views.about') }}">Privacy &amp; limits</a></li>
-          <li><a href="{{ url_for('views.monitor') }}">What leaves the browser</a></li>
-        </ul>
-      </div>
-      <div class="land-col">
-        <h2 class="cap-h">Status</h2>
-        <ul class="muted">
-          <li>Feasibility prototype</li>
-          <li>Synthetic demo data</li>
-          <li>Timing numbers only, never content</li>
+    </div>
+  </section>
+
+  <section class="page section">
+    <div class="grid">
+      <div class="label"><span class="idx">02</span>How it works</div>
+      <div class="body">
+        <ul class="reasons">
+          <li><strong>It learns you.</strong> A few routine checklist sessions set each person's own usual timing. Nobody is compared with anybody else.</li>
+          <li><strong>It notices what changed.</strong> Typing rhythm, pauses and response time are compared with that baseline. Only nine timing numbers ever leave the browser, never the words.</li>
+          <li><strong>A person decides.</strong> A change is a prompt for a check-in, not a verdict. A reviewer can accept a new normal. The system cannot.</li>
         </ul>
       </div>
     </div>

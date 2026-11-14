@@ -7,6 +7,8 @@
     <h1 class="title">Your own status, first.</h1>
     <p class="lede">Compared only with your own usual pattern, and shown to you before anyone else. It says what changed and what you can do. It never guesses the cause, and it never decides.</p>
     <p class="fineprint">If you feel unwell, tell crew medical support directly. This page cannot tell.</p>
+    <p style="margin-top:20px"><a class="btn" href="{{ url_for('views.monitor') }}" id="me-start">Start check-in</a>
+      <a href="{{ url_for('views.attention') }}" style="margin-left:16px">Responsiveness check (about a minute)</a></p>
   </div>
 </section>
 

@@ -25,7 +25,7 @@ Each is per person, small, explainable, and trainable on tens of sessions:
 2. **Change-point detection** (CUSUM / Bayesian online change-point): flags *when* a shift began, not only that today is odd.
 3. **Probabilistic baseline** (e.g. per-feature Student-t or a small Gaussian-process / state-space model with drift): gives a predictive distribution, so "how surprising is today" is a probability with an interval.
 
-## Public dataset (task for Member 4, due early)
+## Public dataset (searched 2026-11-14: none usable, dropped; see docs/ML_RESULTS.md)
 Find one with repeated reaction-time or task-performance measures per person over days, **with a licence we can cite**. Candidates to *verify*, not assume: published psychomotor-vigilance (PVT) datasets, NASA's MATB-II task environment (NASA-developed; check redistribution terms), NASA Life Sciences Data Archive (access is request-based, so probably too slow). Record source, licence and checksum in `docs/ASSETS.md`-style provenance. If nothing clean turns up by hour ~8, we drop it and say synthetic only. Do not use data we cannot license.
 
 ## NASA APIs: where they honestly fit

@@ -42,6 +42,21 @@ median/MAD. The prior washes out because burstiness is learned per person.
 5. **Calibration of "1 session in N"** assumes the count model is right; it is an explanation aid, not a guarantee.
 6. Detects changes in interaction timing against a person's own history. **Not** fatigue, illness or fitness for duty.
 
+## Public dataset search (2026-11-14): no usable fit, dropped
+The plan asked for one public dataset with repeated per-person task timings and a citable licence. What we found,
+so nobody repeats it:
+- **Sandbox network:** only Hugging Face and a few media hosts are reachable. Zenodo, OSF, PhysioNet, figshare, UCI,
+  Kaggle and the CMU keystroke-dynamics page were not.
+- **Hugging Face keystroke sets** (e.g. Aalto 136M features): one session per person, so there is no personal history,
+  and most carry no licence tag, which means we cannot use them.
+- **Closest candidate:** `Emulated-Inc/drowsy-driving-reaction-time-eeg`, a mirror of Cao et al. 2019 (*Scientific Data*
+  6:19, doi:10.1038/s41597-019-0027-4), tagged CC BY 4.0. Lane-drift reaction times, 62 sessions. **At most 5 sessions per
+  person (most have 2 or 3)**, below our 5-session minimum baseline; 20 sessions are EEG files without a trial table;
+  the task is driving, and its framing is drowsiness, which is the claim this project avoids. Not used.
+- **Consequence:** every number in this repository is synthetic. If a typing or reaction-time dataset with 10+ sessions
+  per person and a licence appears (the CMU keystroke-dynamics benchmark is a plausible candidate; its terms are
+  **unverified**), the first use is the false-alert rate on real people with no injected events.
+
 ## Reproduce
 ```
 .venv/bin/python -m ml.report_incumbent        # before: detection and false alerts

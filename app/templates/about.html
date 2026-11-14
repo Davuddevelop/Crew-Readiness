@@ -131,4 +131,26 @@
     </div>
   </div>
 </section>
+
+<section class="section" id="offline-check">
+  <div class="grid">
+    <div class="label"><span class="idx">08</span>Check it yourself: no network</div>
+    <div class="body">
+      <p style="max-width:62ch">When the app runs on the device itself, it needs no internet: no fonts, scripts or data are fetched from anywhere else, and nothing is sent out.
+        The button below lists every file <strong>this page</strong> loaded and where it came from. To test it for real, turn off Wi-Fi, reload, and use the app.</p>
+      <button type="button" class="btn btn-ghost" id="netcheck-run" style="margin:16px 0 24px">List what this page loaded</button>
+      <div class="table-wrap" role="region" aria-label="Files this page loaded" tabindex="0" id="netcheck-out" hidden>
+        <table class="evidence">
+          <thead><tr><th>Kind of file</th><th>Files</th><th>From this device</th><th>From elsewhere</th></tr></thead>
+          <tbody id="netcheck-rows"></tbody>
+        </table>
+      </div>
+      <p class="muted small" id="netcheck-note" style="max-width:62ch"></p>
+      <p class="fineprint" style="max-width:62ch">Limits: this checks the one page you are on, in this browser, now. A test in the project (<code>test_no_page_calls_out_to_the_network</code>) checks every page's links. The hosted demo copy needs the internet to reach you, of course; run the app locally for the offline claim. Not tested: a real on-board computer.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/netcheck.js') }}"></script>
 {% endblock %}

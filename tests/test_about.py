@@ -46,3 +46,9 @@ def test_page_covers_the_r1_topics_and_labels_the_proposal(client):
 def test_baseline_window_on_the_page_matches_the_code(client):
     from app.baseline import MAX_BASELINE_SESSIONS
     assert f"at most the {MAX_BASELINE_SESSIONS} most recent comparable sessions" in page(client)
+
+
+def test_about_has_the_offline_self_check_and_says_what_it_does_not_cover(client):
+    html = client.get("/about").get_data(as_text=True)
+    assert 'id="offline-check"' in html and "js/netcheck.js" in html
+    assert "Not tested: a real on-board computer" in html and "turn off Wi-Fi" in html

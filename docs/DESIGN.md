@@ -70,6 +70,7 @@ Every curve is built from `trend[].deviations` (`docs/DATA_CONTRACT.md` §5). Th
 | Art entrance (~1.5 s once, when first visible) | Sessions accumulate; the newest draws last | drawn instantly |
 | Art morph on crew change | Same plot, different person's history | snaps |
 | Idle drift (±0.8 px) | The data is live | off |
+| Landing: words rise, hands lean toward the pointer (gap shrinks to 60 % and never closes), idle float, statements fade up on scroll | The system never closes the gap; a person does | all off; everything is simply shown |
 | Line hover | Which session is this line | works, no animation |
 | Live key trace (Monitoring) | What is captured: *when*, never *what*. Pauses show amber while they happen | redraws per key, no scroll |
 

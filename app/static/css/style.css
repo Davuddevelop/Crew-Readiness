@@ -269,10 +269,10 @@ table.evidence td.num { font-size: 15px; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .land { overflow-x: clip; }
 .land-top { text-align: center; padding-top: clamp(24px, 3.4vw, 48px); }
-.land-kicker { margin: 0 0 18px; font-size: 13px; line-height: 20px; letter-spacing: .02em; color: var(--muted); }
+.land-kicker { animation: fade-up .8s .05s cubic-bezier(.2,.8,.2,1) both; margin: 0 0 18px; font-size: 13px; line-height: 20px; letter-spacing: .02em; color: var(--muted); }
 .land-h { font-size: clamp(42px, 6.6vw, 100px); line-height: .98; font-weight: 600; letter-spacing: -0.04em; max-width: 15ch; margin: 0 auto 18px; text-wrap: balance; }
-.land-sub { max-width: 56ch; margin: 0 auto 24px; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: var(--muted); text-wrap: balance; }
-.land-top .actions { display: flex; justify-content: center; align-items: center; gap: 12px 28px; flex-wrap: wrap; }
+.land-sub { animation: fade-up .9s .75s cubic-bezier(.2,.8,.2,1) both; max-width: 56ch; margin: 0 auto 24px; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: var(--muted); text-wrap: balance; }
+.land-top .actions { animation: fade-up .9s .95s cubic-bezier(.2,.8,.2,1) both; display: flex; justify-content: center; align-items: center; gap: 12px 28px; flex-wrap: wrap; }
 
 /* the hands: each image is pre-padded so its fingertip sits on the vertical centre line at its inner edge, so the gap
    and the spark are plain CSS (no JavaScript, no tuning). They are above the fold, so they reach on load. */
@@ -281,6 +281,13 @@ table.evidence td.num { font-size: 15px; }
   position: absolute; left: 50%; bottom: -0.17em; transform: translateX(-50%); white-space: nowrap; user-select: none; pointer-events: none;
   font-size: clamp(56px, 12.6vw, 220px); line-height: 1; font-weight: 600; letter-spacing: -0.05em; color: var(--ink); opacity: .06;
 }
+/* headline: each word rises out of its own mask */
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding: .1em .04em .16em; margin: -.1em -.04em -.16em; }
+.w > span { display: inline-block; animation: rise 1s calc(.1s + var(--i) * .09s) cubic-bezier(.2,.8,.2,1) both; }
+@keyframes rise { from { transform: translateY(112%); } to { transform: none; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+/* the pointer moves these wrappers (JS); the images inside keep their own reach animation */
+.hand-wrap { position: absolute; inset: 0; will-change: transform; }
 .hand { position: absolute; top: 0; height: 100%; max-width: none; object-fit: contain; pointer-events: none; user-select: none; }
 .hand-l { left: 0; width: 58vw; object-position: right center; animation: reach-l 2.2s cubic-bezier(.2,.7,.2,1) both; }
 .hand-r { right: 0; width: 33vw; object-position: left center; animation: reach-r 2.2s cubic-bezier(.2,.7,.2,1) both; }
@@ -294,6 +301,8 @@ table.evidence td.num { font-size: 15px; }
 .land-three { padding-top: 28px; padding-bottom: 8px; }
 .land-three .grid { border-top: 1px solid var(--line); padding-top: 28px; row-gap: 28px; }
 .land-three .col { grid-column: span 4; }
+.reveal-on .land-three .col { opacity: 0; transform: translateY(18px); transition: opacity .9s calc(var(--i) * 110ms) ease, transform .9s calc(var(--i) * 110ms) cubic-bezier(.2,.8,.2,1); }
+.reveal-on .land-three .col.in { opacity: 1; transform: none; }
 .land-three h2 { font-size: 15px; line-height: 22px; font-weight: 600; margin: 0 0 6px; }
 .land-three p { font-size: 15px; line-height: 22px; color: var(--muted); max-width: 36ch; }
 .land-credit { font-size: 12px; line-height: 16px; color: var(--muted); padding-top: 28px; padding-bottom: 40px; }
@@ -303,7 +312,8 @@ table.evidence td.num { font-size: 15px; }
   .land-stage { height: clamp(150px, 46vw, 300px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hand-l, .hand-r, .spark, .spark i { animation: none !important; }
+  .hand-l, .hand-r, .spark, .spark i, .w > span, .land-kicker, .land-sub, .land-top .actions { animation: none !important; }
+  .reveal-on .land-three .col { opacity: 1; transform: none; transition: none; }
 }
 
 /* baseline review: shown only while a flagged run waits for a human */

@@ -168,6 +168,14 @@ stacked-sessions art draws exactly these numbers and nothing else (see `docs/DES
 
 ---
 
+### Backup file (task R3)
+`flask --app run export-backup <file>` writes `{"sha256": <hex>, "payload": {"format": "crew-readiness-backup", "format_version": 1,
+"tables": {"profiles": [...], "sessions": [...], "attention_results": [...]}}}`. The rows hold exactly the stored columns (`app/backup.py`
+`SCHEMA`, checked against the live schema by a test); the checksum is SHA-256 of the canonical JSON of `payload`.
+`flask --app run import-backup <file>` restores into an **empty** database only (`flask --app run reset-empty` first), all or nothing, and
+refuses: a checksum mismatch; any unknown top-level field, table or column; a value of the wrong type or outside the feature contract;
+NaN or infinity; free text in `quality_notes` other than the two notes the app writes. Not encrypted; the checksum catches damage, not forgery.
+
 ## 6. Versioning rules
 
 * Changing checklist text, item count, or the pause threshold → **new task_type** (`docking_checklist_v2`). Old baselines must not mix with new sessions.

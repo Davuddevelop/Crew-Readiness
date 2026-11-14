@@ -178,3 +178,19 @@ def test_evidence_budget_table_and_intervals_come_from_the_file(client):
         assert f"{r['observed'] * 100:.1f} %" in html and f"{r['cutoff']:.2f}" in html
     r = data["operating_point"][1]["now"]
     assert f"{r['detection_ci'][0]:.2f} to {r['detection_ci'][1]:.2f}" in html          # an interval is shown, from the file
+
+
+def test_evidence_pilot_section_only_appears_with_a_pilot_report(client, tmp_path, monkeypatch):
+    import json
+    from app import views
+    assert 'id="pilot"' not in client.get("/evidence").get_data(as_text=True)      # no pilot file yet: nothing is claimed
+    rep = {"n_people": 2, "n_sessions": 24, "false_alerts_on_normal": {"yellow": {"flagged": 1, "n": 8, "rate": 0.125, "ci95": [0.02, 0.47]}},
+           "detection_on_perturbed": {k: {"yellow": {"flagged": 5, "n": 6, "rate": 0.8333, "ci95": [0.44, 0.97]}} for k in ("all", "non_dominant_hand", "counting_backwards")},
+           "variability": {"n_people": 2, "iki_cv": {"real_median": 0.09, "assumed": 0.07}, "resp_cv": {"real_median": 0.12, "assumed": 0.11}, "simulator_assumptions_hold": True},
+           "limits": ["A handful of volunteers on one laptop."]}
+    f = tmp_path / "pilot_report.json"
+    f.write_text(json.dumps(rep))
+    monkeypatch.setattr(views, "PILOT_FILE", f)
+    html = client.get("/evidence").get_data(as_text=True)
+    assert 'id="pilot"' in html and "2 volunteers, 24 sessions" in html and "not validation" in html
+    assert "1 of 8" in html and "5 of 6" in html and "13 %" in html                  # numbers come from the file

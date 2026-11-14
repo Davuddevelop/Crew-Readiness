@@ -21,7 +21,7 @@ Status: `[ ]` open, `[~]` in progress, `[x]` done. Update this file in your PR w
 | C2 (done) | **Evidence upgrade.** Budget-calibration table and bootstrap confidence intervals in `ml/export_results.py`, rendered on `/evidence`, with tests tying the numbers to the file | 2.5 h | C1b | `/evidence` shows calibration and intervals; tests pass |
 | C3 (done, PR #25) | **Crew-first "My status" page** (`/me`): own numbers first, today's reasons in plain words (including "about 1 session in N" for pauses), what you can do next, sharing shown as the person's choice (a proposal) | 3 h | none | Page works on desktop and phone; claims test passes |
 | C4 | *(code done, awaits F2 data)* **Pilot analysis and realism check.** `ml/pilot_report.py`; compare real variability with the simulator; fix the simulator if they differ and re-run the benchmark | 2 h | F2 data | A report and, if needed, an updated simulator and results |
-| C5 | **Results into the story.** Evidence, Privacy ("what we validated"), Submission, DEMO.md updated with the pilot and calibration numbers; every number from a file, with tests | 2 h | C2, C4, F2 | Pages and docs match the result files |
+| C5 | *(Evidence pilot section built, appears when docs/pilot/pilot_report.json exists; Privacy, Submission, DEMO wait for data)* **Results into the story.** Evidence, Privacy ("what we validated"), Submission, DEMO.md updated with the pilot and calibration numbers; every number from a file, with tests | 2 h | C2, C4, F2 | Pages and docs match the result files |
 
 ## Workstreams, owner: teammate + Codex
 

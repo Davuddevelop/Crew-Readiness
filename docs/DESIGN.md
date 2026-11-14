@@ -24,7 +24,7 @@ The page is a grid with a **label gutter** on the left (section names, small and
 ## 3. Principles
 
 1. **One grid.** Section names hang in the left gutter; content aligns to the columns.
-2. **One typeface.** Inter, weights 400 and 700 do the work: hierarchy from size and weight, never decoration. Numbers that are compared use tabular figures; running text does not (tabular figures widen Inter's hyphen).
+2. **One typeface.** Instrument Sans, weights 400 and 600 do the work: hierarchy from size and weight, never decoration. Numbers that are compared use tabular figures; running text does not (tabular figures widen the hyphen).
 3. **Flush left, ragged right.** Nothing is centred.
 4. **Structure from rules and space.** No boxes, shadows, blur or gradients. A crisp 1 px ink rule opens every section; 1 px grey rules separate rows.
 5. **Colour only when something needs a human.** The interface is monochrome. Nominal is plain ink. Amber = check-in, coral = review. Status is always written as a word as well.
@@ -44,7 +44,7 @@ CSS custom properties are the single source of truth. CSS and JavaScript read **
 | `--nominal` / `--checkin` / `--review` | ink / `#FFB800` / `#FF5A6E` | status. **Coral was added** to the original palette: three levels need three distinguishable states |
 | `--surface` | `#16181F` | raised surface (chart tooltip) |
 
-Type: Inter (variable woff2, `static/fonts/`, SIL OFL licence alongside); `ui-monospace` stack for code and the payload preview only.
+Type: Instrument Sans (variable woff2, `static/fonts/`, SIL OFL licence alongside); `ui-monospace` stack for code and the payload preview only.
 Scale: display 44–104 px / 0.94 / −0.045 em / 700; title 32–64 px; advisory 22–32 px; body 16 / 24; labels 13 / 20 / 600; fine print 12 / 16.
 
 ## 5. The art: stacked sessions
@@ -57,11 +57,10 @@ Every curve is built from `trend[].deviations` (`docs/DATA_CONTRACT.md` §5). Th
 
 ## 5b. The landing page
 
-`/` is a landing page; the dashboard lives at `/dashboard`. The composition borrows *ideas* from a landing page the team lead supplied as a reference (a dark poster, a tilted product preview, a footer-style link block, two hands almost touching over a giant ghosted wordmark). **No assets, copy or code were taken from it.**
+`/` is a **poster**, and the one deliberate exception to "nothing is centred": a short centred headline, one sentence, two actions, and below them the two hands reaching toward each other as the centrepiece, in the first screen. Then one quiet row of three statements and the image credit. The dashboard lives at `/dashboard` and carries the data. The composition borrows *ideas* from a landing page the team lead supplied as a reference (a dark poster with two hands almost touching over a ghosted wordmark). **No assets, copy or code were taken from it.**
 
-- **Preview:** a live, tilted view of the real dashboard art. It reuses the dashboard's own renderer and API, so it cannot drift from the product, and it stays empty if the API is down. Decorative (`aria-hidden`). It fades out with an alpha mask; there are no colour gradients.
-- **Finale:** two black-and-white **photographs**: Adam's hand from Michelangelo's *Creation of Adam* (public domain) and a real NASA spacesuit glove (NASA, from the 2012 "Man and Machine" photograph), reaching toward each other over a giant ghosted wordmark. The gap is the product's point: the system never decides, a human closes the gap; the amber line between the fingertips is the check-in. Each image is cut out, graded, and padded so its fingertip sits on the vertical centre line at its inner edge, so the gap and the line are plain CSS (no JavaScript). Sources, licences and checksums: `docs/ASSETS.md`; rebuilt with one command by `scripts/assets/make_landing_images.py`. Both are visibly credited on the page.
-- **History:** a first attempt drew the hands procedurally as stacked contour lines (git `da7f160`). The team lead judged it not good enough (the glove read as a mitt) and asked for photographic hands, so it was removed (`2c2964a`) and replaced by the public-domain photographs above.
+- **Finale:** two black-and-white **photographs**: Adam's hand from Michelangelo's *Creation of Adam* (public domain) and a real NASA spacesuit glove (NASA, from the 2012 "Man and Machine" photograph). The gap is the product's point: the system never decides, a human closes the gap; the amber line between the fingertips is the check-in. Each image is cut out, graded, and padded so its fingertip sits on the vertical centre line at its inner edge, so the gap and the line are plain CSS (no JavaScript). They reach in on load (they are above the fold). Sources, licences and checksums: `docs/ASSETS.md`; rebuilt with one command by `scripts/assets/make_landing_images.py`. Both are visibly credited on the page.
+- **History:** a first attempt drew the hands procedurally as stacked contour lines and was removed. The landing page was then built three more ways: a tilted live-preview poster with a footer-style link block (judged generic), a flat plot-and-facts page, and a serif and monospace "mission document" look (rejected by the team lead). The team lead then chose to follow the reference poster, which is what this is.
 - **Licensing rule for any image we add:** public domain or licensed to us, with the source and licence recorded in `docs/ASSETS.md`. Never another company's artwork, and no NASA logos.
 
 ## 6. Motion inventory
@@ -99,7 +98,7 @@ Search summaries only; the article hosts are outside the build environment's net
 - NASA Graphics Standards Manual (restraint, few typefaces, strict system): https://www.nasa.gov/wp-content/uploads/2015/01/nasa_graphics_manual_nhb_1430-2_jan_1976.pdf
 - Landing-page composition: a Dreamflow landing page supplied by the team lead as a reference (ideas only). Hands motif: Michelangelo, *Creation of Adam* (c. 1512, public domain).
 - Mission-control UX patterns: [UX Planet benchmark](https://uxplanet.org/mission-control-software-ux-design-patterns-benchmarking-e8a2d802c1f3)
-- Font: Inter, SIL Open Font License 1.1 (`app/static/fonts/OFL-Inter.txt`).
+- Font: Instrument Sans (The Instrument Sans Project Authors), SIL Open Font License 1.1 (`app/static/fonts/OFL-InstrumentSans.txt`).
 
 ## 10. Open items
 

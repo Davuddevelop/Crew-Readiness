@@ -58,7 +58,7 @@ a smooth-textured glove, so it holds up, but it is softer than the NASA JPL phot
 | Origin | **AI-generated**, supplied by the team lead as a 1024 x 550 PNG (SHA-1 `39541e6fa9e2fc73a8e05579e5dbdb319c790a06`, 92,670 bytes). **The generator was not named**, so we cannot cite its terms |
 | Credit | Crew Readiness team (prompting and selection); generator **[NOT STATED: fill in the tool name]** |
 | Licence | **None stated.** Rights in AI-generated images are unsettled and depend on the generator's own terms, and in some places such images attract no copyright. We use it as our logo on that basis and make no claim to exclusive rights |
-| Derived files | `logo.webp`: cropped, background keyed to transparent, recoloured to our palette. `logo-mark.webp`: bolder small version for the nav. `favicon.png`: 64 x 64. `share-card.png`: 1200 x 630 social preview built from the logo plus text in Inter (`scripts/assets/make_share_card.js`) |
+| Derived files | `logo.webp`: cropped, background keyed to transparent, recoloured to our palette. `logo-mark.webp`: bolder small version for the nav. `favicon.png`: 64 x 64. `share-card.png`: 1200 x 630 social preview built from the logo plus text in Instrument Sans (`scripts/assets/make_share_card.js`) |
 | Contains people? | No |
 
 **Open verification (task R-2, Member 4).** Name the generator and read its terms for commercial and competition use; if they do

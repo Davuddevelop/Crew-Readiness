@@ -83,6 +83,8 @@ Canvas loops pause when off-screen or the tab is hidden; DPR capped at 2.
 - Canvas art has a text alternative (`aria-label`, caption, and the advisory, reasons and evidence table carry the same information).
 - `prefers-reduced-motion` respected; `[hidden]` always wins (a bug we hit: a component's `display` once overrode `hidden` and showed "Monitoring active" before monitoring).
 - Visible focus ring on every interactive element; inputs thicken their underline on focus.
+- Tables that scroll sideways on a phone (`.table-wrap`) are focusable named regions, so they can be scrolled with the keyboard.
+- When an action removes the focused control (accepting a new normal hides the Review panel), focus moves to the updated advisory instead of falling to the page. Check: `node scripts/check_keyboard.js`.
 
 ## 8. History of this decision
 

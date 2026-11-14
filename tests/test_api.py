@@ -1,4 +1,6 @@
 """End-to-end through HTTP. The 'demo' tests protect the pitch: if they fail, fix before demo."""
+import re
+
 from tests.conftest import valid_payload
 
 
@@ -143,3 +145,13 @@ def test_demo_pilot_sits_comfortably_inside_yellow(client):
     assert d["readiness"]["band"] == "YELLOW"
     assert 1.15 <= d["readiness"]["score"] <= 1.35
     assert d["baseline_review"] is None            # the demo opens on a flag, not on a review request
+
+
+def test_scrolling_tables_are_reachable_by_keyboard(client):
+    """At phone width tables scroll sideways inside .table-wrap; keyboard users must be able to Tab to them (F-3)."""
+    for path in ["/dashboard", "/replay", "/evidence"]:
+        html = client.get(path).data.decode()
+        wraps = re.findall(r'<div class="table-wrap"[^>]*>', html)
+        assert wraps, path
+        for w in wraps:
+            assert 'tabindex="0"' in w and 'role="region"' in w and "aria-label=" in w, (path, w)

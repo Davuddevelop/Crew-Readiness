@@ -60,7 +60,7 @@
           <p class="detail-meta" id="detail-meta"></p>
           <div id="detail-chip" style="margin-top:16px"></div>
           <h3 class="cap">Advisory</h3>
-          <p id="detail-advisory" class="advisory"></p>
+          <p id="detail-advisory" class="advisory" tabindex="-1"></p>
           <div id="detail-review" class="review" hidden>
             <h3 class="cap">Review needed</h3>
             <p id="detail-review-text"></p>
@@ -93,7 +93,7 @@
       <div class="grid">
         <div class="label"><span class="idx">06</span>Evidence: today vs usual</div>
         <div class="body">
-          <div class="table-wrap">
+          <div class="table-wrap" role="region" aria-label="Evidence table: today vs usual" tabindex="0">
             <table class="evidence">
               <thead><tr><th>Signal</th><th>Today</th><th>Usual (median)</th><th>Change</th><th>Counts toward score</th></tr></thead>
               <tbody id="detail-evidence"></tbody>

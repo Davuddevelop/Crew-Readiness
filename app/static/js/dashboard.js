@@ -128,6 +128,8 @@ $("detail-accept").addEventListener("click", async (e) => {
   try {
     await api(`/api/readiness/${encodeURIComponent(id)}/accept-new-normal`, { method: "POST" });
     await select(id);
+    // the button just disappeared with the panel; keep keyboard focus on the updated advisory, not lost to <body>
+    $("detail-advisory").focus();
   } catch (err) {
     $("detail-review-note").textContent = `Could not accept: ${err.message}`;
   }

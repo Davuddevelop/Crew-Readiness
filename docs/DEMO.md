@@ -9,23 +9,28 @@ benchmark on **simulated** crews (`/evidence`, `docs/ML_RESULTS.md`); say "simul
 ## Before you start (5 minutes, do it twice)
 1. `python run.py` (local, no internet needed; the app makes no external calls).
 2. `flask --app run reset-demo` for a clean demo crew. Open `http://127.0.0.1:5050/`.
-3. Open `/replay` once so the chart library is cached. Browser zoom 100 %, full screen.
+3. Open `/replay` once so the chart library is cached (it is local, but it loads faster the second time). Browser zoom 100 %, full screen.
 4. Keep a second tab on `/evidence`. Keep a terminal ready with `python scripts/demo_flag_pilot.py`.
 5. Hosted copy (`crew-readiness-mu.vercel.app`) works but its database resets itself (decision D-8). Use local for the demo.
 
-## The walkthrough
+## The walkthrough (3:00)
+
+Timed from a scripted dry run (2026-11-14): the spoken lines below are about 150 words per minute worth, the clicks take
+about 10 s in total, and the rest is breathing room. Reading it aloud once should land near 3 minutes.
 
 | Time | Page | Say | Show |
 |---|---|---|---|
 | 0:00 | `/` landing | "Crews are checked against population norms. Real people differ: 220 ms between keys is normal for one person and a big change for another. We compare each person only to themselves, and a human decides." | The two hands: the system never closes the gap, a person does. |
-| 0:30 | `/dashboard` | "Pilot Okafor is YELLOW. Not a diagnosis: a change from *their own* pattern." | The stacked-sessions art (one line per session, flat = usual). Click the pilot. Read the pause reason aloud ("a count this high would be expected about 1 session in N"). Point at "Advisory only". |
-| 1:00 | `/monitor` (optional, 45 s) | "Only timing numbers leave the browser. Never what you type." | Type a few checklist items. Show the payload preview before sending. If short on time, show the preview only. |
-| 1:30 | `/replay` | "Here is the idea in motion. One simulated person gets 20 % slower for 15 sessions. The old scoring *learned the problem as normal* and stopped alerting. The current scoring keeps flagging it." | Sustained slowdown, press **New random person** twice. **Say out loud that single runs vary** (the page already says it). |
-| 2:10 | `/evidence` | "Across 300 simulated people per row: false alerts fall from about 13 % to about 5 %. We pay for it: detection also falls (0.42 to 0.35 at a 10 % slowdown). At matched false-alert rates the new model is better everywhere." | The two tables and the "What this does not show" box. |
-| 2:40 | `/dashboard` | "And when a person genuinely changes, say a new keyboard, a human accepts the new normal." | Run `python scripts/demo_flag_pilot.py`, refresh the pilot: **Review needed**. Click **Accept as new normal**, confirm: status becomes CALIBRATING. |
-| 2:55 | close | "Next: validate on real repeated-session data with a licence we can cite. We have not done that yet, and the Evidence page says so." | Stop. Leave the Evidence limits on screen. |
+| 0:20 | `/dashboard` | "Pilot Okafor is YELLOW. This is an illustrative seeded case: it shows what a flag looks like, not how well the model works. It is not a diagnosis, it is a change from *their own* pattern. And the system explains itself in plain words: two pauses against a usual 0.7, which we would expect only about one session in nine (read the number on screen)." | Click the pilot. Read the pause reason aloud. Point at the stacked sessions (flat line = usual) and at "Advisory only". |
+| 0:55 | `/replay` | "Here is the idea in motion, on a simulated person. They get 20 % slower for 15 sessions, shaded here. The dashed grey line is the old scoring. It learns the slowdown as normal, so its alerts fade. The white line is the current scoring: flagged sessions stay out of the baseline, so the change keeps showing. Now a different random person. Single runs vary, and sometimes the old scoring does as well. The proof is not one run." | Sustained slowdown. Press **New random person** twice. Point at the table under the chart. |
+| 1:50 | `/evidence` | "The proof is 300 simulated people per row. At the level the product uses, false alerts fall from about 13 % to about 5 %. We pay for it: detection also falls, from 0.42 to 0.35 at a 10 % slowdown. At matched false-alert rates the new model is better everywhere. And this box lists what we did not show: simulated data only, no real crews." | The two result tables, then the "What this does not show" box. |
+| 2:35 | `/dashboard` | "When a person genuinely changes, say a new keyboard, a human accepts the new normal. We never decide that for them." | Run `python scripts/demo_flag_pilot.py`, refresh: **Review needed**. Click **Accept as new normal**, confirm: status becomes CALIBRATING. Say: "Next: validate on real repeated-session data with a licence we can cite. We have not done that yet, and the page says so." |
 
-If you only have 2 minutes, drop `/monitor` and the review step.
+### Extended version (3:45): add the live-capture step
+Insert after the dashboard: `/monitor`, choose a crew member (not the pilot), **Start task**, type the checklist (about 25 s at
+normal speed), stop at the review step. Say: "Only timing numbers leave the browser. Never what you type." Show the payload
+preview: nine numbers, a profile id and a task type, and no text. Click **Discard**. The dry run confirmed that neither the
+preview nor the data actually sent contains any typed phrase.
 
 ## What we claim, and what we do not
 **We claim:** it detects changes in interaction timing against a person's own history, privately, and puts them in front of a human. On simulated data the count model for pauses cuts false alerts by about 60 % at the shipped level, and keeping flagged sessions out of the baseline stops a sustained change from being absorbed.

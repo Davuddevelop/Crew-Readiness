@@ -94,10 +94,13 @@ def seed_demo(db) -> None:
                 quality_notes="; ".join(notes) or None, created_at=_iso(created),
             )
 
-    # The seeded deviation for the demo story: the primary pilot, this morning,
-    # is moderately slower and pauses more than *their own* usual pattern.
-    deviating = _synth_features(rng, STYLES["plt-okafor"], slowdown=1.12,
-                                extra_pauses=2, resp_factor=1.25)
+    # ILLUSTRATIVE CASE for the demo story, not evidence: the primary pilot, this morning, is somewhat
+    # slower, pauses more and responds slower than *their own* usual pattern. The size (15 % slower, two
+    # extra pauses, 30 % slower responses) was CHOSEN so the case lands comfortably inside YELLOW (score
+    # about 1.25, between the 1.0 YELLOW line and the 1.5 baseline-exclusion line). It shows what a flag
+    # looks like. It says nothing about how well the model works: that is the benchmark (docs/ML_RESULTS.md).
+    deviating = _synth_features(rng, STYLES["plt-okafor"], slowdown=1.15,
+                                extra_pauses=2, resp_factor=1.30)
     quality, notes = assess_quality(deviating)
     store.insert_session(
         db, profile_id="plt-okafor", task_type=DEFAULT_TASK_TYPE, features=deviating,

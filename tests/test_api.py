@@ -135,3 +135,11 @@ def test_evidence_operating_point_numbers_come_from_the_file(client):
     for row in json.loads(RESULTS_FILE.read_text())["operating_point"]:
         assert f"{row['now']['false_alerts'] * 100:.1f} %" in html
         assert f"{row['now']['detection']:.2f}" in html
+
+
+def test_demo_pilot_sits_comfortably_inside_yellow(client):
+    """The seeded case must not hover on a cutoff: 1.0 (YELLOW) and 1.5 (kept out of the baseline). Illustrative case."""
+    d = client.get("/api/readiness/plt-okafor").get_json()
+    assert d["readiness"]["band"] == "YELLOW"
+    assert 1.15 <= d["readiness"]["score"] <= 1.35
+    assert d["baseline_review"] is None            # the demo opens on a flag, not on a review request

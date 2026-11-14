@@ -28,3 +28,10 @@ def test_the_document_states_its_limits_and_placeholders():
     for phrase in ("on simulated data only", "No real people", "partly circular", "Nothing here detects fatigue or illness", "approved or endorsed by NASA",
                    "[TEAM NAME]", "[EXACT CHALLENGE TITLE"):
         assert phrase in DOC
+
+
+def test_equipment_change_numbers_match_the_results_file():
+    ec = DATA["equipment_change"]
+    old, cur = ec["rows"]
+    assert f"from **{old['after']['rate'] * 100:.0f} %** to **{cur['after']['rate'] * 100:.0f} %**" in DOC
+    assert f"**{cur['later']['rate'] * 100:.0f} %** of the time against **{old['later']['rate'] * 100:.0f} %**" in DOC

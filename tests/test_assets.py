@@ -39,7 +39,7 @@ def test_landing_credits_the_images_and_describes_the_illustration(client):
 
 def test_brand_images_are_wired_in_and_the_logo_has_a_real_alt_text(client):
     html = client.get("/").data.decode()
-    assert "img/logo.webp" in html and "Crew Readiness logo" in html
+    assert "img/logo-mark.webp" in html and "land-mark" not in html      # the nav mark, no big logo in the hero
     assert 'rel="icon"' in html and "img/favicon.png" in html
     assert 'property="og:image"' in html and "img/share-card.png" in html
     assert "AI-generated" in ASSETS_DOC                      # the origin is disclosed, not hidden

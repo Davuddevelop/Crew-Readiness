@@ -62,7 +62,7 @@ a smooth-textured glove, so it holds up, but it is softer than the NASA JPL phot
 | Contains people? | No |
 
 **Open verification (task R-2, Member 4).** Name the generator and read its terms for commercial and competition use; if they do
-not allow it, replace the logo (it is used in the nav, the landing page, the favicon and the share card, so swapping it means regenerating those with `scripts/assets/make_brand_assets.py` and `make_share_card.js`). Space Apps asks teams to
+not allow it, replace the logo (it is used in the nav and landing footer (small version), the favicon and the share card, so swapping it means regenerating those with `scripts/assets/make_brand_assets.py` and `make_share_card.js`). Space Apps asks teams to
 disclose AI use: `docs/SUBMISSION.md` says the logo is AI-generated.
 
 **Honest caveat.** The source is small (the drawing is about 434 px across). It is thin line art, so it reads well at hero size,

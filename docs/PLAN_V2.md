@@ -35,7 +35,7 @@ Scores are my own judgement as a reviewer (not NASA's), on the usual criteria; t
 
 | Criterion | Now | Target | The levers (workstreams) |
 |---|---|---|---|
-| Creativity | 6 | 8 | **W1** calibrated "rarity" (a conformal p-value: "a score this high happened in 1 of your last 20 sessions", with a measured guarantee); the baseline-poisoning finding and human re-baselining; **W2** crew-first status |
+| Creativity | 6 | 7-8 | **W1** the alert cutoff set to a *stated false-alert budget* and checked on held-out real people; an honest negative result (personal "rarity" as an alert rule is calibrated but detects less, see `docs/ML_RESULTS.md`); the baseline-poisoning finding and human re-baselining; **W2** crew-first status. Creativity is the criterion we are least sure of reaching 8 |
 | Relevance to space | 4 | 8 | **W2** crew-first view (matches "astronauts evaluate and act on their own status"); the on-board/offline argument made concrete; **W5** exact challenge wording and verified NASA sources (R-2); honest positioning as one indicator inside a crew health monitor |
 | Impact | 5 | 8 | W2 (the astronaut gets an actionable, private view); fewer false alarms is the practical benefit under limited crew time and comms delay (W1 numbers); a clear "who uses it, when, what changes" story |
 | Validity and honesty | 7 | 8+ | **W3** a small **real** pilot with deliberate perturbations (labelled "pilot, not a validation"); **W1b** calibration check and confidence intervals; **W4** compare real variability with the simulator and fix it; keep every limit on the page |
@@ -45,12 +45,15 @@ timing is a behavioural proxy, not a health measurement. The score target assume
 
 ## 4. Strategy: "Crew-first, calibrated, validated"
 
-**W1. Calibrated personal rarity (Claude).** For every session, rank today's score among the person's own past scores (a conformal
-p-value). Say it in words ("1 in 14 of your sessions") and **measure that it is calibrated**: at a target false-alert rate of 10 %, the
-observed rate must be about 10 %, for any pause pattern. This is the one real ML contribution we can defend in a day. Gate: run the
-experiment first (about 45 minutes). If it is not calibrated on simulated data, we drop it and say so.
+**W1. Alert-budget calibration (Claude).** *Step 1, done (2026-11-14): the gate experiment.* Ranking today's score among the person's own past
+scores (a conformal p-value) is calibrated but, with 8 to 20 sessions of history, detects less than a population threshold at the same
+false-alert rate, also when people differ in how erratic they are. **Not used to alert; recorded as a negative result** in `docs/ML_RESULTS.md`.
+*Step 2, now:* state the false-alert **budget** the shipped YELLOW cutoff stands for (about 1 normal session in 21 on simulated data), calibrate the
+cutoff for a chosen budget on pooled normal sessions, and **check it on held-out people** (leave-one-person-out), first on simulated data and
+then on the real pilot (W3). If real people are more variable than the simulator, we recalibrate and report both numbers.
 
-**W1b. Evidence upgrade (Claude).** Add a calibration table and bootstrap confidence intervals over people to `/evidence`.
+**W1b. Evidence upgrade (Claude).** Add the budget-calibration table (target vs observed false-alert rate on held-out people) and bootstrap
+confidence intervals over people to `/evidence`.
 
 **W2. Crew-first "My status" (Claude, accessibility pass by the teammate's agent).** A person-centred page: their own numbers first, rarity in
 plain words, what they can do next (check-in, optional reaction test, tell the reviewer), and a clear statement that sharing is their choice
@@ -95,7 +98,7 @@ measures per person (at least 8 sessions each)? If yes and it fits cleanly, run 
 
 | Risk | Mitigation |
 |---|---|
-| Rarity is not calibrated | Gate experiment first; if it fails, drop W1 and say so (that is still an honest finding) |
+| Rarity does not detect enough | **Happened.** Recorded as a negative result; W1 became budget calibration on held-out people |
 | Pilot yields too little or noisy data | Report what we have with its limits; it still checks the simulator (W4) |
 | Official challenge needs something we lack | T0.1 first; adapt wording, not claims |
 | Live site stale or broken | T0.2 now; `smoke.py` on the live URL before every submission step |

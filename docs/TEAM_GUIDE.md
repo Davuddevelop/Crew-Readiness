@@ -199,6 +199,7 @@ Each card: **goal → files → done when → think about → hints.** If a card
 **R-1 · Privacy & limits page** (13:45–17:00)
 - **File:** `app/templates/about.html` (the TODO panel lists what's missing)
 - **Done when:** retention/access proposal, confounders, our validation summary and sources are on the page, all in plain language.
+- **Status:** retention/access (labelled a proposal), confounders and validated / not validated are on the page; `tests/test_about.py` checks every number against `app/results_data.json` and `docs/ML_RESULTS.md`. **Sources are not on the page yet:** they wait for R-2, because each one must be read and verified first.
 
 **R-2 · Sources** (Nov 15)
 - Every source gets one line on **how it informed us**. Separate *their* findings from *our* prototype results.

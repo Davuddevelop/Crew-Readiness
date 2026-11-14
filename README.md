@@ -1,6 +1,6 @@
 # Crew Readiness
 
-**NASA Space Apps 2026.** A privacy-conscious prototype that flags **changes in an astronaut's task interaction timing**, compared with **their own** baseline, for **human review** before a critical operation.
+**NASA Space Apps 2026.** A privacy-conscious prototype that flags **changes in a crew member's task interaction timing**, compared with **their own** baseline, for **human review** before a critical operation.
 
 > ⚠️ **Prototype.** Fictional crew, synthetic demo data, illustrative thresholds. It detects changes in interaction timing; it does **not** detect fatigue, diagnose anything, or clear anyone for duty.
 
@@ -67,20 +67,31 @@ Full details: [docs/DATA_CONTRACT.md](docs/DATA_CONTRACT.md).
 - Stored per session: inter-key interval median and IQR, pause count and total, checklist response median, task duration, correction and retry counts, keystroke count.
 - **Never stored or transmitted:** typed text, which keys were pressed, raw keystroke timelines, passwords.
 - Capture runs only inside the task, with a visible "Monitoring active" indicator.
-- The demo uses fictional profiles with synthetic data, labelled as such. Validation sessions used pseudonymous team profiles.
+- The demo uses fictional profiles with synthetic data, labelled as such. Pseudonymous `team_test` profiles exist for future feasibility sessions; **none have been run yet** (`docs/TEST_LOG.md` is an empty template).
 
 ## Scoring (illustrative)
 Per feature: `z = (today − personal median) / robust spread`; only the "slower / more pausing" direction counts; capped at 4.
-Groups: typing 40 %, pauses 30 %, checklist response 30 %. Bands: < 1.0 GREEN, < 2.0 YELLOW, ≥ 2.0 RED.
+**Pause count** is scored differently: a per-person count model (own average and own burstiness) gives how often a count this high
+would be expected, converted to the same scale; total pause time is shown but not scored. Groups: typing 40 %, pauses 30 %,
+checklist response 30 %. Bands: < 1.0 GREEN, < 2.0 YELLOW, ≥ 2.0 RED.
+A session scored 1.5 or more is **kept out of the person's baseline** (so a sustained change is not learned as normal) until a human
+accepts it as the new normal on the dashboard. Set `CREW_PAUSE_MODEL=robust` to run the original scoring for comparison.
 **These are demo choices, not validated or NASA-approved limits.**
 
+## Evidence (simulated only)
+`/evidence` and `/replay` show how the scoring behaves on **simulated** crews, including where it is worse. Details, commands and
+every limit: [docs/ML_RESULTS.md](docs/ML_RESULTS.md). Demo script: [docs/DEMO.md](docs/DEMO.md). Submission copy: [docs/SUBMISSION.md](docs/SUBMISSION.md).
+
 ## Limitations
-- Small internal feasibility test; **not** clinical or operational validation. *(Results: TODO V-2, see [docs/TEST_LOG.md](docs/TEST_LOG.md).)*
+- **No validation on real people.** Results come from simulated crews only (benchmark, `docs/ML_RESULTS.md`); this is **not** clinical or operational validation.
+- We wrote both the simulator and the model, so the benchmark is partly circular; gains are modest and come with a detection trade-off (stated on the Evidence page).
 - Timing is affected by keyboard, language, practice, task difficulty, time of day, sleep and more.
 - An unusual session means unusual **behaviour**, not a cause.
 
 ## Sources and acknowledgements
-*TODO (R-2): each NASA resource / dataset / paper, with one line on how it informed this work.*
+- Images: Michelangelo, *The Creation of Adam* (public domain); spacesuit glove from NASA's 2012 *Man and Machine* photograph (credit NASA, no endorsement implied); the logo is **AI-generated** (tool not yet named). Sources, licences and open checks: [docs/ASSETS.md](docs/ASSETS.md).
+- Design: Swiss / International Typographic style; the stacked-sessions chart form was inspired by Harold D. Craft Jr.'s 1970 pulsar plot (idea only). Inter typeface, SIL OFL 1.1.
+- **NASA research:** we have **not** yet reviewed NASA's human-research literature and cite none; we claim no NASA findings (task R-2 is open).
 Chart.js © Chart.js contributors, MIT License.
 
 ## Team

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Privacy & limits{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>Privacy, science and limits</h1>
+    <p class="muted">What this prototype is, what it is not, and how it handles data.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>What it does</h2>
+  <p>It detects <strong>changes in task interaction timing</strong> compared with each person's own
+    usual pattern, and flags changes that may merit a human check-in before a critical operation.</p>
+  <h2>What it does not do</h2>
+  <ul>
+    <li>It does not detect or diagnose fatigue, illness, or cognitive impairment.</li>
+    <li>It does not clear anyone for duty or control any mission decision.</li>
+    <li>Its thresholds are illustrative prototype choices, not NASA-approved or clinically validated limits.</li>
+  </ul>
+</section>
+
+<section class="panel">
+  <h2>Data handling</h2>
+  <ul>
+    <li>Only aggregate timing numbers are stored (see the preview shown before every submission).</li>
+    <li>Typed text, key identities and raw keystroke timelines never leave the browser. The server rejects them.</li>
+    <li>Monitoring runs only inside the task, with a visible indicator.</li>
+    <li>Demo crew members are fictional; their data is synthetic and labelled as such.</li>
+  </ul>
+</section>
+
+<section class="panel todo">
+  <h2>TODO(R-1, Member 4): complete this page</h2>
+  <ul>
+    <li>Retention and access: who can see a crew member's data, and for how long (proposal).</li>
+    <li>Known confounders: keyboard, language, task difficulty, time of day, sleep, caffeine, practice effect.</li>
+    <li>Our validation: number of participants, sessions each, what we did and did not show.</li>
+    <li>Sources: NASA challenge resources and research, each with one line on <em>how</em> it informed us.</li>
+  </ul>
+</section>
+{% endblock %}

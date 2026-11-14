@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <h1>Crew readiness</h1>
+    <p class="muted">Each crew member is compared only with <strong>their own</strong> usual timing on the same task.</p>
+  </div>
+  <a class="btn" href="{{ url_for('views.monitor') }}">Start monitored task →</a>
+</section>
+
+<section id="crew-grid" class="crew-grid" aria-live="polite">
+  <p class="muted">Loading crew…</p>
+</section>
+
+<section id="detail" class="panel detail" hidden>
+  <div class="detail-head">
+    <div>
+      <h2 id="detail-name"></h2>
+      <p id="detail-meta" class="muted"></p>
+    </div>
+    <div id="detail-chip"></div>
+  </div>
+
+  <div class="detail-grid">
+    <div>
+      <h3>Advisory</h3>
+      <p id="detail-advisory" class="advisory"></p>
+      <h3>Why (plain language)</h3>
+      <ul id="detail-reasons" class="reasons"></ul>
+      <p id="detail-disclaimer" class="fineprint"></p>
+    </div>
+    <div>
+      <h3>Trend <span class="muted small">(deviation from own baseline, last sessions)</span></h3>
+      <div class="chart-wrap"><canvas id="trend-chart" aria-label="Deviation score trend"></canvas></div>
+      <p class="fineprint">Shaded bands: green &lt; 1.0, yellow 1.0–2.0, red ≥ 2.0 robust SD — illustrative cutoffs.</p>
+    </div>
+  </div>
+
+  <h3>Evidence: today vs usual</h3>
+  <div class="table-wrap">
+    <table class="evidence">
+      <thead><tr><th>Signal</th><th>Today</th><th>Usual (median)</th><th>Change</th><th>Counts toward score</th></tr></thead>
+      <tbody id="detail-evidence"></tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='vendor/chart.umd.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

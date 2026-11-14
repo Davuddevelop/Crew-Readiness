@@ -1,0 +1,5 @@
+Flask>=3.0,<4
+numpy>=1.26
+pytest>=8
+# Optional, only for stretch task M-3 (Isolation Forest):
+# scikit-learn>=1.4

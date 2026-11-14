@@ -74,6 +74,23 @@ decision (decision 4 in `docs/ML_PLAN.md`). **Implemented** (team lead chose "ex
   false-alert budget on pooled normal sessions, and check it on held-out people (real pilot data when we have it; see `docs/TASKS.md` C1).
 - **Assumptions:** same simulator and illustrative parameters as above; a window and minimum history we chose and did not tune.
 
+## Alert-budget calibration, checked on held-out people (`python -m ml.calibrate_cutoffs`)
+A **budget** of 1 in 20 means: on a normal session, about 1 in 20 would be flagged by chance. We fit the cutoff on the pooled normal-session
+scores of some simulated people and measure the false-alert rate on **other** people (10 folds, split by person). 300 people, 10,500 normal sessions.
+
+| Budget | Cutoff | Observed on held-out people | 95 % interval (bootstrap over people) |
+|---|---|---|---|
+| 1 in 10 | 0.82 | 10.0 % | 9.4 % to 10.6 % |
+| 1 in 20 | 0.96 | 5.0 % | 4.6 % to 5.5 % |
+| 1 in 50 | 1.14 | 2.0 % | 1.8 % to 2.3 % |
+
+- **The shipped YELLOW cutoff (1.0) stands for about 1 normal session in 24** on simulated data (4.2 %); with people who differ in how erratic
+  they are, about 1 in 25.
+- **Individuals:** about 12 % of people see more than twice the budget at 1 in 20, but **chance alone gives about 10 %** (each person has only
+  about 35 sessions), and the same holds at the other budgets. So in the simulation a pooled cutoff fits each person about equally well; the
+  "worst person" figures are small-sample noise. **Real people may differ**, which is what the pilot is for (`docs/PLAN_V2.md`, W3 and W4).
+- **Not claimed:** this says the *method* of choosing a cutoff for a budget works on simulated data. It says nothing about real crews.
+
 ## Robustness to a wrong assumption (`python -m ml.stress_prior`)
 Assumed burstiness prior 0.05 / 0.5 / 2.0, against simulated people whose true burstiness is 0 / 0.5 / 1.5
 (10 % slowdown, 5 % false alerts): detection stays 0.35-0.38 / 0.36-0.38 / 0.29 against 0.24 / 0.29 / 0.22 for

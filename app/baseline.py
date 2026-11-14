@@ -35,6 +35,7 @@ class Baseline:
     task_type: str
     n: int                                   # how many sessions it was built from
     features: dict[str, FeatureBaseline]
+    pause_counts: tuple = ()                 # the person's recent pause counts (for the count model)
 
     @property
     def ready(self) -> bool:
@@ -78,6 +79,7 @@ def compute_baseline(sessions: list[dict], feature_names: tuple[str, ...],
     return Baseline(
         task_type=task_type,
         n=len(sessions),
+        pause_counts=tuple(int(s["pause_count"]) for s in sessions),
         features={
             name: FeatureBaseline(median=float(m), spread=float(s))
             for name, m, s in zip(feature_names, medians, spreads)

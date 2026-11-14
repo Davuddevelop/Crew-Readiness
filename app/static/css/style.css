@@ -160,7 +160,7 @@ select:focus-visible, input[type="text"]:focus-visible { outline: none; border-b
 .tag { font-size: 11px; line-height: 16px; color: var(--muted); border: 1px solid var(--line); padding: 1px 6px; margin-left: 6px; }
 
 /* ---------- tables and lists ---------- */
-.table-wrap { overflow-x: auto; }
+.table-wrap { overflow-x: auto; margin-top: 16px; }
 table.evidence { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 22px; }
 table.evidence th {
   text-align: left; font-size: 12px; line-height: 16px; font-weight: 600; color: var(--muted);

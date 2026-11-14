@@ -113,3 +113,16 @@ def test_latest_trend_point_matches_the_readiness_evidence(client):
 def test_trend_deviations_are_null_while_calibrating(client):
     trend = client.get("/api/readiness/ms-ibarra").json["trend"]
     assert trend and all(t["deviations"] is None for t in trend)
+
+
+def test_evidence_page_renders_from_the_results_file(client):
+    import json
+    from app.views import RESULTS_FILE
+    r = client.get("/evidence")
+    assert r.status_code == 200
+    html = r.data.decode()
+    assert "Synthetic data" in html and "Simulated data only" in html and "fatigue" in html
+    data = json.loads(RESULTS_FILE.read_text())
+    assert data["synthetic"] is True
+    for row in data["table"]:                           # every number on the page comes from the file
+        assert f"{row['neg_binomial']:.2f}" in html and f"{row['incumbent']:.2f}" in html

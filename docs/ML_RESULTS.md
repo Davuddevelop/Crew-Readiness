@@ -74,6 +74,9 @@ decision (decision 4 in `docs/ML_PLAN.md`). **Implemented** (team lead chose "ex
   false-alert budget on pooled normal sessions, and check it on held-out people (real pilot data when we have it; see `docs/TASKS.md` C1).
 - **Assumptions:** same simulator and illustrative parameters as above; a window and minimum history we chose and did not tune.
 
+## Intervals and the alert budget on the Evidence page
+`python -m ml.export_results` now writes 95 % bootstrap intervals over simulated **people** (not sessions) for the operating-point table, and the held-out budget table below; `/evidence` renders both from `app/results_data.json`. Point estimates are unchanged (`tests/test_evaluate_ci.py` proves the interval code reproduces `evaluate`). Intervals say how much a result depends on which simulated people were drawn; they say nothing about real people.
+
 ## Alert-budget calibration, checked on held-out people (`python -m ml.calibrate_cutoffs`)
 A **budget** of 1 in 20 means: on a normal session, about 1 in 20 would be flagged by chance. We fit the cutoff on the pooled normal-session
 scores of some simulated people and measure the false-alert rate on **other** people (10 folds, split by person). 300 people, 10,500 normal sessions.

@@ -20,6 +20,8 @@
  * Owner: Member 3 (Frontend). The data contract it relies on: docs/DATA_CONTRACT.md.
  */
 
+import { tokens } from "./tokens.js";
+
 export const FEATURES = [
   { key: "iki_median_ms", label: "Rhythm", short: "Rhythm" },
   { key: "iki_iqr_ms", label: "Variability", short: "Var." },
@@ -29,8 +31,6 @@ export const FEATURES = [
 ];
 
 const SLOTS = 14;                 // fixed grid, so a short history is visibly short
-const C = { bg: "#090A0F", ink: "#F8FAFC", muted: "#9AA0AA", line: "#1D212C",
-            GREEN: "#00F0FF", YELLOW: "#FFB800", RED: "#FF5A6E" };
 const xFrac = (k) => 0.1 + (0.8 * k) / (FEATURES.length - 1);
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
@@ -38,6 +38,7 @@ const easeOut = (t) => 1 - Math.pow(1 - clamp01(t), 3);
 
 export function createRidgeline(canvas, axisEl, readoutEl) {
   const ctx = canvas.getContext("2d");
+  const C = tokens();   // colours come from CSS custom properties, never hard-coded here
   const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const slots = Array.from({ length: SLOTS }, () => ({
     present: 0, a: 0, tgt: FEATURES.map(() => 0), cur: FEATURES.map(() => 0),
@@ -92,7 +93,7 @@ export function createRidgeline(canvas, axisEl, readoutEl) {
     ctx.fillStyle = C.bg;
     ctx.fillRect(0, 0, W, H);
 
-    ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.setLineDash([]);
+    ctx.strokeStyle = C.lineFaint; ctx.lineWidth = 1; ctx.setLineDash([]);
     for (let k = 0; k < FEATURES.length; k++) {
       const x = Math.round(W * xFrac(k)) + 0.5;
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H - 34); ctx.stroke();

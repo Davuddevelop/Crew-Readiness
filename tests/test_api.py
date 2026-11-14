@@ -8,8 +8,22 @@ def test_health(client):
 
 
 def test_all_pages_render(client):
-    for path in ["/", "/monitor", "/attention", "/mission", "/about"]:
+    for path in ["/", "/dashboard", "/monitor", "/attention", "/mission", "/about"]:
         assert client.get(path).status_code == 200, path
+
+
+def test_landing_and_dashboard_are_distinct_pages(client):
+    assert b"A second look before docking" in client.get("/").data
+    assert b"Compared only with yourself" in client.get("/dashboard").data
+
+
+def test_no_page_calls_out_to_the_network(client):
+    """Offline demo rule (risk R-6): every script, stylesheet and font is served by us."""
+    import re
+    for path in ["/", "/dashboard", "/monitor", "/attention", "/mission", "/about"]:
+        html = client.get(path).data.decode()
+        links_out = re.findall(r'<(?:script|link|img)[^>]+(?:src|href)=["\'](https?://[^"\']+)', html)
+        assert not links_out, f"{path} loads from the network: {links_out}"
 
 
 # ---------- demo story protection ----------

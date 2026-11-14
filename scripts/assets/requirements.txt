@@ -1,0 +1,4 @@
+# Dev-only tools for regenerating the landing-page images. The app itself does not need these.
+pillow
+numpy
+opencv-python-headless

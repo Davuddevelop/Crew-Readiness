@@ -99,6 +99,7 @@ Each decision: what, why, who signs off. **Status: DECIDED / PROPOSED (needs sig
 | D-6 | Demo astronaut = fictional Pilot "Kai Okafor"; critical op = manual docking at T-6h | Highest-stakes, easy to understand | Lead | PROPOSED |
 | D-7 | **Live demo strategy:** who types on stage, on which profile, against which baseline? | A live typist compared with a *synthetic* baseline is meaningless (see R-1 below) | **Lead** | **OPEN** |
 | D-8 | Public link: hosted vs. "runnable repo + video" | Submission needs one of them. A Vercel deployment now exists (read-only-ish: SQLite lives in `/tmp`, so submitted sessions are **not durable**; see README → Deploy). Keep it as a viewing link, or invest in a durable DB? | Lead | OPEN (interim: Vercel viewing link) |
+| D-9 | **Visual direction: International Typographic (Swiss) style on the dark ground**: 12-column grid, one typeface (Inter), flush-left, rules instead of boxes, colour only for flagged states. Chosen by the Lead from five researched options; Boldcase (editorial/bento) could not be read from the build environment | A calm, credible tone suits "a human reviews this before docking"; it is cheap to render, accessible and offline-safe. Full rationale and history in `docs/DESIGN.md` | Lead | **TRIAL** on branch; merge when approved |
 
 ### D-5 rules: what counts as an alert (decided by the Lead)
 

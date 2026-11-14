@@ -25,7 +25,7 @@ python run.py                                       # → http://127.0.0.1:5050
 python -m pytest                                    # tests
 ```
 
-The first run creates `instance/crew_readiness.sqlite3` with four fictional crew members.
+The first run creates `instance/crew_readiness.sqlite3` with four fictional crew members. Pages: `/` landing, `/dashboard`, `/monitor`, `/attention`, `/mission`, `/about`.
 Reset any time: `flask --app run reset-demo`.
 
 ## Deploy (Vercel)
@@ -60,7 +60,7 @@ Browser (capture.js)  ──9 aggregate numbers──▶  Flask API (strict allo
 ```
 
 Python 3.10+ · Flask · SQLite · NumPy · vanilla JS · Chart.js and fonts vendored (works offline).
-Visual design and its rationale: [docs/DESIGN.md](docs/DESIGN.md).
+Visual design (Swiss grid, single typeface) and its rationale: [docs/DESIGN.md](docs/DESIGN.md). Add `?grid` to any URL to see the layout grid.
 Full details: [docs/DATA_CONTRACT.md](docs/DATA_CONTRACT.md).
 
 ## Data handling

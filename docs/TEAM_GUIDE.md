@@ -37,7 +37,7 @@ pip install -r requirements.txt
 python run.py
 ```
 
-Open **http://127.0.0.1:5050**. You should see 4 fictional crew cards; Kai Okafor should be **YELLOW**.
+Open **http://127.0.0.1:5050** (the landing page), then **/dashboard**. You should see 4 fictional crew members; Kai Okafor should be **YELLOW**.
 
 Then run the tests (in a second terminal, venv activated):
 
@@ -45,7 +45,7 @@ Then run the tests (in a second terminal, venv activated):
 python -m pytest
 ```
 
-Expected: `36 passed, 6 skipped`. The 6 skipped are the Team Lead's task L-1.
+Expected: `42 passed, 8 skipped`. The 8 skipped are the Team Lead's task L-1.
 
 | Problem | Fix |
 |---|---|
@@ -81,14 +81,20 @@ app/
     monitor.js          checklist flow + payload preview + submit            (Member 3)
     dashboard.js        crew selector, detail, trend chart                    (Member 3)
     ridgeline.js        ★ stacked-sessions art, drawn from trend[].deviations (Member 3)
+    tokens.js           colour roles from CSS, for canvas/chart code (never hard-code hexes)
+    landing.js          landing page: a live preview of the dashboard
+    grid.js             dev aid: add ?grid to any URL to see the 12 columns
     keytrace.js         live key-press trace on Monitoring (timestamps only)  (Member 3)
     mission.js          mission view
     attention.js        reaction-time check TODO                              (A-1)
     common.js           fetch helper, escaping, chips
   static/vendor/        Chart.js (vendored so the demo works offline)
-  static/fonts/         Space Grotesk + JetBrains Mono (self-hosted, SIL OFL)
+  static/fonts/         Inter (self-hosted, SIL OFL)
+  static/img/           the two landing-page photographs (sources/licences: docs/ASSETS.md)
 tests/                  pytest; test_api.py protects the demo story
-docs/                   PLAN, TEAM_GUIDE, DATA_CONTRACT, DESIGN, TEST_LOG
+docs/                   PLAN, TEAM_GUIDE, DATA_CONTRACT, DESIGN, ASSETS, TEST_LOG
+scripts/check_grid.js   optional: asserts layout edges sit on the grid (Node + Playwright)
+scripts/assets/         optional: rebuilds the landing images from their public sources (OpenCV)
 ```
 
 ### Follow one session end to end (do this with the code open)

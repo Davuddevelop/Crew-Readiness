@@ -1,31 +1,44 @@
 {% extends "base.html" %}
 {% block title %}Attention check{% endblock %}
 {% block content %}
-<section class="page-head">
-  <div>
-    <h1>Optional attention check</h1>
-    <p class="muted">A short reaction-time task offered after a YELLOW or RED advisory.
+<section class="pagehead grid">
+  <div class="label">Attention</div>
+  <div class="body">
+    <h1 class="title">Optional attention check</h1>
+    <p class="lede">A short reaction-time task offered after a YELLOW or RED advisory.
       Illustrative only. It adds context for a human reviewer and is not a medical test.</p>
   </div>
 </section>
 
-<section class="panel">
-  <label for="profile-select">Crew member</label>
-  <select id="profile-select"><option>Loading…</option></select>
+<section class="section">
+  <div class="grid">
+    <div class="label"><span class="idx">01</span>Reaction time</div>
+    <div class="body">
+      <label for="profile-select">Crew member</label>
+      <select id="profile-select"><option>Loading…</option></select>
 
-  <!-- The stimulus area. Click or press Space when it turns bright. -->
-  <div id="rt-stage" class="rt-stage" tabindex="0" role="button" aria-label="Reaction area">
-    <span id="rt-message">Press Start. When this box lights up, click it or press Space as fast as you can.</span>
+      <!-- The stimulus area. Click or press Space when it turns bright. -->
+      <div id="rt-stage" class="rt-stage" tabindex="0" role="button" aria-label="Reaction area">
+        <span id="rt-message">Press Start. When this box lights up, click it or press Space as fast as you can.</span>
+      </div>
+      <button id="rt-start" class="btn" disabled>Start (10 trials)</button>
+
+      <div id="rt-result" class="rt-result" hidden></div>
+    </div>
   </div>
-  <button id="rt-start" class="btn" disabled>Start (10 trials)</button>
-
-  <div id="rt-result" class="rt-result" hidden></div>
 </section>
 
-<section class="panel todo">
-  <h2>Builder notes (task A-1)</h2>
-  <p>This page is a frame only. The spec is in <code>docs/TEAM_GUIDE.md → A-1</code> and the TODOs in
-    <code>app/static/js/attention.js</code>. The API endpoint <code>POST /api/attention</code> already works.</p>
+<section class="section">
+  <div class="grid">
+    <div class="label"><span class="idx">02</span>Builder notes</div>
+    <div class="body">
+      <div class="todo-box">
+        <h2 class="h2" style="margin-bottom:12px">Builder notes (task A-1)</h2>
+        <p>This page is a frame only. The spec is in <code>docs/TEAM_GUIDE.md → A-1</code> and the TODOs in
+          <code>app/static/js/attention.js</code>. The API endpoint <code>POST /api/attention</code> already works.</p>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}
 {% block scripts %}

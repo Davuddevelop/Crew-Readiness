@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+<main class="land">
+
+  <section class="page land-hero">
+    <div class="grid">
+      <div class="land-copy">
+        <p class="land-pill">Prototype · built for NASA Space Apps 2026</p>
+        <h1 class="display land-title">A second look before docking.</h1>
+        <p class="lede">Crew Readiness compares how each person works with their own usual pattern, and puts the difference in front of a human before a critical operation. It never reads what is typed. It never decides.</p>
+        <div class="actions">
+          <a class="btn" href="{{ url_for('views.monitor') }}">Start monitored task</a>
+          <a class="link" href="{{ url_for('views.dashboard') }}">Open the dashboard</a>
+        </div>
+      </div>
+
+      <!-- a live, tilted view of the real dashboard: decorative, so hidden from assistive tech -->
+      <div class="land-preview" aria-hidden="true">
+        <div class="pv-card">
+          <div class="pv-head">
+            <span class="pv-name" id="pv-name">Crew member</span>
+            <span id="pv-chip"></span>
+          </div>
+          <div class="pv-plot">
+            <canvas id="pv-canvas"></canvas>
+            <div id="pv-axis" hidden></div>
+            <div id="pv-readout" hidden></div>
+          </div>
+          <p class="pv-foot">One line per session. Flat means it matched their own baseline.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page land-links">
+    <div class="grid">
+      <div class="land-brand">
+        <div class="brand-row">
+          <svg width="30" height="22" viewBox="0 0 30 22" fill="none" aria-hidden="true">
+            <path class="m1" d="M0 3H30" stroke-width="1.5"/>
+            <path class="m2" d="M0 10H30" stroke-width="1.5"/>
+            <path class="m3" d="M0 19H9C12 19 12 6 15 6S18 19 21 19H30" stroke-width="1.8"/>
+          </svg>
+          <strong>Crew Readiness</strong>
+        </div>
+        <p class="small muted">Decision support for crews and the people who review them. Prototype with a fictional crew and illustrative thresholds. It detects changes in interaction timing, not fatigue or fitness for duty.</p>
+      </div>
+      <div class="land-col">
+        <h2 class="cap-h">Product</h2>
+        <ul>
+          <li><a href="{{ url_for('views.dashboard') }}">Dashboard</a></li>
+          <li><a href="{{ url_for('views.monitor') }}">Monitoring</a></li>
+          <li><a href="{{ url_for('views.attention') }}">Attention check</a></li>
+          <li><a href="{{ url_for('views.mission') }}">Mission</a></li>
+        </ul>
+      </div>
+      <div class="land-col">
+        <h2 class="cap-h">Trust</h2>
+        <ul>
+          <li><a href="{{ url_for('views.about') }}">Privacy &amp; limits</a></li>
+          <li><a href="{{ url_for('views.monitor') }}">What leaves the browser</a></li>
+        </ul>
+      </div>
+      <div class="land-col">
+        <h2 class="cap-h">Status</h2>
+        <ul class="muted">
+          <li>Feasibility prototype</li>
+          <li>Synthetic demo data</li>
+          <li>Timing numbers only, never content</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="land-stage" id="land-stage">
+    <div class="ghost" aria-hidden="true">Crew Readiness</div>
+    <img class="hand hand-l" src="{{ url_for('static', filename='img/hand-human.webp') }}" width="1500" height="757" alt="" aria-hidden="true" decoding="async" loading="lazy">
+    <img class="hand hand-r" src="{{ url_for('static', filename='img/hand-astronaut.webp') }}" width="1260" height="1058" alt="" aria-hidden="true" decoding="async" loading="lazy">
+    <div class="spark" aria-hidden="true"><i></i></div>
+    <p class="sr-only">Illustration: a person's hand, from Michelangelo's Creation of Adam, and an astronaut's gloved hand reach toward each other and almost touch. The gap is where a human reviews the readiness advisory.</p>
+  </section>
+  <p class="page land-credit">Imagery: Michelangelo, <em>The Creation of Adam</em> (Sistine Chapel, c. 1512; public domain). Astronaut glove: NASA/JPL-Caltech. Both processed to black and white. Sources and licences: docs/ASSETS.md.</p>
+
+</main>
+{% endblock %}
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/landing.js') }}"></script>
+{% endblock %}

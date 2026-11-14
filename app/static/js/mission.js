@@ -16,7 +16,7 @@ async function load() {
   $("assignments").innerHTML = m.assignments.map((a) => `
     <tr class="${a.critical ? "critical-row" : ""}">
       <td>${esc(a.role)}</td>
-      <td><a href="/?crew=${encodeURIComponent(a.profile_id)}">${esc(a.display_name)}</a></td>
+      <td><a href="/dashboard?crew=${encodeURIComponent(a.profile_id)}">${esc(a.display_name)}</a></td>
       <td>${a.critical ? "Yes" : "No"}</td>
       <td>${bandChip(a)}</td>
       <td>${esc(a.confidence)}</td>

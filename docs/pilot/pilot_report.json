@@ -1,0 +1,176 @@
+{
+  "source": {
+    "sessions": "/home/user/Crew-Readiness/docs/pilot/pilot_sessions.csv",
+    "sheet": "/home/user/Crew-Readiness/docs/pilot/session_sheet.csv"
+  },
+  "n_people": 2,
+  "n_sessions": 24,
+  "cutoffs": {
+    "yellow": 1.0,
+    "red": 2.0
+  },
+  "false_alerts_on_normal": {
+    "yellow": {
+      "flagged": 0,
+      "n": 8,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.3244
+      ]
+    },
+    "red": {
+      "flagged": 0,
+      "n": 8,
+      "rate": 0.0,
+      "ci95": [
+        0.0,
+        0.3244
+      ]
+    }
+  },
+  "detection_on_perturbed": {
+    "all": {
+      "yellow": {
+        "flagged": 5,
+        "n": 6,
+        "rate": 0.8333,
+        "ci95": [
+          0.4365,
+          1.0
+        ]
+      },
+      "red": {
+        "flagged": 0,
+        "n": 6,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.3903
+        ]
+      }
+    },
+    "non_dominant_hand": {
+      "yellow": {
+        "flagged": 3,
+        "n": 3,
+        "rate": 1.0,
+        "ci95": [
+          0.4385,
+          1.0
+        ]
+      },
+      "red": {
+        "flagged": 0,
+        "n": 3,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.5615
+        ]
+      }
+    },
+    "counting_backwards": {
+      "yellow": {
+        "flagged": 2,
+        "n": 3,
+        "rate": 0.6667,
+        "ci95": [
+          0.2077,
+          0.9385
+        ]
+      },
+      "red": {
+        "flagged": 0,
+        "n": 3,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.5615
+        ]
+      }
+    }
+  },
+  "calibration_on_normal": null,
+  "per_person": [
+    {
+      "pseudonym": "pilot-01",
+      "perturbation": "non_dominant_hand",
+      "normal_scores": [
+        0.0,
+        0.01,
+        0.0,
+        0.0
+      ],
+      "perturbed_scores": [
+        1.89,
+        1.89,
+        1.83
+      ],
+      "n_sessions": 12,
+      "n_low_quality": 0
+    },
+    {
+      "pseudonym": "pilot-02",
+      "perturbation": "counting_backwards",
+      "normal_scores": [
+        0.01,
+        0.23,
+        0.0,
+        0.0
+      ],
+      "perturbed_scores": [
+        0.0,
+        1.76,
+        1.86
+      ],
+      "n_sessions": 12,
+      "n_low_quality": 0
+    }
+  ],
+  "variability": {
+    "n_people": 2,
+    "iki_cv": {
+      "real_median": 0.0603,
+      "assumed": 0.07,
+      "ratio": 0.86
+    },
+    "resp_cv": {
+      "real_median": 0.2628,
+      "assumed": 0.11,
+      "ratio": 2.39
+    },
+    "pause_mean_per_session": {
+      "real_min": 0.0,
+      "real_median": 0.06,
+      "real_max": 0.11,
+      "assumed_range": [
+        0.4,
+        1.2
+      ]
+    },
+    "pause_overdispersion": {
+      "real_median": 0.0,
+      "assumed": 0.0
+    },
+    "iki_median_ms": {
+      "real_min": 99.0,
+      "real_max": 99.0,
+      "assumed_range": [
+        145.0,
+        230.0
+      ]
+    },
+    "noise_sigma": {
+      "real_estimate": 0.0,
+      "assumed": 0.0
+    },
+    "simulator_assumptions_hold": false
+  },
+  "limits": [
+    "A handful of volunteers on one laptop; a few dozen scored sessions, so every rate has a wide interval.",
+    "The perturbations (non-dominant hand, counting backwards) are stand-ins for a change in how someone works; they are not fatigue, illness or any health state.",
+    "Volunteers are not astronauts or crew, and a typed checklist is a stand-in task.",
+    "Sessions 1 to 5 of each person are CALIBRATING (no score), so false alerts are counted on the few normal sessions after that."
+  ]
+}

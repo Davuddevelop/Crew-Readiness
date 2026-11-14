@@ -132,7 +132,7 @@ def test_evidence_page_renders_from_the_results_file(client):
     r = client.get("/evidence")
     assert r.status_code == 200
     html = r.data.decode()
-    assert "Synthetic data" in html and "Simulated data only" in html and "fatigue" in html
+    assert "Synthetic data" in html and "simulated data" in html.lower() and "fatigue" in html
     data = json.loads(RESULTS_FILE.read_text())
     assert data["synthetic"] is True
     for row in data["table"]:                           # every number on the page comes from the file
@@ -183,10 +183,13 @@ def test_evidence_budget_table_and_intervals_come_from_the_file(client):
 def test_evidence_pilot_section_only_appears_with_a_pilot_report(client, tmp_path, monkeypatch):
     import json
     from app import views
-    assert 'id="pilot"' not in client.get("/evidence").get_data(as_text=True)      # no pilot file yet: nothing is claimed
+    monkeypatch.setattr(views, "PILOT_FILE", tmp_path / "missing.json")
+    assert 'id="pilot"' not in client.get("/evidence").get_data(as_text=True)      # no pilot file: nothing is claimed
     rep = {"n_people": 2, "n_sessions": 24, "false_alerts_on_normal": {"yellow": {"flagged": 1, "n": 8, "rate": 0.125, "ci95": [0.02, 0.47]}},
            "detection_on_perturbed": {k: {"yellow": {"flagged": 5, "n": 6, "rate": 0.8333, "ci95": [0.44, 0.97]}} for k in ("all", "non_dominant_hand", "counting_backwards")},
-           "variability": {"n_people": 2, "iki_cv": {"real_median": 0.09, "assumed": 0.07}, "resp_cv": {"real_median": 0.12, "assumed": 0.11}, "simulator_assumptions_hold": True},
+           "variability": {"n_people": 2, "iki_cv": {"real_median": 0.09, "assumed": 0.07}, "resp_cv": {"real_median": 0.12, "assumed": 0.11}, "simulator_assumptions_hold": True,
+                           "iki_median_ms": {"real_min": 98, "real_max": 116, "assumed_range": [145.0, 230.0]},
+                           "pause_mean_per_session": {"real_min": 0.0, "real_max": 0.1, "assumed_range": [0.4, 1.2]}},
            "limits": ["A handful of volunteers on one laptop."]}
     f = tmp_path / "pilot_report.json"
     f.write_text(json.dumps(rep))

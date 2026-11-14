@@ -39,7 +39,7 @@ def test_page_covers_the_r1_topics_and_labels_the_proposal(client):
     assert "This is a proposal, not something the prototype does." in t
     for word in ("Keyboard.", "Language.", "Time of day.", "Sleep.", "Practice."):
         assert word in t
-    for phrase in ("simulated data only", "No real people", "partly circular", "approved or endorsed by NASA"):
+    for phrase in ("simulated data", "very small volunteer check", "Almost no real people", "no data from astronauts or crews", "partly circular", "approved or endorsed by NASA"):
         assert phrase in t
 
 

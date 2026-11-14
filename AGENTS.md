@@ -12,7 +12,7 @@ Non-negotiable:
 - **Privacy:** never store or send typed text, key identities or raw keystroke timelines. Only the nine aggregate features in `app/features.py`.
 - **Honest claims:** never say it detects fatigue, illness or fitness for duty, or that NASA approved it. Anything from the benchmark is
   "simulated". Do not edit `app/results_data.json` by hand; regenerate it with `python -m ml.export_results`.
-- **Positioning:** it is a prototype of on-board decision support, tested only on simulated data. Never write that astronauts use it, that it is proven or tested in space, or that it is validated on crews.
+- **Positioning:** it is a prototype of on-board decision support, tested on simulated data and one very small volunteer pilot (docs/pilot), never on crews. Never write that astronauts use it, that it is proven or tested in space, or that it is validated on crews.
 - **No network at runtime** (no CDN fonts or scripts); a test enforces it.
 - **Images:** only public-domain or licensed, recorded in `docs/ASSETS.md` (a test enforces it).
 - **Design:** one grid, one typeface, colour only for status. Read `docs/DESIGN.md` before changing styles. No new gradients, shadows or glass (the landing hero's two documented gradients in `docs/DESIGN.md` are the only exceptions).

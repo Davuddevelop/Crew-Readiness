@@ -170,7 +170,7 @@ def variability(people: dict[str, list[dict]]) -> dict:
         "pause_mean_per_session": {"real_min": round(min(means), 2), "real_median": round(float(np.median(means)), 2),
                                    "real_max": round(max(means), 2), "assumed_range": list(pop.pause_rate)},
         "pause_overdispersion": {"real_median": round(float(np.median(ods)), 3) if ods else None, "assumed": pop.pause_overdispersion},
-        "iki_median_ms": {"real_min": round(min(ikis)), "real_max": round(max(ikis)), "assumed_range": list(pop.iki_ms)},
+        "iki_median_ms": {"real_min": round(min(ikis), 1), "real_max": round(max(ikis), 1), "assumed_range": list(pop.iki_ms)},
         "noise_sigma": {"real_estimate": round(sigma, 3), "assumed": pop.noise_sigma},
     }
     for k in ("iki_cv", "resp_cv"):

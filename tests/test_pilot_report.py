@@ -122,3 +122,24 @@ def test_cli_writes_json(tmp_path, capsys):
     out = tmp_path / "r.json"
     assert main(["--sessions", str(sp), "--sheet", str(sh), "--out", str(out)]) == 0
     assert out.exists() and "False alerts" in capsys.readouterr().out
+
+
+def test_the_committed_pilot_report_is_what_the_committed_files_produce():
+    """docs/pilot/pilot_report.json (rendered on Evidence) must be exactly the analysis of the two committed CSVs: nothing hand-edited."""
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1] / "docs" / "pilot"
+    committed = json.loads((root / "pilot_report.json").read_text())
+    fresh = json.loads(json.dumps(build_report(root / "pilot_sessions.csv", root / "session_sheet.csv")))
+    for r in (committed, fresh):
+        r.pop("source")                                        # paths differ between machines
+    assert committed == fresh
+
+
+def test_the_committed_pilot_files_hold_pseudonyms_and_numbers_only():
+    from pathlib import Path
+    import re
+    root = Path(__file__).resolve().parents[1] / "docs" / "pilot"
+    for name in ("pilot_sessions.csv", "session_sheet.csv"):
+        for line in (root / name).read_text().splitlines()[1:]:
+            assert re.match(r"^pilot-\d\d,", line), line

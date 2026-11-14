@@ -26,9 +26,16 @@ We built a benchmark of simulated crews with injected changes whose timing and s
 - **A trade-off, shown openly.** Detection also falls at that level: for a 10 % slowdown, **0.42** to **0.35** of affected sessions flagged.
 - **Better at matched false-alert rates.** Holding false alerts fixed at 5 %, the new model detects more at every size we tried (for a 10 % slowdown: **0.24** to **0.36** when pauses are Poisson-like, **0.22** to **0.29** when they are very bursty).
 - **A flaw we found and fixed.** In a sustained 20 % slowdown, the old method absorbed the change into the person's baseline and detection fell from 0.88 to **0.07** by the fifteenth affected session; keeping flagged sessions out of the baseline held it at **0.40** with no extra false alerts.
+- **New equipment, handled by a human.** If someone becomes slower for good (gloves, a different device), both methods flag it at first. After a person accepts the change as their new normal, repeated alerts fall from **27 %** to **11 %** of sessions, and a later real slowdown is flagged **60 %** of the time against **54 %** (simulated, 300 people; the size and timing are our assumptions). The tool never accepts a change on its own.
 - **Robust to a wrong assumption.** The result barely depends on the burstiness we assume for pausing, because the model learns it per person.
 
 All of it is reproducible with commands in `docs/ML_RESULTS.md`, and the product's Evidence page renders the same numbers from the benchmark's output file.
+
+## What you can try in the product
+- **My status** (`/me`): a crew member's own status first, in plain words, with what they can do next.
+- **Replay** (`/replay`): one simulated person; include the *New equipment* scenario.
+- **Mission** (`/mission`) and **the printable brief** (`/brief`): what a reviewer would hold before a critical operation, with a blank record to fill in by hand.
+- **Privacy & limits** (`/about`): a button that lists every file the page loaded and shows none came from elsewhere. It checks one page only; a real on-board computer was not tested.
 
 ## What we did not validate
 - **No real people.** We have no data from astronauts, crews or volunteers. The crew in the demo is fictional and its data synthetic.

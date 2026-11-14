@@ -4,15 +4,17 @@ The pages (views.py) are thin shells; they fetch everything from here.
 """
 from __future__ import annotations
 
+from datetime import datetime, timezone
+
 from flask import Blueprint, current_app, jsonify, request
 from werkzeug.exceptions import HTTPException
 
 from . import store
 from .db import get_db
 from .features import ValidationError, assess_quality, validate_session_payload
-from .mission import MISSION, mission_advisory
+from .mission import MISSION, check_in_watchdog, mission_advisory
 from .readiness import accept_new_normal, readiness_for_all, readiness_for_profile
-from .tasks import TASKS
+from .tasks import DEFAULT_TASK_TYPE, TASKS
 
 bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -173,7 +175,9 @@ def mission():
         if profile is None:
             continue
         r = readiness_for_profile(db, profile, with_trend=False)["readiness"]
+        history = store.list_sessions(db, profile["id"], DEFAULT_TASK_TYPE, limit=1)
         assignments.append({**a, "display_name": profile["display_name"],
+                            "last_check_in": history[-1]["created_at"] if history else None,
                             "mission_role": profile["mission_role"],
                             "status": r["status"], "band": r["band"],
                             "confidence": r["confidence"], "reasons": r["reasons"]})
@@ -183,4 +187,5 @@ def mission():
         t_minus_hours=MISSION["t_minus_hours"],
         assignments=assignments,
         advisory=mission_advisory(assignments),
+        watchdog=check_in_watchdog(assignments, MISSION["check_in_interval_hours"], datetime.now(timezone.utc)),
     )

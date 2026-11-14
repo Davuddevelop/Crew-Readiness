@@ -2,6 +2,8 @@
 
 **NASA Space Apps 2026.** A privacy-conscious prototype that flags **changes in a crew member's task interaction timing**, compared with **their own** baseline, for **human review** before a critical operation.
 
+> **Positioning.** A prototype of on-board decision support for crews doing computer-based procedure work, **tested only on simulated data**. It has not been used by or tested with astronauts, and real conditions (tablets, gloves, shared devices, microgravity) are untested.
+
 > ⚠️ **Prototype.** Fictional crew, synthetic demo data, illustrative thresholds. It detects changes in interaction timing; it does **not** detect fatigue, diagnose anything, or clear anyone for duty.
 
 ---

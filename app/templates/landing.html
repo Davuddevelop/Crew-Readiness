@@ -7,7 +7,7 @@
     <div class="grid">
       <div class="label">Crew Readiness<span class="label-sub">Prototype<br>NASA Space Apps 2026</span></div>
       <div class="body">
-        <h1 class="display land-title">A second look before docking.</h1>
+        <h1 class="display land-title">A second look before <em>docking.</em></h1>
         <p class="lede land-lede">It compares each person only with their own usual pattern, and puts what changed in front of a human before a critical operation. It never reads what is typed. It never decides.</p>
         <div class="actions">
           <a class="btn" href="{{ url_for('views.monitor') }}">Start monitored task</a>
@@ -21,7 +21,7 @@
     <div class="grid">
       <div class="label"><span class="idx">01</span>Today</div>
       <div class="body g10">
-        <p class="land-who" id="pv-who">Fictional crew member, synthetic data.</p>
+        <p class="land-who" id="pv-who"><b>Fig. 1</b>Fictional crew member, synthetic data.</p>
         <figure class="art art-wide" aria-label="Stacked sessions: one line per session for a fictional crew member">
           <div class="art-stage">
             <canvas id="pv-canvas" role="img" aria-label="One line per recent session, oldest at the top. Flat lines match the person's own baseline; the amber line is the latest session and rises where timing differed."></canvas>
@@ -59,7 +59,7 @@
     <div class="spark" aria-hidden="true"><i></i></div>
     <p class="sr-only">Illustration: a person's hand, from Michelangelo's Creation of Adam, and an astronaut's gloved hand reach toward each other and almost touch. The gap is where a human reviews the readiness advisory.</p>
   </section>
-  <p class="page land-credit">Imagery: Michelangelo, <em>The Creation of Adam</em> (Sistine Chapel, c. 1512; public domain). Spacesuit glove: NASA, from the 2012 photograph <em>Man and Machine</em>. Both processed to black and white. Sources and licences: docs/ASSETS.md.</p>
+  <p class="page land-credit"><b>Fig. 2</b>Imagery: Michelangelo, <em>The Creation of Adam</em> (Sistine Chapel, c. 1512; public domain). Spacesuit glove: NASA, from the 2012 photograph <em>Man and Machine</em>. Both processed to black and white. Sources and licences: docs/ASSETS.md.</p>
 
 </main>
 {% endblock %}

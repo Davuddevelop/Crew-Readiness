@@ -19,7 +19,7 @@ from PIL import Image
 
 KEY_LOW, KEY_SPAN = 6, 14      # background-distance below KEY_LOW is fully transparent; opaque by KEY_LOW + KEY_SPAN
 # Our palette (app/static/css/style.css :root): the disc becomes --line, the strokes become --ink.
-DISC, INK = np.array([0x2C, 0x31, 0x40], np.float32), np.array([0xF8, 0xFA, 0xFC], np.float32)
+DISC, INK = np.array([0x2E, 0x2B, 0x25], np.float32), np.array([0xED, 0xE8, 0xDC], np.float32)
 SRC_DISC_LUM, SRC_INK_LUM = 43.0, 235.0
 MARK_H, MARK_BOLD = 56, 3     # nav mark height in pixels (2x of 28 CSS px); stroke thickening in source pixels
 

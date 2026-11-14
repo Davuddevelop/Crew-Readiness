@@ -344,3 +344,7 @@ table.evidence td.num { font-size: 15px; }
 @media (prefers-reduced-motion: reduce) {
   .hand-l, .hand-r, .spark, .spark i { animation: none !important; }
 }
+
+/* baseline review: shown only while a flagged run waits for a human */
+.review { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--rule); max-width: 62ch; }
+.review p { margin: 0 0 16px; }

@@ -56,7 +56,7 @@ features (checklist 35 %, typing rhythm 26 %, pauses 20 %, typing variability 19
 
 Catch: excluding flagged sessions forever would also lock out a *genuine new normal* (new keyboard, practice effect), so
 the alerts would never stop. A re-admission rule or a human "accept as the new normal" action is required; that is a design
-decision (decision 4 in `docs/ML_PLAN.md`). Not implemented in the product yet.
+decision (decision 4 in `docs/ML_PLAN.md`). **Implemented** (team lead chose "exclude + human accepts"): flagged sessions are excluded; a reviewer can accept the run, which restarts the baseline from it. The simulation measures only the exclusion; the human-acceptance step is not benchmarked, because it depends on a person's judgement.
 
 ## Robustness to a wrong assumption (`python -m ml.stress_prior`)
 Assumed burstiness prior 0.05 / 0.5 / 2.0, against simulated people whose true burstiness is 0 / 0.5 / 1.5

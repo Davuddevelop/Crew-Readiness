@@ -45,7 +45,7 @@ def insert_profile(db, profile_id: str, display_name: str, mission_role: str,
 # ---------- sessions ----------
 
 _SESSION_COLUMNS = ("id", "profile_id", "task_type", "created_at", "source",
-                    "data_quality", "quality_notes") + FEATURE_NAMES
+                    "data_quality", "quality_notes", "accepted_at") + FEATURE_NAMES
 
 
 def insert_session(db, *, profile_id: str, task_type: str, features: dict,
@@ -72,6 +72,14 @@ def list_sessions(db, profile_id: str, task_type: str, limit: int | None = None)
         params += (limit,)
     rows = db.execute(sql, params).fetchall()
     return [dict(r) for r in reversed(rows)]
+
+
+def accept_sessions(db, session_ids: list[int]) -> None:
+    """A human accepted these flagged sessions as the new normal: they may now shape the baseline."""
+    if not session_ids:
+        return
+    marks = ", ".join("?" for _ in session_ids)
+    db.execute(f"UPDATE sessions SET accepted_at = ? WHERE id IN ({marks})", (utc_now_iso(), *session_ids))
 
 
 # ---------- attention check ----------

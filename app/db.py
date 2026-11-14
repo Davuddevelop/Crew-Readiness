@@ -37,3 +37,12 @@ def is_initialized() -> bool:
 
 def init_app(app) -> None:
     app.teardown_appcontext(close_db)
+
+
+def ensure_columns() -> None:
+    """Add columns introduced after a database was created (the prototype has no migrations)."""
+    db = get_db()
+    have = {r["name"] for r in db.execute("PRAGMA table_info(sessions)")}
+    if "accepted_at" not in have:
+        db.execute("ALTER TABLE sessions ADD COLUMN accepted_at TEXT")
+        db.commit()

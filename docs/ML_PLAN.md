@@ -44,4 +44,4 @@ The feature set does not need any. Optional context that is real and low risk: a
 1. Which candidate model, and why does it suit 5-20 sessions of data?
 2. What event shapes and sizes are *realistic* for the injected drift? Justify from literature, not from what makes the demo look good.
 3. What false-alert rate is acceptable to a crew, and why?
-4. Should flagged sessions be excluded from future baselines? (an open question in `baseline.py`)
+4. ~~Should flagged sessions be excluded from future baselines?~~ **Decided (team lead): yes, and a human accepts a genuine new normal.** Implemented; evidence in `docs/ML_RESULTS.md`.

@@ -101,6 +101,13 @@ function renderDetail(data) {
   $("detail-chip").innerHTML = bandChip(r);
   $("detail-advisory").textContent = r.advisory;
   $("detail-disclaimer").textContent = r.disclaimer;
+  const review = data.baseline_review;
+  $("detail-review").hidden = !review;
+  if (review) {
+    $("detail-review-text").textContent = review.message;
+    $("detail-review-note").textContent = "Accepting restarts this person's baseline from these sessions. It is a human decision, stored with a timestamp (the prototype has no user accounts, so not who).";
+    $("detail-accept").dataset.profile = p.id;
+  }
   $("detail-reasons").innerHTML = r.reasons.length
     ? r.reasons.map((x) => `<li>${esc(x)}</li>`).join("")
     : `<li class="muted">No signal is notably different from usual.</li>`;
@@ -114,6 +121,17 @@ function renderDetail(data) {
     </tr>`).join("") || `<tr><td colspan="5" class="muted">Not enough baseline sessions yet.</td></tr>`;
   renderTrend(data.trend);
 }
+
+$("detail-accept").addEventListener("click", async (e) => {
+  const id = e.currentTarget.dataset.profile;
+  if (!id || !confirm("Accept the flagged sessions as this person's new normal? Their baseline will restart from these sessions, and until it has enough sessions it will show CALIBRATING.")) return;
+  try {
+    await api(`/api/readiness/${encodeURIComponent(id)}/accept-new-normal`, { method: "POST" });
+    await select(id);
+  } catch (err) {
+    $("detail-review-note").textContent = `Could not accept: ${err.message}`;
+  }
+});
 
 async function select(id) {
   selectedId = id;

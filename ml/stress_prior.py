@@ -25,5 +25,5 @@ if __name__ == "__main__":
     print(f"{'assumed prior':>14} | " + " ".join(f"true od={od:<4}" for od in TRUE_OD))
     print(f"{'incumbent':>14} | " + " ".join(f"{det_at_far(incumbent_detector, od):>11.2f}" for od in TRUE_OD))
     for p in PRIORS:
-        candidates.PRIOR_DISPERSION = p
+        candidates.pause_model.PRIOR_DISPERSION = p
         print(f"{'nb prior ' + str(p):>14} | " + " ".join(f"{det_at_far(candidates.candidate_nb, od):>11.2f}" for od in TRUE_OD))

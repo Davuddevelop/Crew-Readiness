@@ -21,6 +21,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from .baseline import MIN_BASELINE_SESSIONS, Baseline
+from . import pause_model
 from .features import FEATURES_BY_NAME
 
 # feature -> (group, direction, absolute spread floor)
@@ -86,6 +87,7 @@ class ReadinessView:
     reasons: list[str] = field(default_factory=list)
     advisory: str = ""
     disclaimer: str = DISCLAIMER
+    model: str = "robust-mad-v1"      # which scoring model produced this view
 
     def to_dict(self) -> dict:
         return {
@@ -101,6 +103,7 @@ class ReadinessView:
             "reasons": self.reasons,
             "advisory": self.advisory,
             "disclaimer": self.disclaimer,
+            "model": self.model,
         }
 
 
@@ -133,6 +136,14 @@ def _reason_text(d: FeatureDeviation) -> str:
     return f"{d.label}: {now} vs usual {usual} ({d.z:+.1f} robust SD, {direction} than usual)."
 
 
+def _nb_pause_reason(d: FeatureDeviation, baseline: Baseline) -> str:
+    p = pause_model.tail_probability(list(baseline.pause_counts), int(d.value))
+    mean = sum(baseline.pause_counts) / max(len(baseline.pause_counts), 1)
+    return (f"{d.label}: {d.value:.0f} vs usual {mean:.1f} per session. "
+            f"Under this person's own pause pattern, a count this high or higher would be expected "
+            f"about 1 session in {1 / p:.0f}.")
+
+
 def insufficient_data_view() -> ReadinessView:
     """For a crew member with no completed sessions at all."""
     return ReadinessView(status="INSUFFICIENT_DATA", band=None, score=None,
@@ -141,8 +152,13 @@ def insufficient_data_view() -> ReadinessView:
                          advisory=ADVISORIES["INSUFFICIENT_DATA"])
 
 
-def score_session(features: dict, baseline: Baseline, data_quality: str) -> ReadinessView:
-    """Compare one session's features with the person's own baseline."""
+def score_session(features: dict, baseline: Baseline, data_quality: str,
+                  pause_model_name: str = "robust") -> ReadinessView:
+    """Compare one session's features with the person's own baseline.
+
+    pause_model_name: "robust" (median/MAD z for every feature, the original) or "nb" (pause COUNT scored
+    by a per-person negative-binomial tail probability; pause TIME is shown as context but not scored).
+    """
     if not baseline.ready:
         return ReadinessView(status="CALIBRATING", band=None, score=None,
                              confidence="NONE", baseline_n=baseline.n,
@@ -156,6 +172,11 @@ def score_session(features: dict, baseline: Baseline, data_quality: str) -> Read
         spread = max(fb.spread, RELATIVE_SPREAD_FLOOR * abs(fb.median), abs_floor)
         z = (float(features[name]) - fb.median) / spread
         d = min(max(0.0, z * direction), DEVIATION_CAP)
+        if pause_model_name == "nb" and name == "pause_count":
+            d = pause_model.pause_deviation_nb(list(baseline.pause_counts), int(features[name]))
+            z = d                                  # z-equivalent of the tail probability
+        if pause_model_name == "nb" and name == "pause_total_ms":
+            group = "context"                      # displayed, not scored (known loss, documented)
         deviations.append(FeatureDeviation(
             feature=name, label=spec.label, unit=spec.unit, group=group,
             value=float(features[name]), baseline_median=fb.median,
@@ -170,7 +191,9 @@ def score_session(features: dict, baseline: Baseline, data_quality: str) -> Read
     band = band_for(score)
 
     ranked = sorted(deviations, key=lambda d: d.deviation, reverse=True)
-    reasons = [_reason_text(d) for d in ranked if d.deviation >= REASON_THRESHOLD]
+    reasons = [(_nb_pause_reason(d, baseline) if (pause_model_name == "nb" and d.feature == "pause_count")
+                else _reason_text(d))
+               for d in ranked if d.deviation >= REASON_THRESHOLD and d.group != "context"]
 
     return ReadinessView(
         status="SCORED", band=band, score=score,
@@ -178,4 +201,5 @@ def score_session(features: dict, baseline: Baseline, data_quality: str) -> Read
         baseline_n=baseline.n, baseline_needed=MIN_BASELINE_SESSIONS,
         data_quality=data_quality, group_scores=group_scores,
         deviations=ranked, reasons=reasons, advisory=ADVISORIES[band],
+        model="nb-pause-v2" if pause_model_name == "nb" else "robust-mad-v1",
     )

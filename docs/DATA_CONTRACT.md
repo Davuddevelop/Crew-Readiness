@@ -68,6 +68,7 @@ A session is never part of its own baseline.
 | `reasons[]` | plain-language strings, only for deviation ≥ 1.0 |
 | `advisory` | one sentence for a human reviewer |
 | `disclaimer` | always shown |
+| `model` | which scoring model produced the view: `nb-pause-v2` (pause count by per-person negative binomial; pause time shown as context, not scored) or `robust-mad-v1`. See docs/ML_RESULTS.md |
 
 ### Attention result (stretch, task A-1)
 `profile_id, session_id?, trials, median_rt_ms|null, premature_count, miss_count`

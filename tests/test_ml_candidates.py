@@ -30,3 +30,24 @@ def test_burstier_history_makes_the_same_count_less_surprising():
     steady = [1, 1, 1, 1, 1, 1, 1, 1]
     bursty = [0, 0, 5, 0, 0, 4, 0, 1]      # same mean (1.5 vs 1.0 aside), far more variable
     assert pause_deviation_nb(bursty, 4) < pause_deviation_nb(steady, 4)
+
+
+def test_product_scoring_equals_the_benchmarked_candidate():
+    """The score the product shows must be the score the benchmark measured."""
+    import numpy as np
+    from app.baseline import compute_baseline, select_baseline_sessions
+    from app.features import FEATURE_NAMES
+    from app.scoring import score_session
+    from ml.candidates import candidate_nb
+    from ml.synth import Event, simulate_person
+    sessions, _ = simulate_person(np.random.default_rng(5), 30, events=(Event("step", 20, 4, 0.2),))
+    for i in range(5, 30):
+        base = compute_baseline(select_baseline_sessions(sessions[:i]), FEATURE_NAMES, "docking_checklist_v1")
+        view = score_session(sessions[i], base, "ok", "nb")
+        assert abs(view.score - candidate_nb(sessions[:i], sessions[i])) < 1e-9
+
+
+def test_api_reports_the_model_and_explains_pauses_in_plain_language(client):
+    d = client.get("/api/readiness/plt-okafor").get_json()
+    assert d["readiness"]["model"] == "nb-pause-v2"
+    assert d["readiness"]["status"] == "SCORED"

@@ -7,6 +7,8 @@ session would partly "explain itself away".
 """
 from __future__ import annotations
 
+import os
+
 from . import store
 from .baseline import compute_baseline, select_baseline_sessions
 from .features import FEATURE_NAMES
@@ -16,6 +18,10 @@ from .tasks import DEFAULT_TASK_TYPE
 # How many of the most recent sessions the trend carries. The dashboard draws one line
 # per session (the "stacked sessions" art), so this is also the number of lines.
 TREND_POINTS = 14
+
+# Which scoring model the product uses. "nb" = per-person count model for pauses (benchmark: docs/ML_RESULTS.md);
+# "robust" = the original median/MAD z-score for every feature. Env override: CREW_PAUSE_MODEL.
+PAUSE_MODEL = os.environ.get("CREW_PAUSE_MODEL", "nb")
 
 
 def _session_summary(s: dict) -> dict:
@@ -34,7 +40,7 @@ def _score_at(history: list[dict], index: int, task_type: str):
     session = history[index]
     baseline = compute_baseline(select_baseline_sessions(history[:index]),
                                 FEATURE_NAMES, task_type)
-    return score_session(session, baseline, session["data_quality"]), baseline
+    return score_session(session, baseline, session["data_quality"], PAUSE_MODEL), baseline
 
 
 def readiness_for_profile(db, profile: dict, task_type: str = DEFAULT_TASK_TYPE,

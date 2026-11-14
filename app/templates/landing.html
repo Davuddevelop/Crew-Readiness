@@ -4,7 +4,7 @@
 <main class="land">
 
   <section class="page land-top">
-    <p class="land-kicker">Crew Readiness &middot; a NASA Space Apps 2026 prototype</p>
+    <p class="land-kicker">A NASA Space Apps 2026 prototype &middot; tested on simulated data</p>
     <h1 class="land-h" aria-label="A second look before docking."><span aria-hidden="true">{% for w in ["A", "second", "look", "before", "docking."] %}<span class="w"><span style="--i:{{ loop.index0 }}">{{ w }}</span></span> {% endfor %}</span></h1>
     <p class="land-sub">It compares each person only with their own usual pattern, and puts what changed in front of a human before a critical operation. It never reads what is typed. It never decides.</p>
     <div class="actions">
@@ -17,8 +17,7 @@
     <div class="ghost" aria-hidden="true">Crew Readiness</div>
     <div class="hand-wrap" id="wrap-l"><img class="hand hand-l" src="{{ url_for('static', filename='img/hand-human.webp') }}" width="1500" height="757" alt="" aria-hidden="true" decoding="async"></div>
     <div class="hand-wrap" id="wrap-r"><img class="hand hand-r" src="{{ url_for('static', filename='img/hand-astronaut.webp') }}" width="1140" height="864" alt="" aria-hidden="true" decoding="async"></div>
-    <div class="spark" aria-hidden="true"><i></i></div>
-    <p class="sr-only">Illustration: a person's hand, from Michelangelo's Creation of Adam, and an astronaut's gloved hand reach toward each other and almost touch. The gap is where a human reviews the readiness advisory.</p>
+    <p class="sr-only">Illustration: a person's hand, from Michelangelo's Creation of Adam, and an astronaut's gloved hand reach toward each other and almost touch. The empty space between them is where a human reviews the readiness advisory.</p>
   </section>
 
   <section class="page land-three">

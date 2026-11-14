@@ -10,6 +10,10 @@ TOUCHY = re.compile(r"fatigue|impair|cognitive|illness|unfit|diagnos|fitness for
 DENIES = re.compile(r"\bnot\b|\bno\b|\bnever\b|\bnothing\b|\bnor\b|\bwithout\b|\bsays nothing\b|\bdoes not\b", re.I)
 BANNED = ("% accurate", "accuracy of", "proven to", "guaranteed", "ai-powered", "clinically proven", "cleared for duty")
 
+# positioning: it is a prototype tested on simulated data. These may appear only in a sentence that denies them.
+POSITIONING = ("used by astronauts", "astronauts use", "tested with astronauts", "tested in space", "flight-proven", "space-proven",
+               "validated on crews", "validated on astronauts")
+
 
 def text_of(html: str) -> str:
     html = re.sub(r"<(script|style)[\s\S]*?</\1>", " ", html)
@@ -36,6 +40,12 @@ def test_touchy_words_only_appear_in_a_sentence_that_denies_them(client):
 def test_no_banned_overclaim_phrases(client):
     bad = [(name, b) for name, t in all_texts(client).items() for b in BANNED if b in t.lower()]
     assert not bad, bad
+
+
+def test_positioning_claims_only_appear_when_denied(client):
+    bad = [(name, s.strip()[:110]) for name, t in all_texts(client).items() for s in sentences(t)
+           if any(ph in s.lower() for ph in POSITIONING) and not DENIES.search(s)]
+    assert not bad, f"implies astronauts use it or that it is proven in space: {bad}"
 
 
 def test_nasa_is_never_claimed_as_approver_or_partner(client):

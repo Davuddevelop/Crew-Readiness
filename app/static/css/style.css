@@ -275,7 +275,7 @@ table.evidence td.num { font-size: 15px; }
 .land-top .actions { animation: fade-up .9s .95s cubic-bezier(.2,.8,.2,1) both; display: flex; justify-content: center; align-items: center; gap: 12px 28px; flex-wrap: wrap; }
 
 /* the hands: each image is pre-padded so its fingertip sits on the vertical centre line at its inner edge, so the gap
-   and the spark are plain CSS (no JavaScript, no tuning). They are above the fold, so they reach on load. */
+   is plain CSS (no JavaScript, no tuning). They are above the fold, so they reach on load. */
 .land-stage { position: relative; margin-top: 0; height: clamp(240px, 34vw, 520px); overflow: hidden; overflow: clip; }
 .land-stage .ghost {
   position: absolute; left: 50%; bottom: -0.17em; transform: translateX(-50%); white-space: nowrap; user-select: none; pointer-events: none;
@@ -293,10 +293,6 @@ table.evidence td.num { font-size: 15px; }
 .hand-r { right: 0; width: 33vw; object-position: left center; animation: reach-r 2.2s cubic-bezier(.2,.7,.2,1) both; }
 @keyframes reach-l { from { transform: translateX(-5vw); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes reach-r { from { transform: translateX(5vw); opacity: 0; } to { transform: none; opacity: 1; } }
-.spark { position: absolute; top: 50%; left: 58vw; width: 9vw; height: 0; border-top: 1.5px solid var(--signal); animation: spark-in .8s 1.8s both; }
-.spark i { position: absolute; top: -4.5px; left: 0; width: 7px; height: 7px; background: var(--signal); animation: travel 2.6s ease-in-out infinite alternate; }
-@keyframes spark-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes travel { to { left: calc(100% - 7px); } }
 
 .land-three { padding-top: 28px; padding-bottom: 8px; }
 .land-three .grid { border-top: 1px solid var(--line); padding-top: 28px; row-gap: 28px; }
@@ -312,7 +308,7 @@ table.evidence td.num { font-size: 15px; }
   .land-stage { height: clamp(150px, 46vw, 300px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hand-l, .hand-r, .spark, .spark i, .w > span, .land-kicker, .land-sub, .land-top .actions { animation: none !important; }
+  .hand-l, .hand-r, .w > span, .land-kicker, .land-sub, .land-top .actions { animation: none !important; }
   .reveal-on .land-three .col { opacity: 1; transform: none; transition: none; }
 }
 

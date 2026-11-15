@@ -199,6 +199,29 @@
 </section>
 {% endif %}
 
+{% if burden %}
+<section class="section" id="alert-burden">
+  <div class="grid">
+    <div class="label"><span class="idx">03f</span>What the alert level costs a crew</div>
+    <div class="body">
+      <p style="max-width:62ch">A mission planner can turn the false-alert rate into workload. Choose a crew and an alert level; the calculator shows how often a <strong>normal</strong> session would be flagged by chance, and the reviewer time that costs. Rates come from the simulated benchmark above ({{ burden.people }} simulated people, {{ burden.sessions }} normal sessions).</p>
+      <form class="replay-controls" id="burden-form" onsubmit="return false">
+        <label><span>Crew size</span><input type="number" id="b-crew" min="1" max="12" value="4"></label>
+        <label><span>Check-ins per person per day</span><input type="number" id="b-perday" min="1" max="6" value="1"></label>
+        <label><span>Mission length (days)</span><input type="number" id="b-days" min="1" max="1000" value="180"></label>
+        <label><span>Alert level</span><select id="b-budget"></select></label>
+        <label><span>Minutes to review one alert</span><input type="number" id="b-minutes" min="1" max="120" value="10"></label>
+      </form>
+      <div class="table-wrap" role="region" aria-label="Alert burden result" tabindex="0" aria-live="polite">
+        <table class="evidence"><tbody id="b-out"></tbody></table>
+      </div>
+      <p class="muted small" style="max-width:62ch">These are alerts on sessions where nothing changed, from simulated people. Real changes add to them. The review time per alert is your own assumption, not a measurement. A tighter alert level means fewer false alerts and, as the table above shows, fewer detections too.</p>
+      <script type="application/json" id="burden-data">{{ burden | tojson }}</script>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% if pilot %}
 {% set fa = pilot.false_alerts_on_normal.yellow %}
 <section class="section" id="pilot">
@@ -287,4 +310,7 @@
   </div>
 </section>
 {% endif %}
+{% endblock %}
+{% block scripts %}
+{% if burden %}<script type="module" src="{{ url_for('static', filename='js/burden.js') }}"></script>{% endif %}
 {% endblock %}

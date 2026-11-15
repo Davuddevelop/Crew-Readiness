@@ -83,4 +83,10 @@ def evidence():
         nasa = json.loads(NASA_FILE.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         nasa = None                     # no NASA analysis yet: the page says nothing about one
-    return render_template("evidence.html", active="evidence", data=data, pilot=pilot, nasa=nasa)
+    burden = None
+    if data and data.get("budget_calibration"):
+        b = data["budget_calibration"]          # the calculator's rates are this file's numbers, nothing typed here
+        burden = {"options": [{"label": f"1 in {round(1 / r['budget'])}", "rate": r["observed"]} for r in b["rows"]]
+                              + [{"label": f"The level the product uses (about 1 in {round(b['shipped']['one_in'])})", "rate": b["shipped"]["false_alert_rate"]}],
+                  "people": b["people"], "sessions": b["normal_sessions"]}
+    return render_template("evidence.html", active="evidence", data=data, pilot=pilot, nasa=nasa, burden=burden)

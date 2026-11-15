@@ -75,3 +75,32 @@ its certificate check. NLSP pages need JavaScript; the files were downloaded thr
 1. Confirm the licence or terms of use for DOI 10.83263/sbne-th55 (NLSP help desk, or the DataCite record). Record the answer here.
 2. If the terms allow it: re-run the script, and let task C4/W4 compare the real session-to-session spread with the simulator.
 3. If they do not, or there is no answer before the freeze: keep this file as the record of the search and do not cite the numbers.
+
+## Search 2 (task W1, 2026-11-15): a NASA dataset with a known stressor (sleep loss) — **no fit; stopped**
+
+**Wanted:** (a) real people; (b) at least 8 repeated performance measures per person; (c) rested sessions **and** sessions after sleep
+loss (total sleep deprivation or sleep restriction); (d) a task with a scorable response time or lapses (a psychomotor vigilance test or
+similar). Time box 90 minutes; the search took about 15, because the archive's own metadata answered the question.
+
+**How:** the NASA Life Sciences Portal JSON API (all 2,676 experiments, as in search 1), filtered to human experiments that mention
+sleep, vigilance, psychomotor tests, reaction or response time, alertness or wakefulness and that have at least some public data
+(30 experiments). For each, the full record was read and every dataset file listed.
+
+**What was found, and why each fails:**
+
+| Experiment | Public part | Why it fails |
+|---|---|---|
+| *Predicting Vulnerability to Performance Impairment from Sleep Loss* (21 people, three 36-hour sleep-deprivation periods, psychomotor vigilance tests) | A final-report PDF only; the archive says "Privacy-protected datasets are available via data request" | The right design, but the per-session data is **not public** (a formal request takes months, per NLSP's own timeline). Fails (b) to (d) on public data |
+| *Sleeping Short* (sleep restriction, ground study) | Final-report PDF only | No per-session data; its measures are questionnaires and sleep timing |
+| *Clinical Trial of the Efficacy of Melatonin...* (circadian shift; lists median reaction time) | Final-report PDF only | No per-session data |
+| *Evaluation of Intermittent Bright Light Exposure...* | Final-report PDF only | No per-session data |
+| *Assessment of Sleep Dynamics in a Simulated Space Station Environment* | Spreadsheets of sleep variables and a timetable | Sleep measures, no performance task; no sleep-loss condition |
+| *Stability and Precision of Human Performance During a Spaceflight Mission* (4 people, a computerized battery with reaction times) | 8 spreadsheets | **Group means** and correlation tables only, no per-person sessions; spaceflight phases, not sleep loss; 4 people |
+| *Sleep and Vestibular Adaptation* (5 crew) | One summary table | Sleep summaries only; no performance task, no sleep-loss condition |
+| The other 23 matches | Spreadsheets on unrelated topics (radiation, formaldehyde, retinal photos, posture, motion sickness, actigraphy) or reports | No performance task with repeated per-person sessions under sleep loss |
+
+**Conclusion:** no openly available NASA dataset meets (a) to (d). The one study with the right design keeps its per-session data behind
+a data request. Per the task, we do not stretch a poor fit: there is no sleep-loss analysis and no `app/nasa_stress_results.json`. The
+WinSCAT bed-rest analysis (search 1) remains our only NASA performance data, and it is a method check without an induced stressor.
+**If the team wants this result later,** the route is a data request to NLSP for the sleep-loss vulnerability study (experiment page:
+https://nlsp.nasa.gov/explore/data/details/b17518d7-68ca-5dd7-8a58-a5a691ba4eba?dataType=EXPERIMENTS).

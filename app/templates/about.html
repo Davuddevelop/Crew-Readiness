@@ -178,6 +178,20 @@
     </div>
   </div>
 </section>
+
+<section class="section" id="ai-use">
+  <div class="grid">
+    <div class="label"><span class="idx">10</span>How AI was used</div>
+    <div class="body">
+      <p style="max-width:62ch">This project was built <strong>with AI assistance</strong>, and we say so plainly. The team lead set the direction (decision support that compares each person only with themselves, a human decides, privacy first), made the product and claim decisions, and ran the volunteer pilot. An AI coding assistant (Claude, by Anthropic) wrote much of the code, tests and documentation, and proposed some features that the team lead approved. A second coding agent, working for a teammate, wrote the pilot tooling, the data search, the self-test and the backup tool.</p>
+      <ul class="reasons">
+        <li><strong>No AI-generated images</strong> are used in the product. The mark is drawn in code; the art is public-domain or NASA material (see the credits on the landing page).</li>
+        <li>Every number on the Evidence page is produced by code from a result file, and the limits are written next to it. Review of the AI-written parts is the team's responsibility.</li>
+        <li>Machine learning here is classical statistics (robust medians, a count model, bootstrap intervals), not a language model; nothing in the running product calls an AI service.</li>
+      </ul>
+    </div>
+  </div>
+</section>
 {% endblock %}
 {% block scripts %}
 <script type="module" src="{{ url_for('static', filename='js/netcheck.js') }}"></script>

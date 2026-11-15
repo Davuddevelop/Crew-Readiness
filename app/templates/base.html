@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Crew Readiness{% endblock %} · Crew Readiness</title>
   <link rel="preload" href="{{ url_for('static', filename='fonts/instrument-sans-latin-wght-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <meta name="ai-assistance" content="Built with AI assistance: an AI coding assistant wrote much of the code, tests and documentation under the team's direction. No AI-generated images are used. See Privacy and limits.">
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
   <meta name="description" content="Crew Readiness compares how each crew member works with their own usual pattern and puts the difference in front of a human. Prototype with simulated data; decision support only.">
   <meta property="og:type" content="website">
@@ -24,7 +25,7 @@
       <div class="grid nav-grid">
         <div class="nav-brand">
           <a class="brand" href="{{ url_for('views.home') }}" aria-label="Crew Readiness, home">
-            <img class="brand-mark" src="{{ url_for('static', filename='img/logo-mark.webp') }}" width="58" height="56" alt="">
+            <img class="brand-mark" src="{{ url_for('static', filename='img/mark.svg') }}" width="28" height="28" alt="">
             Crew Readiness
           </a>
         </div>

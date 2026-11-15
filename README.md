@@ -91,7 +91,7 @@ every limit: [docs/ML_RESULTS.md](docs/ML_RESULTS.md). Demo script: [docs/DEMO.m
 - An unusual session means unusual **behaviour**, not a cause.
 
 ## Sources and acknowledgements
-- Images: Michelangelo, *The Creation of Adam* (public domain); spacesuit glove from NASA's 2012 *Man and Machine* photograph (credit NASA, no endorsement implied); the logo is **AI-generated** (tool not yet named). Sources, licences and open checks: [docs/ASSETS.md](docs/ASSETS.md).
+- Images: Michelangelo, *The Creation of Adam* (public domain); spacesuit glove from NASA's 2012 *Man and Machine* photograph (credit NASA, no endorsement implied); the mark is drawn by the team in code (no AI-generated image is used). Sources, licences and open checks: [docs/ASSETS.md](docs/ASSETS.md).
 - Design: Swiss / International Typographic style; the stacked-sessions chart form was inspired by Harold D. Craft Jr.'s 1970 pulsar plot (idea only). Instrument Sans, Instrument Serif and JetBrains Mono typefaces, SIL OFL 1.1.
 - **NASA research:** we have **not** yet reviewed NASA's human-research literature and cite none; we claim no NASA findings (task R-2 is open).
 Chart.js © Chart.js contributors, MIT License.

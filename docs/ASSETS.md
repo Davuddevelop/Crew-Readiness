@@ -50,25 +50,16 @@ a smooth-textured glove, so it holds up, but it is softer than the NASA JPL phot
 7141 x 4017 px, SHA-1 `20f482f20315eb74c1dd3df6dea104c300fe914e`) remains supported by the script with
 `--glove-kind pia26430` and is a sharper fallback.
 
-## `logo.webp`, `logo-mark.webp`, `favicon.png`, `share-card.png`: brand images
+## `mark.svg`, `favicon.png`, `share-card.png`: brand images
 
 | | |
 |---|---|
-| Work | The Crew Readiness logo: line drawings of a human hand and a robotic hand reaching toward each other on a grey disc (a nod to the *Creation of Adam*) |
-| Origin | **AI-generated**, supplied by the team lead as a 1024 x 550 PNG (SHA-1 `39541e6fa9e2fc73a8e05579e5dbdb319c790a06`, 92,670 bytes). **The generator was not named**, so we cannot cite its terms |
-| Credit | Crew Readiness team (prompting and selection); generator **[NOT STATED: fill in the tool name]** |
-| Licence | **None stated.** Rights in AI-generated images are unsettled and depend on the generator's own terms, and in some places such images attract no copyright. We use it as our logo on that basis and make no claim to exclusive rights |
-| Derived files | `logo.webp`: cropped, background keyed to transparent, recoloured to our palette. `logo-mark.webp`: bolder small version for the nav. `favicon.png`: 64 x 64. `share-card.png`: 1200 x 630 social preview built from the logo plus text in Instrument Sans (`scripts/assets/make_share_card.js`) |
+| Work | The Crew Readiness mark: an open ring with a dot at its centre. The gap is left for a person to close, echoing the product's one rule (a human decides). Drawn by the team in code (`app/static/img/mark.svg`, 3 shapes). |
+| Origin | **Drawn by the team. No AI image generator was used.** The earlier logo (AI-generated, tool not recorded) was **removed on 2026-11-15** from the nav, favicon, share card and landing page, and its files and processing script were deleted, so the product contains no AI-generated image. |
+| Credit | Crew Readiness team |
+| Licence | Original work of the team, released under the repository's MIT licence (`LICENSE`) |
+| Derived files | `favicon.png`: the mark rendered at 64 x 64 by Playwright. `share-card.png`: 1200 x 630 social preview, the mark plus text in Instrument Sans, built from `scripts/assets/share-card.html` by `scripts/assets/make_share_card.js`. |
 | Contains people? | No |
-
-**Open verification (task R-2, Member 4).** Name the generator and read its terms for commercial and competition use; if they do
-not allow it, replace the logo (it is used in the nav and landing footer (small version), the favicon and the share card, so swapping it means regenerating those with `scripts/assets/make_brand_assets.py` and `make_share_card.js`). Space Apps asks teams to
-disclose AI use: `docs/SUBMISSION.md` says the logo is AI-generated.
-
-**Honest caveat.** The source is small (the drawing is about 434 px across). It is thin line art, so it reads well at hero size,
-as a recognisable mark at 32 px, and as a grey disc with a white mark at 16 px. The nav uses `logo-mark.webp`, a version with thickened
-strokes so it survives at about 28 px. Colours were changed to our palette (disc `--line`, strokes `--ink`). The earlier hand-drawn
-stacked-sessions logo was removed. Rebuild with `scripts/assets/make_brand_assets.py`.
 
 ## Processing (both images)
 

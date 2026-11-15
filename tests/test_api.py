@@ -233,5 +233,7 @@ def test_evidence_nasa_section_appears_only_with_the_results_file_and_shows_its_
     html = client.get("/evidence").get_data(as_text=True)
     assert 'id="nasa"' in html and "24 people in a NASA bed-rest study" in html and "DOI 10.83263/sbne-th55" in html
     assert "62 %" in html and "5.1 %" in html and "18.0 %" in html and "40 %" in html and "3 people were flagged in most" in html   # every number from the file
+    assert "1.6 times bigger" in html                                                # 1 / sqrt(1 - 0.62), computed from the file's own number
+    assert "does not show that either rule is better" in html                        # the intervals overlap, so the page says so
     assert "does not validate the product" in html and "never impairment" in html
     assert "https://example.invalid" not in html                                    # the page links to no other host

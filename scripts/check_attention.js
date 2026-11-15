@@ -80,7 +80,7 @@ const lit = (page) => page.$eval('#rt-stage', (el) => el.classList.contains('rt-
     await page.waitForSelector('#rt-result:not([hidden])');
     const text = await page.textContent('#rt-result');
     check(posts.length === 1, `exactly one POST (${posts.length})`);
-    const expected = { profile_id: 'plt-okafor', trials: 10, median_rt_ms: 240, premature_count: 2, miss_count: 1 };
+    const expected = { profile_id: 'plt-okafor', trials: 10, median_rt_ms: 240, premature_count: 2, miss_count: 1, lapse_count: 1 };
     check(JSON.stringify(posts[0]) === JSON.stringify(expected), `POST body ${JSON.stringify(posts[0])}`);
     check(text.includes('Illustrative reaction-time check. Not a medical test.'), 'result carries the label');
     check(text.includes('240 ms') && text.includes('9 of 10'), 'result shows median and valid trials');
@@ -102,6 +102,31 @@ const lit = (page) => page.$eval('#rt-stage', (el) => el.classList.contains('rt-
     check(posts.length === 0, 'Escape cancels the run without a POST');
     check((await page.textContent('#rt-message')).includes('Nothing was sent'), 'cancel message shown');
     check(await page.evaluate(() => document.activeElement.id) === 'rt-start', 'focus returns to Start after cancel');
+    await ctx.close();
+  }
+
+  // ---- the 3-minute version (design of NASA's Reaction Self Test): runs about 180 s, counts lapses over 355 ms ----
+  {
+    const { ctx, page, posts, errors } = await open(browser);
+    await page.click('#rt-start-long');
+    check(await page.isDisabled('#rt-start'), 'the quick button is locked during the long run');
+    let n = 0, lapses = 0;
+    while (posts.length === 0 && n < 100) {
+      await page.clock.runFor(2500);                                    // the long version waits 1000 + 0.5 x 3000 ms
+      const rt = n % 10 === 9 ? 400 : 300;                              // every tenth response is slow (a lapse)
+      await page.clock.runFor(rt);
+      await page.keyboard.press('Space');
+      if (rt > 355) lapses += 1;
+      n += 1;
+    }
+    await page.waitForSelector('#rt-result:not([hidden])');
+    const body = posts[0];
+    check(posts.length === 1 && body.trials === n && n >= 60 && n <= 66, `one POST after about three minutes of trials (${n} trials)`);
+    check(body.median_rt_ms === 300 && body.premature_count === 0 && body.miss_count === 0, `median 300 ms, no early presses or misses (${JSON.stringify(body)})`);
+    check(body.lapse_count === lapses && lapses >= 6, `lapse count is the number of responses over 355 ms (${body.lapse_count})`);
+    check(Object.keys(body).sort().join() === 'lapse_count,median_rt_ms,miss_count,premature_count,profile_id,trials', 'only the five summary numbers and the profile id are sent');
+    check((await page.textContent('#rt-result')).includes('Lapses (over 355 ms, or missed)'), 'result shows the lapse count');
+    check(errors.length === 0, `no console errors ${errors.join(' | ')}`);
     await ctx.close();
   }
 

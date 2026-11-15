@@ -72,7 +72,7 @@ A session is never part of its own baseline.
 | `model` | which scoring model produced the view: `nb-pause-v2` (pause count by per-person negative binomial; pause time shown as context, not scored) or `robust-mad-v1`. See docs/ML_RESULTS.md |
 
 ### Attention result (stretch, task A-1)
-`profile_id, session_id?, trials, median_rt_ms|null, premature_count, miss_count`
+`profile_id, session_id?, trials, median_rt_ms|null, premature_count, miss_count, lapse_count?`
 
 ---
 
@@ -133,7 +133,7 @@ All JSON. Errors: `{"error": "<code>", "message": "<human text>"}`.
 | POST | `/api/sessions` | `{profile_id, task_type, features{…all 9…}}` | `201 {session_id, …ProfileReadiness}` · `400` contract violation · `404` unknown profile |
 | GET | `/api/readiness` | latest readiness for every profile (no trend) | `200 {crew: [ProfileReadiness]}` |
 | GET | `/api/readiness/<profile_id>` | includes `trend` (last 14 sessions, oldest first; see **Trend point** below) | `200 ProfileReadiness` |
-| POST | `/api/attention` | `{profile_id, session_id?, trials, median_rt_ms, premature_count, miss_count}` | `201 {id}` |
+| POST | `/api/attention` | `{profile_id, session_id?, trials, median_rt_ms, premature_count, miss_count, lapse_count?}` (`lapse_count` = responses over 355 ms plus misses, the PVT-B convention; 0 to `trials`; defaults to `miss_count` for pages from before it existed) | `201 {id, responsiveness}` |
 | GET | `/api/mission` | scenario + assignments joined with readiness + `advisory` + `watchdog` | `200` |
 | GET | `/api/selftest` | health of the monitor (task R1): database write/read/rollback, scoring on a fixed hand-worked fixture (1.2 YELLOW), clock sanity, no page loads from another host, app version. Reads nothing about any person; its test row is rolled back | `200 {ok, checked_at, version, checks: [{id, name, ok, detail}], does_not_show}` (always 200; `ok` carries the result) |
 
@@ -216,3 +216,10 @@ Written by `python -m ml.nasa_eval <local folder>`; aggregates only, never raw r
  "limits": ["WinSCAT is not our typing task", "..."]}
 ```
 Every number shown on the page comes from this file. `icc` is the share of variation that is between people (0 to 1).
+
+
+## The 3-minute reaction check (plan v4, W2)
+`/attention` has a 3-minute version that follows the design of NASA's Reaction Self Test (a 3-minute psychomotor vigilance test, PVT-B): random waits of 1 to 4 s for 3 minutes, and a response over 355 ms, or none, is a **lapse**
+(Basner and Dinges, 2011). It is the same five numbers as the quick check (`trials` is simply about 60). Existing databases gain the column automatically (`lapse_count INTEGER NOT NULL DEFAULT 0`);
+backups made before it still restore. The responsiveness view reports lapses only when there are at least 3, at least one in ten, and clearly above the person's own earlier checks. We claim the same design as NASA's test, not
+equivalence with NASA's software; it is not a medical test.

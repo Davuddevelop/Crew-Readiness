@@ -46,3 +46,7 @@ def ensure_columns() -> None:
     if "accepted_at" not in have:
         db.execute("ALTER TABLE sessions ADD COLUMN accepted_at TEXT")
         db.commit()
+    have_att = {r["name"] for r in db.execute("PRAGMA table_info(attention_results)")}
+    if have_att and "lapse_count" not in have_att:
+        db.execute("ALTER TABLE attention_results ADD COLUMN lapse_count INTEGER NOT NULL DEFAULT 0")
+        db.commit()

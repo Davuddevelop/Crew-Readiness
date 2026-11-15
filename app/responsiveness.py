@@ -63,4 +63,10 @@ def assess(history: list[dict]) -> dict:
     miss = today.get("miss_count") or 0
     if miss >= 2 and miss > max(base_misses):
         out["reasons"].append(f"Missed responses: {miss} of {today.get('trials', 10)}, more than in any of your {len(base)} earlier checks.")
+    lapse = today.get("lapse_count")
+    base_rates = [r["lapse_count"] / r["trials"] for r in base if r.get("lapse_count") is not None and r.get("trials")]
+    if lapse is not None and (today.get("trials") or 0) >= 10 and len(base_rates) >= MIN_BASELINE_CHECKS:
+        rate = lapse / today["trials"]
+        if lapse >= 3 and rate >= 0.10 and rate > 1.5 * max(base_rates):          # at least one lapse in ten, and clearly above their usual
+            out["reasons"].append(f"Lapses (responses over 355 ms, or none): {lapse} of {today['trials']}, a clearly higher share than in any of your {len(base_rates)} earlier checks.")
     return out

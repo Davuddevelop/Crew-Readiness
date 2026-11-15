@@ -75,3 +75,29 @@ def test_simulated_behaviour_is_sane_and_documented():
     assert run(0.0) < 0.06                      # few false alerts on normal checks (about 3 % in the documented run)
     assert run(0.10) < run(0.20) < run(0.30)    # bigger slowdowns are found more often
     assert run(0.30) > 0.85
+
+
+def test_lapses_are_reported_only_when_they_exceed_every_earlier_check():
+    def c(rt, lapses, trials=60):
+        return {"median_rt_ms": rt, "miss_count": 0, "trials": trials, "lapse_count": lapses, "premature_count": 0, "created_at": "2026-11-15T00:00:00Z"}
+    base = [c(300 + i, 2) for i in range(6)]
+    assert any("Lapses" in x and "9 of 60" in x for x in assess(base + [c(303, 9)])["reasons"])
+    assert not any("Lapses" in x for x in assess(base + [c(303, 3)])["reasons"])               # 3 of 60 is within the person's usual
+    assert not any("Lapses" in x for x in assess(base + [c(303, 5)])["reasons"])               # 5 of 60 is under one in ten
+
+
+def test_the_lapse_count_is_stored_defaults_for_older_pages_and_survives_a_backup(client, app):
+    body = {"profile_id": "fe-sato", "trials": 60, "median_rt_ms": 300, "premature_count": 1, "miss_count": 1, "lapse_count": 7}
+    assert client.post("/api/attention", json=body).status_code == 201
+    assert client.get("/api/readiness/fe-sato").json["attention"]["lapse_count"] == 7
+    old = {"profile_id": "fe-sato", "trials": 10, "median_rt_ms": 300, "premature_count": 0, "miss_count": 2}          # a page from before the lapse count
+    assert client.post("/api/attention", json=old).status_code == 201
+    assert client.get("/api/readiness/fe-sato").json["attention"]["lapse_count"] == 2                                   # defaults to the misses
+    assert client.post("/api/attention", json=dict(body, lapse_count=61)).status_code == 400                           # cannot exceed the trials
+
+
+def test_a_backup_made_before_the_lapse_count_still_restores(tmp_path):
+    from app import backup
+    old_row = {"id": 1, "profile_id": "x-1", "session_id": None, "created_at": "2026-11-15T10:00:00Z", "trials": 10, "median_rt_ms": 300.0, "premature_count": 0, "miss_count": 1}
+    cols = backup.SCHEMA["attention_results"]
+    assert "lapse_count" in cols and set(cols) - set(old_row) == {"lapse_count"}

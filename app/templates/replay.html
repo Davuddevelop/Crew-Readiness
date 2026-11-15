@@ -77,6 +77,38 @@
     </div>
   </div>
 </section>
+
+{% if sim %}
+<section class="section" id="six-months">
+  <div class="grid">
+    <div class="label"><span class="idx">05</span>A simulated six-month mission</div>
+    <div class="body">
+      <p style="max-width:62ch">What would a reviewer actually have to do over a long mission? Four simulated crew, one checklist a day for {{ sim.days }} days, scored exactly as the product scores it. <strong>Synthetic: the story is ours and every size and timing is an assumption.</strong>
+        Crew A works with new equipment from day {{ sim.story.equipment_start }} (accepted as the new normal on day {{ sim.story.equipment_accepted }}); crew B has a real slowdown for {{ sim.story.slowdown_days }} days from day {{ sim.story.slowdown_start }}; crew C is silent for {{ sim.story.gap_days }} days from day {{ sim.story.gap_start }}; crew D has nothing happen.</p>
+      <div class="table-wrap" role="region" aria-label="Six-month mission summary" tabindex="0">
+        <table class="evidence"><tbody>
+          <tr><td>Check-ins in the mission</td><td class="num"><strong>{{ sim.checkins }}</strong></td></tr>
+          <tr><td>Alerts raised (YELLOW or worse)</td><td class="num"><strong>{{ sim.alerts }}</strong> ({{ sim.flags_during_real_changes }} during a real change, {{ sim.false_alerts }} on days when nothing was happening)</td></tr>
+          <tr><td>The 10-day slowdown: days flagged</td><td class="num"><strong>{{ sim.slowdown_days_flagged }} of {{ sim.story.slowdown_days }}</strong></td></tr>
+          <tr><td>New equipment: days flagged before it was accepted</td><td class="num"><strong>{{ sim.equipment_flagged_before_acceptance }} of {{ sim.story.equipment_accepted - sim.story.equipment_start }}</strong>; after it was accepted: {{ sim.equipment_flagged_after_acceptance }}</td></tr>
+          <tr><td>Missed check-in notices (days past the agreed gap)</td><td class="num"><strong>{{ sim.missed_checkin_overdue_days }}</strong></td></tr>
+          <tr><td>What the reviewer does</td><td class="num">review {{ sim.reviewer_actions.alerts_to_review }} alerts, accept {{ sim.reviewer_actions.accept_new_normal }} new normal, look in {{ sim.reviewer_actions.look_in_after_missed_checkins }} time</td></tr>
+          <tr><td>Reviewer time at {{ sim.review_minutes }} minutes an alert</td><td class="num"><strong>{{ sim.reviewer_hours }} hours</strong> over six months</td></tr>
+        </tbody></table>
+      </div>
+      <figure style="margin:24px 0 0" aria-label="Alerts per week over the mission">
+        <div class="weekbars" role="img" aria-label="Bars showing the number of alerts in each of the {{ sim.weekly_alerts | length }} weeks">
+          {% for n in sim.weekly_alerts %}<span class="weekbar" style="height:{{ [n * 14, 3] | max }}px" title="Week {{ loop.index }}: {{ n }} alert{{ '' if n == 1 else 's' }}"></span>{% endfor %}
+        </div>
+        <figcaption class="fineprint">Alerts per week, weeks 1 to {{ sim.weekly_alerts | length }}: {{ sim.weekly_alerts | select("le", 1) | list | length }} of {{ sim.weekly_alerts | length }} weeks have none or one, and the busiest week has {{ sim.weekly_alerts | max }}.</figcaption>
+      </figure>
+      <ul class="reasons">
+        {% for item in sim.limits %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{% endif %}
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='vendor/chart.umd.js') }}"></script>

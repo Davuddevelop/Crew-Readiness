@@ -15,8 +15,8 @@ times each. Our product compares each person with their own usual pattern instea
 test that idea on real repeated measures from a NASA study. On 24 people, most of the variation in WinSCAT response times was between
 people rather than within one person (an intraclass correlation of 65 % to 87 % across four measures), which is why a personal
 baseline is the right frame. At the same 1-in-20 alert budget, judged on people the cutoff was not fitted on, the own-baseline rule
-kept its budget before bed rest (5.1 %) and flagged none of the bed-rest sessions, consistent with the original study's finding of no
-consistent decrement. This checks our method on NASA data; it is not validation of the product and says nothing about health. Results
+kept its budget before bed rest (5.1 %) and flagged none of the bed-rest sessions; the one-threshold rule did the same, so this comparison does
+not show either rule is better, and people had also got faster at the test by then (a practice effect), so it is not evidence either way. This checks our method on NASA data; it is not validation of the product and says nothing about health. Results
 are produced by `ml/nasa_eval.py` and shown on our Evidence page with every limit. Terms of use are being confirmed with the NASA Life
 Sciences Portal; the raw files are not redistributed.
 

@@ -237,3 +237,50 @@ def test_evidence_nasa_section_appears_only_with_the_results_file_and_shows_its_
     assert "does not show that either rule is better" in html                        # the intervals overlap, so the page says so
     assert "does not validate the product" in html and "never impairment" in html
     assert "https://example.invalid" not in html                                    # the page links to no other host
+
+
+NASA_STRESS_FIXTURE = {   # SYNTHETIC numbers in the documented shape (docs/PLAN_V4_TARGET_8.md section 5); not a result
+    "source": {"title": "Sleep-loss vigilance (synthetic example)", "doi": "10.0000/example", "url": "https://example.invalid", "accessed": "2026-11-15", "sha256": "0" * 64, "stressor": "sleep restriction"},
+    "measure": "Psychomotor vigilance: median response time", "people": 20, "rested_sessions": 100, "stress_sessions": 60,
+    "rules": {"alert_budget": 0.05,
+              "rested": {"own_baseline": {"false_alert_rate": 0.051, "ci95": [0.02, 0.09]}, "population": {"false_alert_rate": 0.049, "ci95": [0.02, 0.1]}},
+              "stress": {"own_baseline": {"flag_rate": 0.61, "ci95": [0.45, 0.75]}, "population": {"flag_rate": 0.22, "ci95": [0.1, 0.33]}}},
+    "by_night": [{"label": "After 1 night", "own_baseline": 0.4, "population": 0.2}],
+    "limits": ["A laboratory analog."],
+}
+
+
+def test_evidence_stressor_section_appears_only_with_its_file_and_reports_honestly(client, tmp_path, monkeypatch):
+    import json
+    from app import views
+    monkeypatch.setattr(views, "NASA_STRESS_FILE", tmp_path / "missing.json")
+    assert 'id="nasa-stress"' not in client.get("/evidence").get_data(as_text=True)
+    f = tmp_path / "s.json"
+    f.write_text(json.dumps(NASA_STRESS_FIXTURE))
+    monkeypatch.setattr(views, "NASA_STRESS_FILE", f)
+    html = client.get("/evidence").get_data(as_text=True)
+    assert 'id="nasa-stress"' in html and "20 people in a NASA study with sleep restriction" in html
+    assert "61.0 %" in html and "22.0 %" in html and "flagged clearly more sessions than one threshold for everyone" in html
+    assert "After 1 night" in html and "40 %" in html and "does not validate the product" in html
+    # the same page says plainly when the data do NOT favour us
+    flipped = json.loads(json.dumps(NASA_STRESS_FIXTURE))
+    flipped["rules"]["stress"] = {"own_baseline": {"flag_rate": 0.1, "ci95": [0.05, 0.15]}, "population": {"flag_rate": 0.5, "ci95": [0.4, 0.6]}}
+    f.write_text(json.dumps(flipped))
+    assert "That does not favour our approach" in client.get("/evidence").get_data(as_text=True)
+    flipped["rules"]["stress"] = {"own_baseline": {"flag_rate": 0.3, "ci95": [0.2, 0.4]}, "population": {"flag_rate": 0.32, "ci95": [0.22, 0.42]}}
+    f.write_text(json.dumps(flipped))
+    assert "does not show that either is better" in client.get("/evidence").get_data(as_text=True)
+
+
+def test_evidence_baseline_length_table_comes_from_the_nasa_file(client, tmp_path, monkeypatch):
+    import json
+    from app import views
+    nasa = json.loads(json.dumps(NASA_FIXTURE))
+    nasa["baseline_length"] = [{"sessions": 3, "false_alert_rate": 0.09, "ci95": [0.05, 0.14]}, {"sessions": 5, "false_alert_rate": 0.052, "ci95": [0.03, 0.08]}]
+    nasa["notes"] = "The false-alert rate settles by five sessions."
+    f = tmp_path / "n.json"
+    f.write_text(json.dumps(nasa))
+    monkeypatch.setattr(views, "NASA_FILE", f)
+    html = client.get("/evidence").get_data(as_text=True)
+    assert "How many sessions before we say anything?" in html and "9.0 %" in html and "5.2 %" in html
+    assert "(what the product waits for)" in html and "settles by five sessions" in html

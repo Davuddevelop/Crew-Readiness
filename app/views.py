@@ -65,6 +65,7 @@ def replay():
 
 RESULTS_FILE = Path(__file__).with_name("results_data.json")
 NASA_FILE = Path(__file__).with_name("nasa_results.json")      # written by `python -m ml.nasa_eval`; absent until the analysis is run
+NASA_STRESS_FILE = Path(__file__).with_name("nasa_stress_results.json")     # written by `python -m ml.nasa_stress_eval`; absent until that analysis exists
 PILOT_FILE = Path(__file__).resolve().parents[1] / "docs" / "pilot" / "pilot_report.json"   # written by `python -m ml.pilot_report`; absent until the pilot is run
 
 
@@ -83,10 +84,15 @@ def evidence():
         nasa = json.loads(NASA_FILE.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         nasa = None                     # no NASA analysis yet: the page says nothing about one
+    try:
+        nasa_stress = json.loads(NASA_STRESS_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        nasa_stress = None              # no sleep-loss analysis: the page says nothing about one
+    from .baseline import MIN_BASELINE_SESSIONS
     burden = None
     if data and data.get("budget_calibration"):
         b = data["budget_calibration"]          # the calculator's rates are this file's numbers, nothing typed here
         burden = {"options": [{"label": f"1 in {round(1 / r['budget'])}", "rate": r["observed"]} for r in b["rows"]]
                               + [{"label": f"The level the product uses (about 1 in {round(b['shipped']['one_in'])})", "rate": b["shipped"]["false_alert_rate"]}],
                   "people": b["people"], "sessions": b["normal_sessions"]}
-    return render_template("evidence.html", active="evidence", data=data, pilot=pilot, nasa=nasa, burden=burden)
+    return render_template("evidence.html", active="evidence", data=data, pilot=pilot, nasa=nasa, nasa_stress=nasa_stress, burden=burden, min_baseline=MIN_BASELINE_SESSIONS)

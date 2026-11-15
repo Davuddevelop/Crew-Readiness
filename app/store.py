@@ -86,19 +86,19 @@ def accept_sessions(db, session_ids: list[int]) -> None:
 
 def insert_attention_result(db, *, profile_id: str, session_id: int | None, trials: int,
                             median_rt_ms: float | None, premature_count: int,
-                            miss_count: int, created_at: str | None = None) -> int:
+                            miss_count: int, lapse_count: int = 0, created_at: str | None = None) -> int:
     cur = db.execute(
         "INSERT INTO attention_results (profile_id, session_id, created_at, trials, "
-        "median_rt_ms, premature_count, miss_count) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "median_rt_ms, premature_count, miss_count, lapse_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (profile_id, session_id, created_at or utc_now_iso(), trials, median_rt_ms,
-         premature_count, miss_count),
+         premature_count, miss_count, lapse_count),
     )
     return cur.lastrowid
 
 
 def latest_attention_result(db, profile_id: str) -> dict | None:
     row = db.execute(
-        "SELECT id, session_id, created_at, trials, median_rt_ms, premature_count, miss_count "
+        "SELECT id, session_id, created_at, trials, median_rt_ms, premature_count, miss_count, lapse_count "
         "FROM attention_results WHERE profile_id = ? ORDER BY id DESC LIMIT 1",
         (profile_id,),
     ).fetchone()
@@ -108,6 +108,6 @@ def latest_attention_result(db, profile_id: str) -> dict | None:
 def list_attention_results(db, profile_id: str, limit: int = 60) -> list[dict]:
     """A person's reaction checks, oldest first (the latest `limit`)."""
     rows = db.execute(
-        "SELECT id, session_id, created_at, trials, median_rt_ms, premature_count, miss_count "
+        "SELECT id, session_id, created_at, trials, median_rt_ms, premature_count, miss_count, lapse_count "
         "FROM attention_results WHERE profile_id = ? ORDER BY id DESC LIMIT ?", (profile_id, limit)).fetchall()
     return [dict(r) for r in reversed(rows)]

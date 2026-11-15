@@ -48,5 +48,6 @@ CREATE TABLE attention_results (
   trials           INTEGER NOT NULL,
   median_rt_ms     REAL,                   -- NULL if every trial was missed
   premature_count  INTEGER NOT NULL,
-  miss_count       INTEGER NOT NULL
+  miss_count       INTEGER NOT NULL,
+  lapse_count      INTEGER NOT NULL DEFAULT 0   -- responses over 355 ms plus misses (the PVT-B convention); added 2026-11-15
 );

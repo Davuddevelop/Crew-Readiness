@@ -134,11 +134,11 @@ def simulate():
 def create_attention_result():
     """Store a reaction-time attention check result (task A-1).
 
-    Body: {profile_id, session_id?, trials, median_rt_ms|null, premature_count, miss_count}
+    Body: {profile_id, session_id?, trials, median_rt_ms|null, premature_count, miss_count, lapse_count?}
     """
     body = request.get_json(silent=True) or {}
     allowed = {"profile_id", "session_id", "trials", "median_rt_ms",
-               "premature_count", "miss_count"}
+               "premature_count", "miss_count", "lapse_count"}
     if not isinstance(body, dict) or set(body) - allowed:
         raise ValidationError(f"Only these fields are accepted: {sorted(allowed)}.")
 
@@ -155,6 +155,7 @@ def create_attention_result():
     trials = _int("trials", 1, 100)
     premature = _int("premature_count", 0, 1000)
     misses = _int("miss_count", 0, trials)
+    lapses = _int("lapse_count", 0, trials) if "lapse_count" in body else misses       # older pages send no lapse count
     rt = body.get("median_rt_ms")
     if rt is not None and (isinstance(rt, bool) or not isinstance(rt, (int, float))
                            or not 50 <= rt <= 5000):
@@ -167,7 +168,7 @@ def create_attention_result():
     result_id = store.insert_attention_result(
         db, profile_id=profile["id"], session_id=session_id, trials=trials,
         median_rt_ms=None if rt is None else float(rt),
-        premature_count=premature, miss_count=misses,
+        premature_count=premature, miss_count=misses, lapse_count=lapses,
     )
     db.commit()
     return jsonify(id=result_id, responsiveness=responsiveness.assess(store.list_attention_results(db, profile["id"]))), 201

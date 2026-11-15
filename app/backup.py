@@ -102,6 +102,7 @@ SCHEMA = {
         "median_rt_ms": lambda v: _num(v, 50, 5000, nullable=True),
         "premature_count": lambda v: _int(v, 0, 1000),
         "miss_count": lambda v: _int(v, 0, 100),
+        "lapse_count": lambda v: _int(v, 0, 100),
     },
 }
 TABLE_ORDER = ("profiles", "sessions", "attention_results")   # parents before children
@@ -171,6 +172,9 @@ def validate(payload: dict) -> None:
             extra, missing = set(row) - set(cols), set(cols) - set(row)
             if extra:
                 raise BackupError(f"{table} row {i + 1} has unknown fields {sorted(extra)}; only the stored columns are allowed")
+            if table == "attention_results" and missing == {"lapse_count"}:
+                row["lapse_count"] = 0                  # a backup made before the lapse count existed
+                missing = set()
             if missing:
                 raise BackupError(f"{table} row {i + 1} is missing {sorted(missing)}")
             for col, ok in cols.items():

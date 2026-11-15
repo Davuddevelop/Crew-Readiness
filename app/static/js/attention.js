@@ -17,7 +17,7 @@
  *       { profile_id, trials: 10, median_rt_ms, premature_count, miss_count }
  *   - Show the summary with the label "Illustrative reaction-time check. Not a medical test."
  *
- * PRIVACY: only the four summary numbers above are sent. Individual reaction
+ * PRIVACY: only the five summary numbers (the four above plus lapse_count) are sent. Individual reaction
  * times stay in this page's memory and are dropped when the check ends.
  *
  * DESIGN: a small state machine, idle -> waiting -> stimulus -> (waiting | done),
@@ -31,14 +31,23 @@ export const TRIALS = 10;
 export const FOREPERIOD_MS = [1500, 4000];
 export const MISS_AFTER_MS = 1500;
 export const MIN_VALID_RT_MS = 100;
+// The 3-minute version follows the design of NASA's Reaction Self Test (a 3-minute psychomotor vigilance test, PVT-B): random waits of
+// 1 to 4 s, run for 3 minutes, a response over 355 ms (or none) counts as a lapse (the PVT-B convention, Basner and Dinges 2011).
+export const LONG_MS = 180000;
+export const LONG_FOREPERIOD_MS = [1000, 4000];
+export const LONG_MAX_TRIALS = 100;
+export const LAPSE_MS = 355;
 
 const select = document.getElementById("profile-select");
 const startBtn = document.getElementById("rt-start");
+const longBtn = document.getElementById("rt-start-long");
 const stage = document.getElementById("rt-stage");
 const message = document.getElementById("rt-message");
 const progress = document.getElementById("rt-progress");
 const result = document.getElementById("rt-result");
 
+let mode = "quick";          // quick (10 trials) | long (3 minutes)
+let runStart = 0;            // performance.now() when a run began
 let state = "idle";          // idle | waiting | stimulus | done
 let timer = null;            // the only timer handle
 let shownAt = 0;             // performance.now() when the stimulus appeared
@@ -55,11 +64,17 @@ function clearTimer() {
 function say(text) { message.textContent = text; }
 
 function showProgress() {
-  progress.textContent = `Trial ${Math.min(trial + 1, TRIALS)} of ${TRIALS}`;
+  if (mode === "long") {
+    const left = Math.max(0, Math.ceil((LONG_MS - (performance.now() - runStart)) / 1000));
+    progress.textContent = `About ${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")} left`;
+  } else {
+    progress.textContent = `Trial ${Math.min(trial + 1, TRIALS)} of ${TRIALS}`;
+  }
 }
 
 function setRunning(running) {
   startBtn.disabled = running;
+  if (longBtn) longBtn.disabled = running;
   select.disabled = running;
   progress.hidden = !running;
 }
@@ -70,7 +85,7 @@ function wait(note) {
   stage.classList.remove("rt-go");
   showProgress();
   say(note || "Wait for the light…");
-  const [lo, hi] = FOREPERIOD_MS;
+  const [lo, hi] = mode === "long" ? LONG_FOREPERIOD_MS : FOREPERIOD_MS;
   timer = setTimeout(showStimulus, lo + Math.random() * (hi - lo));
 }
 
@@ -90,7 +105,8 @@ function onMiss() {
 
 function nextTrial(note) {
   trial += 1;
-  if (trial >= TRIALS) finish();
+  const over = mode === "long" ? performance.now() - runStart >= LONG_MS || trial >= LONG_MAX_TRIALS : trial >= TRIALS;
+  if (over) finish();
   else wait(note);
 }
 
@@ -110,9 +126,11 @@ function respond() {
   }
 }
 
-function start() {
+function start(which = "quick") {
   if (!select.value) return;
   clearTimer();
+  mode = which;
+  runStart = performance.now();
   trial = 0; rts = []; premature = 0; misses = 0;
   result.hidden = true;
   result.innerHTML = "";
@@ -138,10 +156,11 @@ async function finish() {
   setRunning(false);
   const summary = {
     profile_id: select.value,
-    trials: TRIALS,
+    trials: mode === "long" ? Math.max(1, trial) : TRIALS,
     median_rt_ms: rts.length ? Math.round(median(rts)) : null,
     premature_count: premature,
     miss_count: misses,
+    lapse_count: misses + rts.filter((x) => x > LAPSE_MS).length,
   };
   rts = [];
   say("Done. Press Start to run it again.");
@@ -165,14 +184,16 @@ function renderResult(s, saved) {
       <li>Valid trials: <span class="num">${valid} of ${s.trials}</span></li>
       <li>Too early: <span class="num">${s.premature_count}</span></li>
       <li>Missed: <span class="num">${s.miss_count}</span></li>
+      <li>Lapses (over ${LAPSE_MS} ms, or missed): <span class="num">${s.lapse_count} of ${s.trials}</span></li>
     </ul>
     ${s.__resp ? `<p>${esc(s.__resp.summary)}</p>${(s.__resp.reasons || []).length ? `<ul class="reasons">${s.__resp.reasons.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}` : ""}
-    <p class="fineprint">${esc(saved)} Only these four numbers are stored, as context for a human reviewer.</p>
+    <p class="fineprint">${esc(saved)} Only these five numbers are stored, as context for a human reviewer.</p>
     <p><a class="btn" href="/me?crew=${encodeURIComponent(select.value)}">Back to my status</a></p>`;
   result.hidden = false;
 }
 
-startBtn.addEventListener("click", start);
+startBtn.addEventListener("click", () => start("quick"));
+if (longBtn) longBtn.addEventListener("click", () => start("long"));
 
 // pointerdown, not click: a click fires on release, which would add the
 // press duration to every reaction time.
@@ -207,6 +228,7 @@ async function loadProfiles() {
   const preselect = new URLSearchParams(location.search).get("crew");
   if (preselect && profiles.some((p) => p.id === preselect)) select.value = preselect;
   startBtn.disabled = profiles.length === 0;
+  if (longBtn) longBtn.disabled = profiles.length === 0;
 }
 
 loadProfiles().catch((err) => {

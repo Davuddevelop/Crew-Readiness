@@ -107,6 +107,12 @@
         <div class="table-wrap" id="notes-table-wrap" hidden>
           <table class="evidence"><thead><tr><th>When</th><th>Sleep (hours)</th><th>How I felt (1 to 9)</th></tr></thead><tbody id="notes-rows"></tbody></table>
         </div>
+        <div id="notes-insight" style="margin-top:20px">
+          <h2 class="cap" style="margin-top:0">Your sleep and your reaction time, on this device</h2>
+          <p id="insight-text" aria-live="polite"></p>
+          <p class="fineprint"><button type="button" class="btn btn-ghost" id="insight-example">Show how this looks with example numbers</button></p>
+          <p class="fineprint" style="max-width:62ch">This compares only your own saved notes with your own reaction checks, here in your browser; nothing is sent. With few days and many other causes it describes your entries and is <strong>not a finding and not advice</strong>.</p>
+        </div>
         <p style="margin-top:16px;display:flex;flex-wrap:wrap;gap:12px"><button type="button" class="btn btn-ghost" id="notes-copy">Copy a summary I can share</button>
           <button type="button" class="btn btn-ghost" id="notes-clear">Delete my notes on this device</button></p>
         <p class="fineprint">The summary is text you choose to paste to your reviewer or crew medical support. It combines what this page shows with your latest note and says it is your own summary. These notes are your own words in numbers: the software does not interpret them, and it does not use them in your status.</p>
@@ -129,4 +135,5 @@
 {% block scripts %}
 <script type="module" src="{{ url_for('static', filename='js/me.js') }}"></script>
 <script type="module" src="{{ url_for('static', filename='js/notes.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/insight.js') }}"></script>
 {% endblock %}

@@ -174,6 +174,15 @@ def create_attention_result():
     return jsonify(id=result_id, responsiveness=responsiveness.assess(store.list_attention_results(db, profile["id"]))), 201
 
 
+@bp.get("/attention/<profile_id>")
+def attention_history(profile_id: str):
+    """A person's own reaction checks, oldest first (read only). The browser joins them to the person's private notes ON THE DEVICE."""
+    if _require_profile(profile_id) is None:
+        return jsonify(error="not_found", message="Unknown profile_id."), 404
+    rows = store.list_attention_results(get_db(), profile_id, 60)
+    return jsonify(checks=[{k: r[k] for k in ("created_at", "median_rt_ms", "trials", "miss_count", "lapse_count")} for r in rows])
+
+
 @bp.get("/mission")
 def mission():
     db = get_db()

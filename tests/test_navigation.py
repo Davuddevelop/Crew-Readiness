@@ -33,3 +33,11 @@ def test_check_in_flow_carries_the_person_and_labels_its_steps(client):
     att = client.get("/attention").get_data(as_text=True)
     assert "step 2 of 2 (optional)" in att and "optional at any check-in" in att
     assert 'id="me-start"' in client.get("/me").get_data(as_text=True)
+
+
+def test_mission_shows_the_escalation_ladder_and_says_people_move_it(client):
+    html = client.get("/mission").get_data(as_text=True)
+    assert 'id="escalation"' in html and "moves nobody up this ladder" in html and "people do" in html
+    for rung in ("The person", "A crew mate", "The reviewer", "Crew medical support", "The ground"):
+        assert rung in html
+    assert "feels unwell tells crew medical support directly" in html

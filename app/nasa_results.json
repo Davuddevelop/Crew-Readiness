@@ -1,0 +1,143 @@
+{
+ "source": {
+  "title": "WinSCAT test battery, UTMB bed-rest Campaign 3 (Flight Analog)",
+  "full_title": "Neurocognitive Assessment (WinSCAT) (Cognitive Assessment Tool for Windows) (Flight Analog)",
+  "doi": "10.83263/sbne-th55",
+  "url": "https://nlsp.nasa.gov/explore/data/details/80ee3231-7c42-5be4-b6c2-b8c788feeb50?dataType=EXPERIMENTS",
+  "archive": "NASA Life Sciences Data Archive (NASA Life Sciences Portal)",
+  "accessed": "2026-11-14",
+  "sha256": "5ed6f27330a5b026d1bda1bef46eedec15adddfbf68b85caf9addc6710bb7c16"
+ },
+ "people": 24,
+ "pre_bed_rest_sessions": 118,
+ "icc": [
+  {
+   "measure": "CPTRT",
+   "label": "Running memory response time",
+   "icc": 0.872,
+   "ci95": [
+    0.788,
+    0.918
+   ]
+  },
+  {
+   "measure": "MTHRT",
+   "label": "Mathematics response time",
+   "icc": 0.788,
+   "ci95": [
+    0.625,
+    0.857
+   ]
+  },
+  {
+   "measure": "MTSRT",
+   "label": "Match to sample response time",
+   "icc": 0.709,
+   "ci95": [
+    0.497,
+    0.796
+   ]
+  },
+  {
+   "measure": "CDDRT",
+   "label": "Code substitution (delayed) response time",
+   "icc": 0.653,
+   "ci95": [
+    0.491,
+    0.769
+   ]
+  }
+ ],
+ "rules": {
+  "alert_budget": 0.05,
+  "people": 24,
+  "evaluation": "leave one person out; cutoffs fitted on the other people's pre-bed-rest sessions only",
+  "pre_bed_rest": {
+   "own_baseline": {
+    "false_alert_rate": 0.0508,
+    "ci95": [
+     0.0171,
+     0.0855
+    ],
+    "sessions": 118
+   },
+   "population": {
+    "false_alert_rate": 0.0424,
+    "ci95": [
+     0.0,
+     0.1034
+    ],
+    "sessions": 118
+   }
+  },
+  "during_bed_rest": {
+   "own_baseline": {
+    "flag_rate": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "sessions": 87
+   },
+   "population": {
+    "flag_rate": 0.0115,
+    "ci95": [
+     0.0,
+     0.0361
+    ],
+    "sessions": 87
+   }
+  },
+  "people_over_twice_budget_before_bed_rest": {
+   "own_baseline": 6,
+   "population": 3,
+   "expected_by_chance_alone": 5.3,
+   "note": "With about five normal sessions per person one flag is 20 %, so this count is mostly chance; 'expected_by_chance_alone' is what a rule flagging everyone at exactly the budget would give."
+  }
+ },
+ "any_of_five": {
+  "people": 23,
+  "sessions": 109,
+  "flag_rate": 0.4037,
+  "per_measure": [
+   {
+    "measure": "CPTRT",
+    "label": "Running memory response time",
+    "flag_rate": 0.0917
+   },
+   {
+    "measure": "MTHRT",
+    "label": "Mathematics response time",
+    "flag_rate": 0.0826
+   },
+   {
+    "measure": "MTSRT",
+    "label": "Match to sample response time",
+    "flag_rate": 0.1468
+   },
+   {
+    "measure": "CDDRT",
+    "label": "Code substitution (delayed) response time",
+    "flag_rate": 0.1101
+   },
+   {
+    "measure": "CPTA",
+    "label": "Running memory accuracy",
+    "flag_rate": 0.1376
+   }
+  ],
+  "rule": "per measure, deviation >= 1.0 against the person's own pre-bed-rest sessions; sessions during and after bed rest"
+ },
+ "limits": [
+  "WinSCAT is not our typing task: it is a cognitive test battery, used here to check the method, not the product.",
+  "Sessions are days to weeks apart, unlike routine check-ins before an operation.",
+  "Each person's baseline has only a few sessions (about five before bed rest), fewer than a long mission would give.",
+  "This is a check of the METHOD on real NASA repeated measures. It is not validation of the product, and it is not on astronauts or crews.",
+  "It says nothing about health, fatigue, illness or fitness for duty.",
+  "The original study reports no consistent cognitive decrement during bed rest, so a flag means \"differs from this person's own pattern\", never impairment.",
+  "Practice effect: people get faster at the test over its first sessions. Pre-bed-rest sessions include that learning; bed-rest sessions come after it, so they tend to look faster than the baseline, which lowers flag rates during bed rest for both rules.",
+  "One study, one campaign, about two dozen people, all on the ground; intervals are wide."
+ ],
+ "generated_by": "python -m ml.nasa_eval <unzipped Campaign 3 folder> --zip <zip>",
+ "notes": "Aggregates and counts only; no per-session or per-person values. Run 1 (each person's first exposure) is dropped as practice."
+}

@@ -284,3 +284,19 @@ def test_evidence_baseline_length_table_comes_from_the_nasa_file(client, tmp_pat
     html = client.get("/evidence").get_data(as_text=True)
     assert "How many sessions before we say anything?" in html and "9.0 %" in html and "5.2 %" in html
     assert "(what the product waits for)" in html and "settles by five sessions" in html
+
+
+def test_evidence_baseline_length_handles_lengths_the_data_cannot_test(client, tmp_path, monkeypatch):
+    """The real NASA file marks baseline lengths it cannot measure with nulls; the page must say so, not crash."""
+    import json
+    from app import views
+    nasa = json.loads(json.dumps(NASA_FIXTURE))
+    nasa["baseline_length"] = [{"sessions": 3, "false_alert_rate": 0.0558, "ci95": [0.0237, 0.0903], "people": 24},
+                               {"sessions": 5, "false_alert_rate": None, "ci95": None, "people": 0, "note": "not measurable: no more than 5 normal sessions per person"}]
+    f = tmp_path / "n.json"
+    f.write_text(json.dumps(nasa))
+    monkeypatch.setattr(views, "NASA_FILE", f)
+    r = client.get("/evidence")
+    assert r.status_code == 200
+    html = r.get_data(as_text=True)
+    assert "5.6 %" in html and "Cannot be tested on these data" in html and "no more than 5 normal sessions per person" in html

@@ -17,6 +17,7 @@ const say = (msg) => { $("notes-status").textContent = msg; };
 const num = (v) => (v === "" || v === null || Number.isNaN(Number(v)) ? null : Number(v));
 
 function render() {
+  document.dispatchEvent(new CustomEvent("notes:changed"));
   const list = load();
   if (list === null) { say("This browser is not letting the page save notes, so notes are switched off here."); $("notes-save").disabled = true; return; }
   $("notes-save").disabled = false;

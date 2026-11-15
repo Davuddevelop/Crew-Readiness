@@ -204,6 +204,48 @@ def compare_rules(people: list[dict], budget: float = ALERT_BUDGET) -> dict:
     return out
 
 
+# ------------------------------------------------------------------ (b2) how long must a baseline be? (task W1b)
+
+def baseline_length_table(people: list[dict], lengths=range(3, 8), budget: float = ALERT_BUDGET) -> tuple[list[dict], str]:
+    """False-alert rate on normal (pre-bed-rest) sessions when the own baseline has exactly L sessions.
+
+    Each normal session is scored against EVERY set of L of the same person's OTHER pre-bed-rest sessions; the cutoff is fitted on
+    the other people's scores at the same L (leave one person out), at the same alert budget. A length is measured only if at
+    least three people have L + 1 normal sessions; otherwise it is reported as not measurable, never extrapolated."""
+    from itertools import combinations
+    rows, measured = [], []
+    for L in lengths:
+        eligible = [p for p in people if len(p["pre"]) >= L + 1]
+        if len(eligible) < 3:
+            rows.append({"sessions": L, "false_alert_rate": None, "ci95": None, "people": len(eligible),
+                         "note": f"not measurable: no more than {max((len(p['pre']) for p in people), default=0)} normal sessions per person"})
+            continue
+        scores = []
+        for p in eligible:
+            per = []
+            for i, r in enumerate(p["pre"]):
+                others = [o for j, o in enumerate(p["pre"]) if j != i]
+                for subset in combinations(others, L):
+                    per.append(score(r, {m: _stats([o[m] for o in subset]) for m in RT_MEASURES}))
+            scores.append(per)
+        counts = []
+        for i, per in enumerate(scores):
+            cut = _cutoff([s for j, q in enumerate(scores) if j != i for s in q], budget)
+            counts.append((sum(s >= cut for s in per), len(per)))
+        rate, ci = _rate(counts, seed=11)
+        rows.append({"sessions": L, "false_alert_rate": rate, "ci95": ci, "people": len(eligible)})
+        measured.append(L)
+    if not measured:
+        note = "No baseline length could be measured on these data."
+    else:
+        shown = ", ".join(f"{r['sessions']} sessions: {r['false_alert_rate'] * 100:.1f} %" for r in rows if r["false_alert_rate"] is not None)
+        note = (f"Measured on held-out people at a 1-in-{round(1 / budget)} budget for baseline lengths {', '.join(map(str, measured))} "
+                f"({shown}). These data have at most {max(len(p['pre']) for p in people)} normal sessions per person, so a baseline of "
+                f"{max(measured) + 1} or more cannot be tested here: they cannot show whether the false-alert rate settles by 5 sessions. "
+                "The product keeps its minimum of 5; nothing here changes an app constant.")
+    return rows, note
+
+
 # ------------------------------------------------------------------ (c) any of five
 
 def any_of_five(raw_people: dict[str, list[dict]]) -> dict:
@@ -229,6 +271,7 @@ def evaluate(folder: Path, zip_path: Path | None = None, accessed: str | None = 
     people = usable(raw)
     if len(people) < 3:
         raise SystemExit(f"only {len(people)} people with >= {MIN_SESSIONS} sessions in {folder}; is this the Campaign 3 folder?")
+    bl_rows, bl_note = baseline_length_table(people)
     return {
         "source": dict(SOURCE, accessed=accessed or date.today().isoformat(),
                        sha256=sha256_of(zip_path) if zip_path else None),
@@ -237,9 +280,11 @@ def evaluate(folder: Path, zip_path: Path | None = None, accessed: str | None = 
         "icc": icc_table(people),
         "rules": compare_rules(people),
         "any_of_five": any_of_five(raw),
+        "baseline_length": bl_rows,
         "limits": LIMITS,
         "generated_by": "python -m ml.nasa_eval <unzipped Campaign 3 folder> --zip <zip>",
-        "notes": "Aggregates and counts only; no per-session or per-person values. Run 1 (each person's first exposure) is dropped as practice.",
+        "notes": "Aggregates and counts only; no per-session or per-person values. Run 1 (each person's first exposure) is dropped as practice. "
+                 "Baseline length: " + bl_note,
     }
 
 

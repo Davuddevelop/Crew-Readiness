@@ -128,6 +128,47 @@
   ],
   "rule": "per measure, deviation >= 1.0 against the person's own pre-bed-rest sessions; sessions during and after bed rest"
  },
+ "baseline_length": [
+  {
+   "sessions": 3,
+   "false_alert_rate": 0.0558,
+   "ci95": [
+    0.0237,
+    0.0903
+   ],
+   "people": 24
+  },
+  {
+   "sessions": 4,
+   "false_alert_rate": 0.0545,
+   "ci95": [
+    0.0182,
+    0.0909
+   ],
+   "people": 22
+  },
+  {
+   "sessions": 5,
+   "false_alert_rate": null,
+   "ci95": null,
+   "people": 0,
+   "note": "not measurable: no more than 5 normal sessions per person"
+  },
+  {
+   "sessions": 6,
+   "false_alert_rate": null,
+   "ci95": null,
+   "people": 0,
+   "note": "not measurable: no more than 5 normal sessions per person"
+  },
+  {
+   "sessions": 7,
+   "false_alert_rate": null,
+   "ci95": null,
+   "people": 0,
+   "note": "not measurable: no more than 5 normal sessions per person"
+  }
+ ],
  "limits": [
   "WinSCAT is not our typing task: it is a cognitive test battery, used here to check the method, not the product.",
   "Sessions are days to weeks apart, unlike routine check-ins before an operation.",
@@ -139,5 +180,5 @@
   "One study, one campaign, about two dozen people, all on the ground; intervals are wide."
  ],
  "generated_by": "python -m ml.nasa_eval <unzipped Campaign 3 folder> --zip <zip>",
- "notes": "Aggregates and counts only; no per-session or per-person values. Run 1 (each person's first exposure) is dropped as practice."
+ "notes": "Aggregates and counts only; no per-session or per-person values. Run 1 (each person's first exposure) is dropped as practice. Baseline length: Measured on held-out people at a 1-in-20 budget for baseline lengths 3, 4 (3 sessions: 5.6 %, 4 sessions: 5.5 %). These data have at most 5 normal sessions per person, so a baseline of 5 or more cannot be tested here: they cannot show whether the false-alert rate settles by 5 sessions. The product keeps its minimum of 5; nothing here changes an app constant."
 }

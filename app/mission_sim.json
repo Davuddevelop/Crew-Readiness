@@ -1,0 +1,63 @@
+{
+  "synthetic": true,
+  "seed": 11,
+  "days": 180,
+  "crew": 4,
+  "checkins": 715,
+  "review_minutes": 10,
+  "story": {
+    "equipment_start": 61,
+    "equipment_accepted": 68,
+    "slowdown_start": 121,
+    "slowdown_days": 10,
+    "gap_start": 151,
+    "gap_days": 5
+  },
+  "weekly_alerts": [
+    0,
+    2,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    2,
+    1,
+    4,
+    1,
+    2,
+    0,
+    2,
+    2,
+    1,
+    6,
+    7,
+    2,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+  ],
+  "alerts": 36,
+  "flags_during_real_changes": 11,
+  "false_alerts": 25,
+  "equipment_flagged_before_acceptance": 2,
+  "equipment_flagged_after_acceptance": 7,
+  "slowdown_days_flagged": 9,
+  "missed_checkin_overdue_days": 4,
+  "reviewer_actions": {
+    "alerts_to_review": 36,
+    "accept_new_normal": 1,
+    "look_in_after_missed_checkins": 1
+  },
+  "reviewer_hours": 6.0,
+  "limits": [
+    "Simulated crew and a story we wrote; every size and timing is an assumption.",
+    "One random run: it illustrates the workload, it is not evidence of accuracy (the 300-person results are above).",
+    "The review time per alert is an assumption.",
+    "Nothing here is about anyone's health."
+  ]
+}

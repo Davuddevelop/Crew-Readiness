@@ -60,11 +60,16 @@ def status():
 
 @bp.get("/replay")
 def replay():
-    return render_template("replay.html", active="replay")
+    try:
+        sim = json.loads(MISSION_SIM_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        sim = None                      # not generated: the page shows nothing about a six-month mission
+    return render_template("replay.html", active="replay", sim=sim)
 
 
 RESULTS_FILE = Path(__file__).with_name("results_data.json")
 NASA_FILE = Path(__file__).with_name("nasa_results.json")      # written by `python -m ml.nasa_eval`; absent until the analysis is run
+MISSION_SIM_FILE = Path(__file__).with_name("mission_sim.json")     # written by `python -m ml.mission_sim`
 PILOT_FILE = Path(__file__).resolve().parents[1] / "docs" / "pilot" / "pilot_report.json"   # written by `python -m ml.pilot_report`; absent until the pilot is run
 
 

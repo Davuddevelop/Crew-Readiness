@@ -393,3 +393,6 @@ table.evidence td.num { font-size: 15px; }
 .land-more:hover { color: var(--ink); }
 .nav-cta { white-space: nowrap; }
 @media (max-width: 520px) { .nav-cta-wrap { display: none; } }   /* the primary action is already the first link and the page's own button on a phone */
+
+.weekbars { display: flex; align-items: flex-end; gap: 4px; height: 120px; border-bottom: 1px solid var(--line); }
+.weekbar { flex: 1; min-width: 4px; background: var(--ink); }

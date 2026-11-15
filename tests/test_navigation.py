@@ -41,3 +41,13 @@ def test_mission_shows_the_escalation_ladder_and_says_people_move_it(client):
     for rung in ("The person", "A crew mate", "The reviewer", "Crew medical support", "The ground"):
         assert rung in html
     assert "feels unwell tells crew medical support directly" in html
+
+
+def test_ground_summary_is_built_on_the_device_and_cannot_send_anything(client):
+    import re as _re
+    html = client.get("/mission").get_data(as_text=True)
+    assert 'id="ground-make"' in html and "the software never sends this" in html and "js/ground.js" in html
+    js = client.get("/static/js/ground.js").get_data(as_text=True)
+    code = _re.sub(r"/\*.*?\*/|//[^\n]*", "", js, flags=_re.S)
+    for forbidden in ("fetch(", "XMLHttpRequest", "sendBeacon", "WebSocket", "api(", "import ", "localStorage"):
+        assert forbidden not in code, forbidden

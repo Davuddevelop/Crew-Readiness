@@ -9,6 +9,58 @@
   </div>
 </section>
 
+{% if nasa %}
+<section class="section" id="nasa">
+  <div class="grid">
+    <div class="label"><span class="idx">00</span>Tested on real NASA data</div>
+    <div class="body">
+      <p style="max-width:62ch"><strong>{{ nasa.people }} people in a NASA bed-rest study</strong> ({{ nasa.source.title }}, NASA Life Sciences Data Archive, DOI {{ nasa.source.doi }}).
+        They did the same cognitive test battery again and again, {{ nasa.pre_bed_rest_sessions }} sessions before bed rest in all. We ran our method on their results.
+        Bed rest is a ground analog of spaceflight. This checks the <strong>method</strong> on real repeated measures from NASA; it does not validate the product and says nothing about anyone's health.</p>
+      <h3 class="cap" style="margin-top:24px">1. How much of the variation is between people?</h3>
+      <div class="table-wrap" role="region" aria-label="Between-person variation in NASA data" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>Measure</th><th>Share between people</th><th>95 % interval</th></tr></thead>
+          <tbody>
+          {% for m in nasa.icc %}
+            <tr><td>{{ m.label }}</td><td class="num"><strong>{{ '%.0f' | format(m.icc * 100) }} %</strong></td><td class="num">{{ '%.0f' | format(m.ci95[0] * 100) }} % to {{ '%.0f' | format(m.ci95[1] * 100) }} %</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small" style="max-width:62ch">The bigger the share, the more a single threshold for everyone misjudges individuals, and the more it matters to compare each person only with themselves.</p>
+      {% if nasa.rules %}
+      {% set r = nasa.rules %}
+      <h3 class="cap" style="margin-top:24px">2. Own baseline against one threshold for everyone</h3>
+      <p class="muted small" style="max-width:62ch">Both rules were set to the same alert budget (1 in {{ (1 / r.alert_budget) | round(0) | int }}) and judged on people the cutoff was not fitted on.</p>
+      <div class="table-wrap" role="region" aria-label="Own baseline against a population threshold on NASA data" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>Sessions flagged</th><th>Own-baseline rule</th><th>One threshold for everyone</th></tr></thead>
+          <tbody>
+            <tr><td>Before bed rest (no change induced)</td>
+              <td class="num"><strong>{{ '%.1f' | format(r.pre_bed_rest.own_baseline.false_alert_rate * 100) }} %</strong> <span class="ci">({{ '%.1f' | format(r.pre_bed_rest.own_baseline.ci95[0] * 100) }} to {{ '%.1f' | format(r.pre_bed_rest.own_baseline.ci95[1] * 100) }} %)</span></td>
+              <td class="num"><strong>{{ '%.1f' | format(r.pre_bed_rest.population.false_alert_rate * 100) }} %</strong> <span class="ci">({{ '%.1f' | format(r.pre_bed_rest.population.ci95[0] * 100) }} to {{ '%.1f' | format(r.pre_bed_rest.population.ci95[1] * 100) }} %)</span></td></tr>
+            <tr><td>During bed rest</td>
+              <td class="num"><strong>{{ '%.1f' | format(r.during_bed_rest.own_baseline.flag_rate * 100) }} %</strong> <span class="ci">({{ '%.1f' | format(r.during_bed_rest.own_baseline.ci95[0] * 100) }} to {{ '%.1f' | format(r.during_bed_rest.own_baseline.ci95[1] * 100) }} %)</span></td>
+              <td class="num"><strong>{{ '%.1f' | format(r.during_bed_rest.population.flag_rate * 100) }} %</strong> <span class="ci">({{ '%.1f' | format(r.during_bed_rest.population.ci95[0] * 100) }} to {{ '%.1f' | format(r.during_bed_rest.population.ci95[1] * 100) }} %)</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small" style="max-width:62ch">The original study reports no consistent cognitive decline across people during bed rest, so a flag here means "differs from this person's own pattern", never impairment.
+        {% if r.people_flagged_by_population_rule_in_most_sessions is defined %}Under one threshold for everyone, {{ r.people_flagged_by_population_rule_in_most_sessions }} people were flagged in most of their sessions: a threshold keeps flagging the same individuals.{% endif %}</p>
+      {% endif %}
+      {% if nasa.any_of_five %}
+      <h3 class="cap" style="margin-top:24px">3. Why one weighted score, not "alert if any measure moves"</h3>
+      <p style="max-width:62ch">Flagging a session when <em>any</em> of five measures moved raised an alert in <strong>{{ '%.0f' | format(nasa.any_of_five.flag_rate * 100) }} %</strong> of sessions, against {% for m in nasa.any_of_five.per_measure %}{{ '%.0f' | format(m.flag_rate * 100) }} % for {{ m.label | lower }}{% if not loop.last %}, {% endif %}{% endfor %} one measure at a time. That is why the product combines measures into one score calibrated to a stated alert budget.</p>
+      {% endif %}
+      <ul class="reasons">
+        {% for item in nasa.limits %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% if not data %}
 <section class="section"><div class="grid"><div class="label">Results</div><div class="body">
   <p>Benchmark results are not generated yet. Run <code>python -m ml.export_results</code>.</p>

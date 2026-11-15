@@ -148,3 +148,24 @@ def test_the_paste_ready_nasa_answer_matches_the_results_file():
     assert f"an intraclass correlation of {min(iccs) * 100:.0f} % to {max(iccs) * 100:.0f} % across {dict([(4, 'four')]).get(len(iccs), len(iccs))} measures" in doc
     assert f"kept its budget before bed rest ({r['pre_bed_rest']['own_baseline']['false_alert_rate'] * 100:.1f} %)" in doc
     assert r["during_bed_rest"]["own_baseline"]["flag_rate"] == 0 and "flagged none of the bed-rest sessions" in doc
+
+
+# ---- task W1b: baseline length ----
+def test_baseline_length_reports_measured_lengths_and_marks_the_rest_not_measurable(result):
+    rows = {r["sessions"]: r for r in result["baseline_length"]}
+    assert sorted(rows) == [3, 4, 5, 6, 7]
+    for L in (3, 4):                                   # the fixture has 5 normal sessions per person after run 1
+        r = rows[L]
+        assert 0 <= r["false_alert_rate"] <= 1 and r["ci95"][0] <= r["false_alert_rate"] <= r["ci95"][1]
+    for L in (5, 6, 7):
+        assert rows[L]["false_alert_rate"] is None and "not measurable" in rows[L]["note"]
+    assert "cannot show whether the false-alert rate settles by 5 sessions" in result["notes"]
+
+
+@pytest.mark.skipif(not SHIPPED.exists(), reason="no NASA results file")
+def test_the_shipped_file_has_the_baseline_length_table():
+    d = json.loads(SHIPPED.read_text(encoding="utf-8"))
+    rows = d["baseline_length"]
+    assert [r["sessions"] for r in rows] == [3, 4, 5, 6, 7]
+    assert all(r["false_alert_rate"] is None or 0 <= r["false_alert_rate"] <= 1 for r in rows)
+    assert "Baseline length:" in d["notes"]

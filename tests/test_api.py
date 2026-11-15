@@ -207,3 +207,31 @@ def test_evidence_equipment_table_comes_from_the_file(client):
     html = client.get("/evidence").get_data(as_text=True)
     assert 'id="equipment-change"' in html and "Synthetic data" in html
     assert f"{ec['rows'][1]['after']['rate'] * 100:.0f} %" in html and f"{ec['people']} simulated people" in html
+
+
+NASA_FIXTURE = {   # SYNTHETIC numbers in the documented shape (docs/DATA_CONTRACT.md); not a result
+    "source": {"title": "Neurocognitive Assessment (WinSCAT) (Flight Analog)", "doi": "10.83263/sbne-th55", "url": "https://example.invalid", "accessed": "2026-11-15", "sha256": "0" * 64},
+    "people": 24, "pre_bed_rest_sessions": 144,
+    "icc": [{"measure": "CPTRT", "label": "Running memory response time", "icc": 0.62, "ci95": [0.45, 0.78]}],
+    "rules": {"alert_budget": 0.05,
+              "pre_bed_rest": {"own_baseline": {"false_alert_rate": 0.051, "ci95": [0.03, 0.08]}, "population": {"false_alert_rate": 0.049, "ci95": [0.02, 0.11]}},
+              "during_bed_rest": {"own_baseline": {"flag_rate": 0.18, "ci95": [0.1, 0.27]}, "population": {"flag_rate": 0.09, "ci95": [0.04, 0.16]}},
+              "people_flagged_by_population_rule_in_most_sessions": 3},
+    "any_of_five": {"flag_rate": 0.4, "per_measure": [{"measure": "CPTRT", "label": "Running memory response time", "flag_rate": 0.09}]},
+    "limits": ["WinSCAT is not our typing task."],
+}
+
+
+def test_evidence_nasa_section_appears_only_with_the_results_file_and_shows_its_numbers(client, tmp_path, monkeypatch):
+    import json
+    from app import views
+    monkeypatch.setattr(views, "NASA_FILE", tmp_path / "missing.json")
+    assert 'id="nasa"' not in client.get("/evidence").get_data(as_text=True)        # no analysis: nothing is claimed
+    f = tmp_path / "nasa_results.json"
+    f.write_text(json.dumps(NASA_FIXTURE))
+    monkeypatch.setattr(views, "NASA_FILE", f)
+    html = client.get("/evidence").get_data(as_text=True)
+    assert 'id="nasa"' in html and "24 people in a NASA bed-rest study" in html and "DOI 10.83263/sbne-th55" in html
+    assert "62 %" in html and "5.1 %" in html and "18.0 %" in html and "40 %" in html and "3 people were flagged in most" in html   # every number from the file
+    assert "does not validate the product" in html and "never impairment" in html
+    assert "https://example.invalid" not in html                                    # the page links to no other host

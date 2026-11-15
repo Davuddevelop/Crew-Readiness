@@ -201,3 +201,18 @@ NaN or infinity; free text in `quality_notes` other than the two notes the app w
  "baseline": {"n": 8, "median_rt_ms": 277.0, "spread_ms": 17.0}, "deviation": 3.1, "today": {"median_rt_ms": 328.0, "miss_count": 1, "trials": 10, "created_at": "...Z"}, "n_checks": 9}
 ```
 Compared only with the same person's earlier checks (at least 5 valid ones, otherwise `CALIBRATING`). Cut-offs are illustrative and not validated; it never changes `readiness.band`.
+
+## NASA bed-rest results file (`app/nasa_results.json`, plan: docs/NASA_JUDGING_PLAYBOOK.md task N1)
+Written by `python -m ml.nasa_eval <local folder>`; aggregates only, never raw rows; rendered by the Evidence page (hidden when the file is absent).
+```json
+{"source": {"title": "...", "doi": "10.83263/sbne-th55", "url": "...", "accessed": "2026-11-15", "sha256": "..."},
+ "people": 24, "pre_bed_rest_sessions": 144,
+ "icc": [{"measure": "CPTRT", "label": "Running memory response time", "icc": 0.71, "ci95": [0.55, 0.82]}],
+ "rules": {"alert_budget": 0.05,
+           "pre_bed_rest": {"own_baseline": {"false_alert_rate": 0.05, "ci95": [0.03, 0.08]}, "population": {"false_alert_rate": 0.05, "ci95": [0.02, 0.09]}},
+           "during_bed_rest": {"own_baseline": {"flag_rate": 0.2, "ci95": [0.1, 0.3]}, "population": {"flag_rate": 0.1, "ci95": [0.05, 0.2]}},
+           "people_flagged_by_population_rule_in_most_sessions": 3},
+ "any_of_five": {"flag_rate": 0.40, "per_measure": [{"measure": "CPTRT", "label": "Running memory response time", "flag_rate": 0.09}]},
+ "limits": ["WinSCAT is not our typing task", "..."]}
+```
+Every number shown on the page comes from this file. `icc` is the share of variation that is between people (0 to 1).

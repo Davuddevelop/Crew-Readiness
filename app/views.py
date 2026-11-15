@@ -64,6 +64,7 @@ def replay():
 
 
 RESULTS_FILE = Path(__file__).with_name("results_data.json")
+NASA_FILE = Path(__file__).with_name("nasa_results.json")      # written by `python -m ml.nasa_eval`; absent until the analysis is run
 PILOT_FILE = Path(__file__).resolve().parents[1] / "docs" / "pilot" / "pilot_report.json"   # written by `python -m ml.pilot_report`; absent until the pilot is run
 
 
@@ -78,4 +79,8 @@ def evidence():
         pilot = json.loads(PILOT_FILE.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         pilot = None                    # no pilot yet: the page says nothing about one
-    return render_template("evidence.html", active="evidence", data=data, pilot=pilot)
+    try:
+        nasa = json.loads(NASA_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        nasa = None                     # no NASA analysis yet: the page says nothing about one
+    return render_template("evidence.html", active="evidence", data=data, pilot=pilot, nasa=nasa)

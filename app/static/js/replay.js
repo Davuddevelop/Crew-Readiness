@@ -95,7 +95,7 @@ function summarise(d) {
     $("replay-note").textContent = "Same simulated person and sessions for both. The current scoring only stops alerting because a person accepted the change; it never decides that itself. One simulated person is an illustration, not evidence. The 300-person figures are on the Evidence page.";
     return;
   }
-  $("replay-head").innerHTML = "<tr><th></th><th>Affected sessions flagged</th><th>False alerts in normal sessions</th></tr>";
+  $("replay-head").innerHTML = "<tr><th><span class="sr-only">Scoring method</span></th><th>Affected sessions flagged</th><th>False alerts in normal sessions</th></tr>";
   const row = (name, s) => `<tr><td>${esc(name)}</td>
     <td class="num">${s.event_sessions ? `${s.flagged_in_event} of ${s.event_sessions}` : "no change to find"}</td>
     <td class="num">${s.false_alerts} of ${s.normal_sessions}</td></tr>`;

@@ -105,7 +105,7 @@ code { font-family: var(--mono); font-size: .92em; }
 .lede { font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: var(--muted); max-width: 40ch; }
 .kicker { font-size: 13px; line-height: 20px; font-weight: 600; color: var(--muted); }
 .advisory { font-size: clamp(22px, 2.4vw, 32px); line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; max-width: 30ch; text-wrap: balance; }
-h3.cap { font-size: 13px; line-height: 20px; font-weight: 600; color: var(--muted); margin: 40px 0 12px; }
+h2.cap, h3.cap { font-size: 13px; line-height: 20px; font-weight: 600; color: var(--muted); margin: 40px 0 12px; }
 
 /* ---------- frame ---------- */
 .proto-banner { border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
@@ -242,13 +242,13 @@ table.evidence td.num { font-size: 15px; }
   width: 100%; padding: 18px 0; background: none; border: 0; border-top: 1px solid var(--line); border-bottom: 0;
   color: var(--muted); text-align: left; font: inherit; cursor: pointer; transition: color .2s, border-color .2s;
 }
-.crew-item:hover, .crew-item[aria-selected="true"] { color: var(--ink); }
-.crew-item[aria-selected="true"] { border-top: 3px solid var(--ink); padding-top: 16px; }
+.crew-item:hover, .crew-item[aria-pressed="true"] { color: var(--ink); }
+.crew-item[aria-pressed="true"] { border-top: 3px solid var(--ink); padding-top: 16px; }
 .crew-item .mark { grid-area: mark; align-self: start; margin-top: 8px; width: 8px; height: 8px; background: var(--line); transition: background .2s; }
-.crew-item[aria-selected="true"] .mark.m-green { background: var(--nominal); }
-.crew-item[aria-selected="true"] .mark.m-yellow { background: var(--checkin); }
-.crew-item[aria-selected="true"] .mark.m-red { background: var(--review); }
-.crew-item[aria-selected="true"] .mark.m-calibrating { background: var(--muted); }
+.crew-item[aria-pressed="true"] .mark.m-green { background: var(--nominal); }
+.crew-item[aria-pressed="true"] .mark.m-yellow { background: var(--checkin); }
+.crew-item[aria-pressed="true"] .mark.m-red { background: var(--review); }
+.crew-item[aria-pressed="true"] .mark.m-calibrating { background: var(--muted); }
 .crew-item .who { grid-area: who; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 18px; line-height: 24px; font-weight: 700; letter-spacing: -0.015em; }
 .crew-item .chipcell { grid-area: chip; justify-self: end; }
 .crew-item .role { grid-area: role; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; line-height: 20px; color: var(--muted); }

@@ -112,7 +112,7 @@ $("submit-btn").addEventListener("click", async () => {
       ${r.reasons.length ? `<ul class="reasons">${r.reasons.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
       ${data.latest_session.data_quality === "low"
         ? `<p class="warn">Flagged LOW quality: ${esc(data.latest_session.quality_notes)}</p>` : ""}
-      <h3 class="cap" style="margin-top:24px">Next</h3>
+      <h2 class="cap" style="margin-top:24px">Next</h2>
       <p><a class="btn" href="/attention?crew=${encodeURIComponent(select.value)}">Add a reaction check (about a minute, optional)</a>
          <a class="btn btn-ghost" href="/me?crew=${encodeURIComponent(select.value)}">See my status</a></p>
       <p class="fineprint"><a href="/dashboard?crew=${encodeURIComponent(select.value)}">Open on the reviewer dashboard</a> &middot;

@@ -6,7 +6,7 @@ timing against their OWN baseline, for a human to review. Start with `docs/NEXT_
 
 Run: `python -m venv .venv && .venv/bin/pip install -r requirements.txt`, then `python run.py` (http://127.0.0.1:5050).
 Before every change is done: `.venv/bin/python -m pytest -q` (expect everything passing, some skipped) and, with the app running,
-`node scripts/check_grid.js`.
+`node scripts/check_grid.js`. Accessibility: `node scripts/check_a11y.js` (axe-core; see its header).
 
 Non-negotiable:
 - **Privacy:** never store or send typed text, key identities or raw keystroke timelines. Only the nine aggregate features in `app/features.py`.

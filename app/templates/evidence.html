@@ -57,8 +57,68 @@
       <h2 class="cap" style="margin-top:24px">3. Why one weighted score, not "alert if any measure moves"</h2>
       <p style="max-width:62ch">Flagging a session when <em>any</em> of five measures moved raised an alert in <strong>{{ '%.0f' | format(nasa.any_of_five.flag_rate * 100) }} %</strong> of sessions, against {% for m in nasa.any_of_five.per_measure %}{{ '%.0f' | format(m.flag_rate * 100) }} % for {{ m.label | lower }}{% if not loop.last %}, {% endif %}{% endfor %} one measure at a time. That is why the product combines measures into one score calibrated to a stated alert budget.</p>
       {% endif %}
+      {% if nasa.baseline_length %}
+      <h2 class="cap" style="margin-top:24px">4. How many sessions before we say anything?</h2>
+      <p class="muted small" style="max-width:62ch">The same real data, with the baseline built from only the first few sessions. The product waits for {{ min_baseline }} sessions before it shows a status (CALIBRATING until then).</p>
+      <div class="table-wrap" role="region" aria-label="False alerts by baseline length on NASA data" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>Sessions in the baseline</th><th>False alerts on later normal sessions</th><th>95 % interval</th></tr></thead>
+          <tbody>
+          {% for b in nasa.baseline_length %}
+            <tr><td>{{ b.sessions }}{% if b.sessions == min_baseline %} (what the product waits for){% endif %}</td><td class="num"><strong>{{ '%.1f' | format(b.false_alert_rate * 100) }} %</strong></td><td class="num">{{ '%.1f' | format(b.ci95[0] * 100) }} % to {{ '%.1f' | format(b.ci95[1] * 100) }} %</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if nasa.notes %}<p class="muted small" style="max-width:62ch">{{ nasa.notes }}</p>{% endif %}
+      {% endif %}
       <ul class="reasons">
         {% for item in nasa.limits %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if nasa_stress %}
+{% set st = nasa_stress %}{% set sr = st.rules %}
+<section class="section" id="nasa-stress">
+  <div class="grid">
+    <div class="label"><span class="idx">00b</span>Tested on a known stressor</div>
+    <div class="body">
+      <p style="max-width:62ch"><strong>{{ st.people }} people in a NASA study with {{ st.source.stressor }}</strong> ({{ st.source.title }}, DOI {{ st.source.doi }}). {{ st.rested_sessions }} rested sessions and {{ st.stress_sessions }} sessions under the stressor, measured by {{ st.measure | lower }}.
+        This asks a different question from the bed-rest data above: when something <em>is</em> known to have changed a person's performance, does the rule notice? It is a laboratory analog and a test of the <strong>method</strong>; it does not validate the product and makes no claim about anyone's health.</p>
+      <div class="table-wrap" role="region" aria-label="Rules on rested and stressed sessions" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>Sessions flagged (alert budget 1 in {{ (1 / sr.alert_budget) | round(0) | int }})</th><th>Own-baseline rule</th><th>One threshold for everyone</th></tr></thead>
+          <tbody>
+            <tr><td>Rested (nothing changed)</td>
+              <td class="num"><strong>{{ '%.1f' | format(sr.rested.own_baseline.false_alert_rate * 100) }} %</strong> <span class="ci">({{ '%.1f' | format(sr.rested.own_baseline.ci95[0] * 100) }} to {{ '%.1f' | format(sr.rested.own_baseline.ci95[1] * 100) }} %)</span></td>
+              <td class="num"><strong>{{ '%.1f' | format(sr.rested.population.false_alert_rate * 100) }} %</strong> <span class="ci">({{ '%.1f' | format(sr.rested.population.ci95[0] * 100) }} to {{ '%.1f' | format(sr.rested.population.ci95[1] * 100) }} %)</span></td></tr>
+            <tr><td>Under the stressor</td>
+              <td class="num"><strong>{{ '%.1f' | format(sr.stress.own_baseline.flag_rate * 100) }} %</strong> <span class="ci">({{ '%.1f' | format(sr.stress.own_baseline.ci95[0] * 100) }} to {{ '%.1f' | format(sr.stress.own_baseline.ci95[1] * 100) }} %)</span></td>
+              <td class="num"><strong>{{ '%.1f' | format(sr.stress.population.flag_rate * 100) }} %</strong> <span class="ci">({{ '%.1f' | format(sr.stress.population.ci95[0] * 100) }} to {{ '%.1f' | format(sr.stress.population.ci95[1] * 100) }} %)</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="max-width:62ch"><strong>
+        {% if sr.stress.own_baseline.ci95[0] > sr.stress.population.ci95[1] %}Under the stressor the own-baseline rule flagged clearly more sessions than one threshold for everyone, at the same alert budget (the intervals do not overlap).
+        {% elif sr.stress.population.ci95[0] > sr.stress.own_baseline.ci95[1] %}Under the stressor one threshold for everyone flagged clearly more sessions than the own-baseline rule, at the same alert budget (the intervals do not overlap). That does not favour our approach.
+        {% else %}Under the stressor the two rules flagged a similar share of sessions, and the intervals overlap: this test does not show that either is better.{% endif %}</strong></p>
+      {% if st.by_night %}
+      <div class="table-wrap" role="region" aria-label="Flag rate by night" tabindex="0">
+        <table class="evidence">
+          <thead><tr><th>Under the stressor</th><th>Own-baseline rule</th><th>One threshold for everyone</th></tr></thead>
+          <tbody>
+          {% for n in st.by_night %}
+            <tr><td>{{ n.label }}</td><td class="num">{{ '%.0f' | format(n.own_baseline * 100) }} %</td><td class="num">{{ '%.0f' | format(n.population * 100) }} %</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+      <ul class="reasons">
+        {% for item in st.limits %}<li>{{ item }}</li>{% endfor %}
       </ul>
     </div>
   </div>

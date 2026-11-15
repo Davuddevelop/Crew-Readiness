@@ -19,6 +19,17 @@
       <div id="advisory"></div>
       <p style="margin-top:20px;display:flex;flex-wrap:wrap;gap:8px 24px"><a href="{{ url_for('views.brief') }}">Open the printable brief for the reviewer</a>
         <a href="{{ url_for('views.dashboard') }}">Open the full crew dashboard</a></p>
+      <div id="ground" style="margin-top:20px">
+        <button type="button" class="btn btn-ghost" id="ground-make">Prepare a summary for the ground</button>
+        <div id="ground-out" hidden style="margin-top:16px">
+          <label for="ground-text" class="small">Plain text, built on this device from what this page shows. Edit it if you wish, then copy or save it and send it when a link window opens.</label>
+          <textarea id="ground-text" rows="14" style="width:100%;max-width:70ch;background:var(--surface);color:var(--ink);border:1px solid var(--line);padding:12px;font:inherit"></textarea>
+          <p style="display:flex;flex-wrap:wrap;gap:12px;margin-top:12px"><button type="button" class="btn btn-ghost" id="ground-copy">Copy</button>
+            <button type="button" class="btn btn-ghost" id="ground-save">Save as a text file</button></p>
+          <p class="fineprint" id="ground-status" aria-live="polite"></p>
+        </div>
+        <p class="fineprint" style="max-width:62ch">Store and forward: the software never sends this. A person chooses what to include, and when and how to send it. It holds no typed text and no private notes.</p>
+      </div>
       <p class="fineprint" style="margin-top:20px">The system suggests; humans decide. It never assigns, clears or grounds anyone.</p>
     </div>
   </div>
@@ -93,4 +104,5 @@
 {% endblock %}
 {% block scripts %}
 <script type="module" src="{{ url_for('static', filename='js/mission.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/ground.js') }}"></script>
 {% endblock %}

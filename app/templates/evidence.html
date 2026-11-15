@@ -65,7 +65,11 @@
           <thead><tr><th>Sessions in the baseline</th><th>False alerts on later normal sessions</th><th>95 % interval</th></tr></thead>
           <tbody>
           {% for b in nasa.baseline_length %}
+            {% if b.false_alert_rate is none %}
+            <tr><td>{{ b.sessions }}{% if b.sessions == min_baseline %} (what the product waits for){% endif %}</td><td class="num" colspan="2"><em>Cannot be tested on these data</em>{% if b.note %}: {{ b.note }}{% endif %}</td></tr>
+            {% else %}
             <tr><td>{{ b.sessions }}{% if b.sessions == min_baseline %} (what the product waits for){% endif %}</td><td class="num"><strong>{{ '%.1f' | format(b.false_alert_rate * 100) }} %</strong></td><td class="num">{{ '%.1f' | format(b.ci95[0] * 100) }} % to {{ '%.1f' | format(b.ci95[1] * 100) }} %</td></tr>
+            {% endif %}
           {% endfor %}
           </tbody>
         </table>

@@ -115,7 +115,7 @@ h3.cap { font-size: 13px; line-height: 20px; font-weight: 600; color: var(--mute
 .nav-brand { grid-column: 1 / span 3; }
 .nav-links { grid-column: 4 / span 6; display: flex; justify-content: center; flex-wrap: wrap; gap: 2px 22px; }
 .nav-cta-wrap { grid-column: 10 / span 3; display: flex; justify-content: flex-end; }
-.brand-mark { display: block; flex: none; height: 28px; width: auto; }
+.brand-mark { display: block; flex: none; height: 28px; width: 28px; }
 .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: -0.01em; white-space: nowrap; }
 .nav-links a {
   color: var(--muted); text-decoration: none; padding: 6px 0; font-size: 13px; line-height: 20px; font-weight: 500;

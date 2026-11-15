@@ -39,10 +39,11 @@ def test_landing_credits_the_images_and_describes_the_illustration(client):
 
 def test_brand_images_are_wired_in_and_the_logo_has_a_real_alt_text(client):
     html = client.get("/").data.decode()
-    assert "img/logo-mark.webp" in html and "land-mark" not in html      # the nav mark, no big logo in the hero
+    assert "img/mark.svg" in html and "land-mark" not in html            # the nav mark, no big logo in the hero
     assert 'rel="icon"' in html and "img/favicon.png" in html
     assert 'property="og:image"' in html and "img/share-card.png" in html
-    assert "AI-generated" in ASSETS_DOC                      # the origin is disclosed, not hidden
+    assert "No AI image generator was used" in ASSETS_DOC               # the origin is disclosed, not hidden
+    assert not (IMG_DIR / "logo.webp").exists() and not (IMG_DIR / "logo-mark.webp").exists()   # the AI-generated logo is gone
 
 
 def test_landing_motion_hooks_and_an_accessible_headline(client):

@@ -61,3 +61,10 @@ def test_about_places_the_tool_beside_health_monitoring_without_health_claims(cl
     assert "tell crew medical support directly" in html
     landing = client.get("/").get_data(as_text=True)
     assert "beside crew health monitoring, not in place of it" in landing
+
+
+def test_about_discloses_ai_assistance_and_the_product_has_the_metadata(client):
+    html = client.get("/about").get_data(as_text=True)
+    assert 'id="ai-use"' in html and "built <strong>with AI assistance</strong>" in html and "No AI-generated images" in html
+    assert "nothing in the running product calls an AI service" in html
+    assert '<meta name="ai-assistance"' in client.get("/").get_data(as_text=True)          # indicator visible in the page's own metadata
